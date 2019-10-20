@@ -18,6 +18,29 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\AnimationComponent.cpp" />
+    <ClCompile Include="src\MovementComponent.cpp" />
+    <ClCompile Include="src\Button.cpp" />
+    <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\Entity.cpp" />
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\GameState.cpp" />
+    <ClCompile Include="src\MainMenuState.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\State.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\AnimationComponent.h" />
+    <ClInclude Include="src\MovementComponent.h" />
+    <ClInclude Include="src\Button.h" />
+    <ClInclude Include="src\Player.h" />
+    <ClInclude Include="src\Game.h" />
+    <ClInclude Include="src\Entity.h" />
+    <ClInclude Include="src\GameState.h" />
+    <ClInclude Include="src\MainMenuState.h" />
+    <ClInclude Include="src\State.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{29711673-0301-49DA-8A49-5B8449D035CE}</ProjectGuid>
@@ -129,9 +152,6 @@
       <AdditionalDependencies>sfml-system-d.lib;sfml-window-d.lib;sfml-audio-d.lib;sfml-graphics-d.lib;sfml-network-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="src\main.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
