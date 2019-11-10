@@ -25,49 +25,90 @@ void MainMenuState::initKeybinds()
 
 void MainMenuState::initButton()
 {
-	this->buttons["New Game"] = new Button(
-		565, 300, 150 , 0,
-		this->font, "NEW GAME", 40,
-		sf::Color(255, 255, 255, 220), sf::Color(0, 0, 0, 255), sf::Color(150, 150, 150, 255),
-		sf::Color(255, 255, 255, 200), sf::Color(0, 0, 0, 255), sf::Color(150, 150, 150, 255));
+	//variable to set button size
+	float button_width = 150.0f;
+	float button_height = 0.0f;
 
-	this->buttons["Editor"] = new Button(
-		565, 400, 150, 0,
+	this->buttons["New Game"] = new gui::Button(
+		(this->window->getSize().x / 2) - (button_width / 2), 
+		(this->window->getSize().y / 8) * 3.5f, 
+		button_width, button_height,
+		this->font, "NEW GAME", 40,
+		sf::Color(255, 255, 255, 255), sf::Color(150, 150, 150, 255), sf::Color(0, 0, 0, 255));
+
+	this->buttons["Score"] = new gui::Button(
+		(this->window->getSize().x / 2) - (button_width / 2),
+		(this->window->getSize().y / 8) * 4.25f, 
+		button_width, button_height,
+		this->font, "SCORE", 40,
+		sf::Color(255, 255, 255, 255), sf::Color(150, 150, 150, 255), sf::Color(0, 0, 0, 255));
+
+	this->buttons["Editor"] = new gui::Button(
+		(this->window->getSize().x / 2) - (button_width / 2),
+		(this->window->getSize().y / 8) * 5.0f, 
+		button_width, button_height,
 		this->font, "EDITOR", 40,
-		sf::Color(255, 255, 255, 220), sf::Color(0, 0, 0, 255), sf::Color(150, 150, 150, 255),
-		sf::Color(255, 255, 255, 200), sf::Color(0, 0, 0, 255), sf::Color(150, 150, 150, 255));
+		sf::Color(255, 255, 255, 255), sf::Color(150, 150, 150, 255), sf::Color(0, 0, 0, 255));
 	
-	this->buttons["Options"] = new Button(
-		565, 500, 150, 0,
+	this->buttons["Options"] = new gui::Button(
+		(this->window->getSize().x / 2) - (button_width / 2),
+		(this->window->getSize().y / 8) * 5.75f, 
+		button_width, button_height,
 		this->font, "OPTIONS", 40,
-		sf::Color(255, 255, 255, 220), sf::Color(0, 0, 0, 255), sf::Color(150, 150, 150, 255),
-		sf::Color(255, 255, 255, 200), sf::Color(0, 0, 0, 255), sf::Color(150, 150, 150, 255));
+		sf::Color(255, 255, 255, 255), sf::Color(150, 150, 150, 255), sf::Color(0, 0, 0, 255));
 	
-	this->buttons["Quit"] = new Button(
-		565, 600, 150, 0,
+	this->buttons["Quit"] = new gui::Button(
+		(this->window->getSize().x / 2) - (button_width / 2),
+		(this->window->getSize().y / 8) * 6.50f, 
+		button_width, button_height,
 		this->font, "QUIT", 40,
-		sf::Color(255, 255, 255, 220), sf::Color(0, 0, 0, 255), sf::Color(150, 150, 150, 255),
-		sf::Color(255, 255, 255, 200), sf::Color(0, 0, 0, 255), sf::Color(150, 150, 150, 255));
+		sf::Color(255, 255, 255, 255), sf::Color(150, 150, 150, 255), sf::Color(0, 0, 0, 255));
 }
 
 void MainMenuState::initBackground() 
 {
 	this->background.setSize(sf::Vector2f(static_cast<float>(this->window->getSize().x), static_cast<float>(this->window->getSize().y)));
 
-	if (!backgroundTexture.loadFromFile("src/Resource/Background/MainMenuState/testbackground.png")) {
+	if (!this->backgroundTexture.loadFromFile("src/Resource/Background/MainMenuState/background.png")) {
 		throw("[Main Menu State] >> ..ERROR.. Could't load backgroundTexture");
 	}
 	this->background.setTexture(&this->backgroundTexture);
 }
 
+void MainMenuState::initLogo() 
+{
+	if (!this->logoTexture.loadFromFile("src/Resource/Gamelogo/Gamelogo.png")) {
+		throw("[Main Menu State] >> ..ERROR.. Could't load logoTexture");
+	}
+
+	this->logo.setSize(sf::Vector2f(static_cast<float>(this->logoTexture.getSize().x / 2), static_cast<float>(this->logoTexture.getSize().y / 2)));
+	this->logo.setPosition(sf::Vector2f(static_cast<float>((this->window->getSize().x / 2) - (this->logo.getSize().x / 2)), static_cast<float>(this->window->getSize().y / 8)));
+	this->logo.setTexture(&this->logoTexture);
+}
+
+void MainMenuState::initMusic()
+{
+	if (!musicBuffer.loadFromFile("src/Resource/Music/MainMenuState/twinkle_twinkle_little_star.ogg")) {
+		throw("[Main Menu State] >> ..ERROR.. Could't load musicBuffer");
+	}
+
+	this->music.setBuffer(this->musicBuffer);
+	this->music.setLoop(true);
+	this->music.setVolume(30);
+	this->music.play();
+}
+
 //Constructor , Destructor
-MainMenuState::MainMenuState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states) :State(window, supportedKeys, states)
+MainMenuState::MainMenuState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states) 
+	:State(window, supportedKeys, states)
 {
 	std::cout << "[Main Menu State] >> On" << std::endl;
 	this->initFonts();
 	this->initKeybinds();
 	this->initButton();
 	this->initBackground();
+	this->initLogo();
+	this->initMusic();
 }
 
 MainMenuState::~MainMenuState()
@@ -80,10 +121,13 @@ MainMenuState::~MainMenuState()
 //Function
 void MainMenuState::updateState(const float &dt)
 {
+	this->updateKeyTime(dt);
+
 	this->updateMousePosition();
 	this->updateInput(dt);
-	
+
 	this->updateButton();
+	this->updateMusic();
 }
 
 void MainMenuState::updateInput(const float &dt)
@@ -98,20 +142,34 @@ void MainMenuState::updateButton()
 	}
 
 	//Go Game State
-	if (this->buttons["New Game"]->isPressed()) {
+	if (this->buttons["New Game"]->isPressed() && this->getKeyTime()) {
 		this->states->push(new GameState(this->window, this->supportedKeys, this->states));
 	}
+	//Go Score 
+	if (this->buttons["Score"]->isPressed() && this->getKeyTime()) {
+		
+	}
 	//Go Editor State
-	if (this->buttons["Editor"]->isPressed()) {
+	if (this->buttons["Editor"]->isPressed() && this->getKeyTime()) {
 
 	}
 	//Go Setting State
-	if (this->buttons["Options"]->isPressed()) {
-		
+	if (this->buttons["Options"]->isPressed() && this->getKeyTime()) {
+		this->states->push(new SettingState(this->window, this->supportedKeys, this->states));
 	}
 	//Exit this state
-	if (this->buttons["Quit"]->isPressed()) {
-		this->quit = true;
+	if (this->buttons["Quit"]->isPressed() && this->getKeyTime()) {
+		this->endState();
+	}
+}
+
+void MainMenuState::updateMusic()
+{
+	if (this->states->top() == this && this->music.getStatus()!=sf::Sound::Playing) {
+		this->music.play();
+	}
+	else if (this->states->top() != this) {
+		this->music.stop();
 	}
 }
 
@@ -121,8 +179,9 @@ void MainMenuState::renderState(sf::RenderTarget* target)
 		target = this->window;
 	}
 	target->draw(this->background);
+	target->draw(this->logo);
 
-	this->renderButton(target);
+	this->renderButton(*target);
 
 	//Show for debug << remove later/////////////////////////////////////
 	sf::Text mouseText;
@@ -136,16 +195,12 @@ void MainMenuState::renderState(sf::RenderTarget* target)
 	/////////////////////////////////////////////////////////////////////
 }
 
-void MainMenuState::renderButton(sf::RenderTarget* target)
+void MainMenuState::renderButton(sf::RenderTarget& target)
 {
 	for (auto it = this->buttons.begin(); it!=this->buttons.end(); it++) {
 		it->second->renderButton(target);
 	}
 }
 
-void MainMenuState::endState()
-{
-	std::cout << "[Main Menu State] >> Exit" << std::endl;
-}
 
 

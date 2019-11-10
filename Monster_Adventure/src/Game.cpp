@@ -112,7 +112,6 @@ void Game::updateGame()
 		this->states.top()->updateState(this->dt);
 
 		if (this->states.top()->getQuit()) {
-			this->states.top()->endState();
 
 			delete this->states.top();
 			this->states.pop();
@@ -121,10 +120,6 @@ void Game::updateGame()
 	else {
 		this->endGame();
 		this->window->close();  //stack is empty so end this application
-		
-		// Remove later///////
-		std::system("pause");
-		//////////////////////
 	}
 }
 

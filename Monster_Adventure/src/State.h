@@ -35,8 +35,12 @@ protected:
 	sf::Vector2i mousePosScreen;
 	sf::Vector2i mousePosWindow;
 	sf::Vector2f mousePosView;
-
+	
+	bool paused;
 	bool quit;
+	
+	float keyTime;
+	float keyTimeMax;
 
 	//Resource
 	std::map<std::string, sf::Texture> textures;
@@ -51,18 +55,20 @@ public:
 
 	//Accessor
 	const bool& getQuit();
+	const bool getKeyTime();
 
 	//Function
+	void pausedState();
+	void unpausedState();
+	void endState();
 
 	//update
 	virtual void updateState(const float &dt) = 0;
+	virtual void updateKeyTime(const float &dt);
 	virtual void updateInput(const float &dt) = 0;
 	virtual void updateMousePosition();
-	
+
 	//render
 	virtual void renderState(sf::RenderTarget* target = NULL) = 0;
-	
-	//end
-	virtual void endState() = 0;
 };
 

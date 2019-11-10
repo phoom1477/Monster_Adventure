@@ -10,12 +10,44 @@ MovementComponent::~MovementComponent()
 {
 }
 
+//Accessor
 const sf::Vector2f& MovementComponent::getVelocity()
 {
 	return this->velocity;
 }
 
+
+const float & MovementComponent::getMaxVelocity()
+{
+	return this->maxVelocity;
+}
+
 //Function
+const bool MovementComponent::getState(const short unsigned state)
+{
+	if (state == IDLE && this->velocity.x == 0.0f && this->velocity.y == 0.0f) {
+		return true;
+	}
+	else if (state == MOVING && this->velocity.x != 0.0f && this->velocity.y != 0.0f) {
+		return true;
+	}
+	else if (state == MOVING_LEFT && this->velocity.x < 0.0f ) {
+		return true;
+	}
+	else if (state == MOVING_RIGHT && this->velocity.x > 0.0f) {
+		return true;
+	}
+	else if (state == MOVING_UP && this->velocity.y < 0.0f) {
+		return true;
+	}
+	else if (state == MOVING_DOWN && this->velocity.y > 0.0f){
+		return false;
+	}
+	else {
+		return false;
+	}
+}
+
 void MovementComponent::move(const float direction_x, const float direction_y, const float &dt)
 {
 	//acceleration increase to reaches maxVelocity
@@ -33,7 +65,7 @@ void MovementComponent::updateComponent(const float &dt)
 			this->velocity.x = this->maxVelocity;
 		}
 
-		//Deceleration x positive
+		//Deceleration x positive 
 		this->velocity.x -= this->deceleration;
 		if (this->velocity.x < 0.0f) {
 			this->velocity.x = 0.0f;

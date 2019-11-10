@@ -14,6 +14,8 @@
 #include <vector>
 #include <map>
 
+enum movement_state { IDLE = 0 ,MOVING ,MOVING_LEFT, MOVING_RIGHT, MOVING_UP, MOVING_DOWN};
+
 class MovementComponent
 {
 private:
@@ -25,8 +27,6 @@ private:
 	float deceleration;
 
 	sf::Vector2f velocity;
-	
-	//Initialization
 
 public:
 	//Constructor , Destructor
@@ -35,8 +35,11 @@ public:
 
 	//Accessor
 	const sf::Vector2f& getVelocity();
+	const float& getMaxVelocity();
 
 	//Function
+	const bool getState(const short unsigned state);
+
 	void move(const float direction_x, const float direction_y, const float &dt);
 	void updateComponent(const float &dt);
 };

@@ -6,10 +6,10 @@ class Player : public Entity
 {
 private:
 	//Variable
+	bool attacking;
 
 	//Initialization
 	void initVariable();
-	/*void initComponent();*/
 
 public:
 	//Constructor , Destructor
@@ -20,6 +20,9 @@ public:
 	
 	//update
 	void updateEntity(const float &dt);
+	void updateAttack(const float &dt);
+	void updateAnimation(const float &dt);
+	
 	//render
 	
 };

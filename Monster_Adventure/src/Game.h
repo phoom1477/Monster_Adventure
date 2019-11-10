@@ -41,7 +41,6 @@ public:
 	Game();
 	virtual ~Game();
 
-
 	void run();
 
 	//update

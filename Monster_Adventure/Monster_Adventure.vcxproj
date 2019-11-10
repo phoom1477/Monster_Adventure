@@ -19,9 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\SettingState.cpp" />
+    <ClCompile Include="src\PauseMenu.cpp" />
+    <ClCompile Include="src\HitboxComponent.cpp" />
     <ClCompile Include="src\AnimationComponent.cpp" />
     <ClCompile Include="src\MovementComponent.cpp" />
-    <ClCompile Include="src\Button.cpp" />
+    <ClCompile Include="src\Gui.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Game.cpp" />
@@ -29,17 +32,22 @@
     <ClCompile Include="src\MainMenuState.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\State.cpp" />
+    <ClCompile Include="src\Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\SettingState.h" />
+    <ClInclude Include="src\PauseMenu.h" />
+    <ClInclude Include="src\HitboxComponent.h" />
     <ClInclude Include="src\AnimationComponent.h" />
     <ClInclude Include="src\MovementComponent.h" />
-    <ClInclude Include="src\Button.h" />
+    <ClInclude Include="src\Gui.h" />
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\GameState.h" />
     <ClInclude Include="src\MainMenuState.h" />
     <ClInclude Include="src\State.h" />
+    <ClInclude Include="src\Tile.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -149,7 +157,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>C:\Users\Admin\Desktop\Monster_Adventure\SFML-VC++15\SFML-2.5.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-system-d.lib;sfml-window-d.lib;sfml-audio-d.lib;sfml-graphics-d.lib;sfml-network-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sfml-system.lib;sfml-window.lib;sfml-audio.lib;sfml-graphics.lib;sfml-network.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

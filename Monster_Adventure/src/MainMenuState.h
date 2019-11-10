@@ -6,23 +6,31 @@
 #pragma once
 
 #include "GameState.h"
-#include "Button.h"
+#include "SettingState.h"
+#include "gui.h"
 
 class MainMenuState : public State
 {
 private:
 	//variable
-	sf::Texture backgroundTexture;
-	sf::RectangleShape background;    
-	sf::Font font;
+	sf::SoundBuffer musicBuffer;
+	sf::Sound music;
 
-	std::map<std::string, Button*> buttons;
+	sf::Texture logoTexture;
+	sf::RectangleShape logo;
+	sf::Texture backgroundTexture;
+	sf::RectangleShape background;   
+
+	sf::Font font;
+	std::map<std::string, gui::Button*> buttons;
 
 	//Initialization
 	void initFonts();
 	void initKeybinds();
 	void initButton();
 	void initBackground();
+	void initLogo();
+	void initMusic();
 
 public:
 	//Constructor , Destructor
@@ -33,12 +41,10 @@ public:
 	void updateState(const float &dt);
 	void updateInput(const float &dt);
 	void updateButton();
+	void updateMusic();
 
 	//render
 	void renderState(sf::RenderTarget* target = NULL);
-	void renderButton(sf::RenderTarget* target = NULL);
-
-	//end
-	void endState();
+	void renderButton(sf::RenderTarget& target);
 };
 
