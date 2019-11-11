@@ -4,6 +4,8 @@
 void Player::initVariable()
 {
 	this->attacking = false;
+	this->attackStyle = NONE;
+	this->attackHitbox = NULL;
 }
 
 //Constructor , Destructor
@@ -17,10 +19,11 @@ Player::Player(float x, float y, sf::Texture& texture_sheet )
 	this->createAnimationComponent(texture_sheet);
 	this->animationComponent->addAnimation("IDLE", 10.0f, 0, 5, 3, 5, 32, 32);
 	this->animationComponent->addAnimation("WALK", 8.0f, 0, 1, 5, 1, 32, 32);
-	this->animationComponent->addAnimation("ATTACK", 8.0f, 0, 3, 3, 3, 32, 32);
+	this->animationComponent->addAnimation("ATTACK_1", 8.0f, 0, 3, 3, 3, 32, 32);
+	this->animationComponent->addAnimation("ATTACK_2", 8.0f, 6, 5, 12, 5, 32, 32);
 	
 	//create hitbox component
-	this->createHitboxComponent(20.0f, 20.0f, this->sprite.getGlobalBounds().width-40, this->sprite.getGlobalBounds().height-20);
+	this->createHitboxComponent(16.0f, 16.0f, this->sprite.getGlobalBounds().width-40, this->sprite.getGlobalBounds().height-20, sf::Color::Green);
 	
 	//create movement component
 	this->createMovementComponent(400.0f, 30.0f, 10.0f);
@@ -28,52 +31,100 @@ Player::Player(float x, float y, sf::Texture& texture_sheet )
 
 Player::~Player()
 {
+	delete this->attackHitbox;
+}
+
+bool & Player::getAttacking()
+{
+	return this->attacking;
 }
 
 //Function
-void Player::updateEntity(const float & dt)
+/*bool Player::checkIntersect(const sf::FloatRect & frect)
 {
-	this->movementComponent->updateComponent(dt);
-	
-	this->updateAttack(dt);
-	this->updateAnimation(dt);
+	if (this->attackHitbox) {
+		return this->attackHitbox->checkIntersect(frect);
+	}
+	return false;
+}*/
 
-	this->hitboxComponent->updateComponent();
+void Player::attack(short unsigned attack_style)
+{
+	this->attacking = true;
+	this->attackStyle = attack_style;
 }
 
-void Player::updateAttack(const float & dt)
+void Player::updateEntity(const float & dt)
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {					// <<---add for test
-		this->attacking = true;
+	//Update movement
+	if (this->movementComponent) {
+		this->movementComponent->updateComponent(dt);
+	}
+	
+	this->updateAttackHitbox();
+	this->updateAnimation(dt);
+	
+	//Update hitboxComponent
+	if (this->hitboxComponent) {
+		this->hitboxComponent->updateComponent();
+	}
+
+	//Update Add on component
+	if (this->attackHitbox) {
+		this->attackHitbox->updateComponent();
+	}
+}
+
+void Player::updateAttackHitbox()
+{
+	//delete attackHitbox if not NULL
+	if (this->attackHitbox) {
+		delete this->attackHitbox;
+		this->attackHitbox = NULL;
+	}
+	//create new attackHitbox
+	if (this->sprite.getScale().x > 0.0f) {
+		if (this->attackStyle == ATTACK_MELEE) {
+			this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Red);
+		}
+		if (this->attackStyle == ATTACK_RANGE) {
+			this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Blue);
+		}
+		if (this->attackStyle == ATTACK_SKILL) {
+			this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Yellow);
+		}
+	}
+	else {
+		if (this->attackStyle == ATTACK_MELEE) {
+			this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Red);
+		}
+		if (this->attackStyle == ATTACK_RANGE) {
+			this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Blue);
+		}
+		if (this->attackStyle == ATTACK_SKILL) {
+			this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Yellow);
+		}
 	}
 }
 
 void Player::updateAnimation(const float & dt)
 {
+	//Animate and check for animation end
 	if (this->attacking) {
-		//Set origin depending on direction
-		if (this->sprite.getScale().x > 0.0f) { //Facing right
-			this->sprite.setOrigin(0.0f, 0.0f);
-			this->sprite.setScale(3.0f, 3.0f);
-		}
-		else {									//Facing left
-			this->sprite.setOrigin(32.0f, 0.0f);
-			this->sprite.setScale(-3.0f, 3.0f);
-		}
-		//Animate and check for animation end
-		if (this->animationComponent->play("ATTACK", dt, true)) {
+		if (this->attackStyle == ATTACK_MELEE && this->animationComponent->play("ATTACK_1", dt, true)) {
 			this->attacking = false;
-			if (this->sprite.getScale().x > 0.0f) { //Facing right
-				this->sprite.setOrigin(0.0f, 0.0f);
-				this->sprite.setScale(3.0f, 3.0f);
-			}
-			else {									//Facing left
-				this->sprite.setOrigin(32.0f, 0.0f);
-				this->sprite.setScale(-3.0f, 3.0f);
-			}
+			this->attackStyle = NONE;
+		}
+		if (this->attackStyle == ATTACK_RANGE && this->animationComponent->play("ATTACK_2", dt, true)) {
+			this->attacking = false;
+			this->attackStyle = NONE;
+		}
+		if (this->attackStyle == ATTACK_SKILL && this->animationComponent->play("IDLE", dt, true)) {
+			this->attacking = false;
+			this->attackStyle = NONE;
 		}
 	}
-
+	
 	if (this->movementComponent->getState(IDLE)) {
 		this->animationComponent->play("IDLE", dt);
 	}
@@ -87,7 +138,7 @@ void Player::updateAnimation(const float & dt)
 	}
 	else if (this->movementComponent->getState(MOVING_LEFT)) {
 		if (this->sprite.getScale().x > 0.0f) {
-			this->sprite.setOrigin(32.0f, 0.0f);
+			this->sprite.setOrigin(29.0f, 0.0f);
 			this->sprite.setScale(-3.0f, 3.0f);
 		}
 
@@ -95,6 +146,17 @@ void Player::updateAnimation(const float & dt)
 	}
 }
 
+void Player::renderEntity(sf::RenderTarget& target)
+{
+	target.draw(this->sprite);
+
+	if (this->hitboxComponent) {
+		this->hitboxComponent->renderComponent(target);
+	}
+	if (this->attackHitbox) {
+		this->attackHitbox->renderComponent(target);
+	}
+}
 
 
 

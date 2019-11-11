@@ -139,16 +139,19 @@ gui::DropDownBox::DropDownBox(float x, float y, float width, float height,
 		x, y, width, height,
 		this->font, list[default_index], 25,
 		sf::Color(255, 255, 255, 255), sf::Color(150, 150, 150, 255), sf::Color(0, 0, 0, 255),
-		sf::Color(255, 255, 255, 200), sf::Color(0, 0, 0, 255), sf::Color(150, 150, 150, 255)
+		sf::Color(255, 255, 255, 200), sf::Color(0, 0, 0, 255), sf::Color(150, 150, 150, 255),
+		default_index
 	);
 
 	for (size_t i = 0; i < num_Elements; i++) {
+		std::cout << i << std::endl;
 		this->list.push_back(
 			new gui::Button(
-				x, y + ((i+1) * height), width, height,
+				x, y + ((i + 1) * height), width, height,
 				this->font, list[i], 25,
 				sf::Color(255, 255, 255, 255), sf::Color(150, 150, 150, 255), sf::Color(0, 0, 0, 255),
-				sf::Color(255, 255, 255, 200), sf::Color(0, 0, 0, 255), sf::Color(150, 150, 150, 255)
+				sf::Color(255, 255, 255, 200), sf::Color(0, 0, 0, 255), sf::Color(150, 150, 150, 255),
+				i
 			)
 		);
 	}

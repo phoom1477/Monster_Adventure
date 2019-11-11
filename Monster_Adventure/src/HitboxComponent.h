@@ -20,7 +20,7 @@ private:
 
 public:
 	//Constrictor , Destructor
-	HitboxComponent(sf::Sprite& sprite, float offset_x, float offset_y, float width, float height);
+	HitboxComponent(sf::Sprite& sprite, float offset_x, float offset_y, float width, float height, sf::Color linecolor);
 	virtual ~HitboxComponent();
 
 	//Function

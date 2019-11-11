@@ -19,9 +19,9 @@ private:
 	//Variable
 	sf::RenderWindow* window;
 	sf::Event event;
-	std::vector<sf::VideoMode> videoModes;
-	sf::ContextSettings windowSetting;
+	
 	bool fullscreen;
+	sf::ContextSettings windowSetting;
 
 	sf::Clock clock;
 	float dt;

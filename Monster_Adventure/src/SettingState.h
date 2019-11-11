@@ -14,22 +14,27 @@ class SettingState :
 {
 private:
 	//Variable
+	std::vector<sf::VideoMode> videoModes;
+
+	//Resource
 	sf::Texture backgroundTexture;
 	sf::RectangleShape background;
 
 	sf::Font font;
 	std::map<std::string, gui::Button*> buttons;
-	/*std::map<std::string, gui::DropDownBox*> dropDownBoxs;*/
+	std::map<std::string, gui::DropDownBox*> dropDownBoxs;
 
-	/*sf::Text optionText;
-	std::vector<sf::VideoMode> videoModes;*/
+	sf::Text optionText;
+	
 	//Initialization
 	void initVariable();
 	void initFonts();
 	void initKeybinds();
 	void initGui();
+	void initButton();
+	void initDropdownBox();
 	void initBackground();
-	void InitText();
+	void InitOptionText();
 
 public:
 	//Constructor , Destructor

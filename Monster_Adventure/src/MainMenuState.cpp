@@ -123,14 +123,14 @@ void MainMenuState::updateState(const float &dt)
 {
 	this->updateKeyTime(dt);
 
-	this->updateMousePosition();
 	this->updateInput(dt);
+	this->updateMousePosition();
 
 	this->updateButton();
 	this->updateMusic();
 }
 
-void MainMenuState::updateInput(const float &dt)
+void MainMenuState::updateInput(const float & dt)
 {
 }
 
@@ -182,17 +182,6 @@ void MainMenuState::renderState(sf::RenderTarget* target)
 	target->draw(this->logo);
 
 	this->renderButton(*target);
-
-	//Show for debug << remove later/////////////////////////////////////
-	sf::Text mouseText;
-	mouseText.setPosition(this->mousePosView + sf::Vector2f(25.f,25.f));
-	mouseText.setFont(this->font);
-	mouseText.setCharacterSize(12);
-	std::stringstream ss;
-	ss << this->mousePosView.x << " " << this->mousePosView.y;
-	mouseText.setString(ss.str());
-	target->draw(mouseText);
-	/////////////////////////////////////////////////////////////////////
 }
 
 void MainMenuState::renderButton(sf::RenderTarget& target)

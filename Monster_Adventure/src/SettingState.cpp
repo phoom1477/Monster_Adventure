@@ -3,7 +3,7 @@
 //Initialization
 void SettingState::initVariable()
 {
-	/*this->videoModes = sf::VideoMode::getFullscreenModes();*/
+	this->videoModes = sf::VideoMode::getFullscreenModes();
 }
 
 void SettingState::initFonts()
@@ -30,60 +30,81 @@ void SettingState::initKeybinds()
 
 void SettingState::initGui()
 {
+	this->initButton();
+	this->initDropdownBox();
+}
+
+void SettingState::initButton()
+{
 	//create buttons
 	float button_width = 150.0f;
 	float button_height = 0.0f;
-	
+
 	this->buttons["Apply"] = new gui::Button(
 		(this->window->getSize().x / 2) - (button_width / 2) - (button_width / 2),
 		(this->window->getSize().y / 8) * 6.50f,
 		button_width, button_height,
 		this->font, "APPLY", 40,
 		sf::Color(255, 255, 255, 255), sf::Color(150, 150, 150, 255), sf::Color(0, 0, 0, 255),
-		sf::Color(255, 255, 255, 200), sf::Color(0, 0, 0, 255), sf::Color(150, 150, 150, 255));
-	
+		sf::Color(255, 255, 255, 200), sf::Color(0, 0, 0, 255), sf::Color(150, 150, 150, 255)
+	);
+
 	this->buttons["Back"] = new gui::Button(
 		(this->window->getSize().x / 2) - (button_width / 2) + (button_width / 2),
 		(this->window->getSize().y / 8) * 6.50f,
 		button_width, button_height,
 		this->font, "BACK", 40,
 		sf::Color(255, 255, 255, 255), sf::Color(150, 150, 150, 255), sf::Color(0, 0, 0, 255),
-		sf::Color(255, 255, 255, 200), sf::Color(0, 0, 0, 255), sf::Color(150, 150, 150, 255));
-	
+		sf::Color(255, 255, 255, 200), sf::Color(0, 0, 0, 255), sf::Color(150, 150, 150, 255)
+	);
+}
+
+void SettingState::initDropdownBox()
+{
 	//create dropdownboxs
 	float dropdawnbox_width = 200.0f;
 	float dropdawnbox_height = 50.0f;
-	/*std::vector<std::string> videomode_str;
+
+	short unsigned default_index = 0;
+	short unsigned count_index = 0;
+	std::vector<std::string> videomode_str;
 	for (auto &i : this->videoModes) {
-		videomode_str.push_back(std::to_string(i.width) + 'x' + std::to_string(i.height));
+		if (i.width == this->window->getSize().x && i.height == this->window->getSize().y) {
+			default_index = count_index;
+		}
+		if ((float)i.width / i.height == 16.0f / 9.0f) {
+			videomode_str.push_back(std::to_string(i.width) + 'x' + std::to_string(i.height));
+			count_index++;
+		}
 	}
 	this->dropDownBoxs["Resolution"] = new gui::DropDownBox(
-		this->window->getSize().x / 8.0f * 3.0f, 
-		this->window->getSize().y / 8.0f * 1.0f, 
+		this->window->getSize().x / 8.0f * 3.0f,
+		this->window->getSize().y / 8.0f * 1.0f,
 		dropdawnbox_width, dropdawnbox_height,
-		font, videomode_str.data(), videomode_str.size());*/
+		font, videomode_str.data(), videomode_str.size(),
+		default_index
+	);
 }
 
 void SettingState::initBackground()
 {
 	this->background.setSize(sf::Vector2f(static_cast<float>(this->window->getSize().x), static_cast<float>(this->window->getSize().y)));
-
 	if (!this->backgroundTexture.loadFromFile("src/Resource/Background/SettingState/background.png")) {
 		throw("[Setting State] >> ..ERROR.. Could't load backgroundTexture");
 	}
 	this->background.setTexture(&this->backgroundTexture);
 }
 
-void SettingState::InitText()
+void SettingState::InitOptionText()
 {
-	/*this->optionText.setFont(this->font);
+	this->optionText.setFont(this->font);
 	this->optionText.setCharacterSize(30);
 	this->optionText.setFillColor(sf::Color(255, 255, 255, 200));
 	this->optionText.setPosition(sf::Vector2f(
 		this->window->getSize().x / 8.0f * 1.0f,
 		this->window->getSize().y / 8.0f * 1.0f));
 	
-	this->optionText.setString("Resolution\n\nFullscreen\n\nVsync\n\nAntialiasing");*/
+	this->optionText.setString("Resolution\n\nFullscreen\n\nVsync\n\nAntialiasing");
 }
 
 //Constructor , Destructor
@@ -96,7 +117,7 @@ SettingState::SettingState(sf::RenderWindow* window, std::map<std::string, int>*
 	this->initKeybinds();
 	this->initGui();
 	this->initBackground();
-	this->InitText();
+	this->InitOptionText();
 }
 
 SettingState::~SettingState()
@@ -104,9 +125,9 @@ SettingState::~SettingState()
 	for (auto it = this->buttons.begin(); it != this->buttons.end(); it++) {
 		delete it->second;
 	}
-	/*for (auto it = this->dropDownBoxs.begin(); it != this->dropDownBoxs.end(); it++) {
+	for (auto it = this->dropDownBoxs.begin(); it != this->dropDownBoxs.end(); it++) {
 		delete it->second;
-	}*/
+	}
 }
 
 //Accessor
@@ -132,17 +153,18 @@ void  SettingState::updateGui(const float &dt)
 	}
 	//Button Functionality
 	if (this->buttons["Apply"]->isPressed()) {		//Apply selected setting
-		//test
-		/*this->window->create(this->videoModes[this->dropDownBoxs["Resolution"]->getActiveElementId()], "Test");*/
+		/*int width = this->videoModes[this->dropDownBoxs["Resolution"]->getActiveElementId()].width;
+		int height = this->videoModes[this->dropDownBoxs["Resolution"]->getActiveElementId()].height;
+		this->window->setSize(sf::Vector2u(width,height));*/
 	}
 	if (this->buttons["Back"]->isPressed()) {		//quit state
 		this->endState();
 	}
 
 	//Update all the dropdownboxs in this state
-	/*for (auto it = this->dropDownBoxs.begin(); it != this->dropDownBoxs.end(); ++it) {
+	for (auto it = this->dropDownBoxs.begin(); it != this->dropDownBoxs.end(); ++it) {
 		it->second->updateDropDownBox(dt, this->mousePosView);
-	}*/
+	}
 }
 
 void  SettingState::renderState(sf::RenderTarget* target)
@@ -154,18 +176,7 @@ void  SettingState::renderState(sf::RenderTarget* target)
 
 	this->renderGui(*target);
 
-	/*target->draw(this->optionText);*/
-
-	//Show for debug << remove later/////////////////////////////////////
-	sf::Text mouseText;
-	mouseText.setPosition(this->mousePosView + sf::Vector2f(25.f, 25.f));
-	mouseText.setFont(this->font);
-	mouseText.setCharacterSize(12);
-	std::stringstream ss;
-	ss << this->mousePosView.x << " " << this->mousePosView.y;
-	mouseText.setString(ss.str());
-	target->draw(mouseText);
-	/////////////////////////////////////////////////////////////////////
+	target->draw(this->optionText);
 }
 
 void  SettingState::renderGui(sf::RenderTarget& target)
@@ -173,7 +184,7 @@ void  SettingState::renderGui(sf::RenderTarget& target)
 	for (auto it = this->buttons.begin(); it != this->buttons.end(); it++) {
 		it->second->renderButton(target);
 	}
-	/*for (auto it = this->dropDownBoxs.begin(); it != this->dropDownBoxs.end(); it++) {
+	for (auto it = this->dropDownBoxs.begin(); it != this->dropDownBoxs.end(); it++) {
 		it->second->renderDropDownBox(target);
-	}*/
+	}
 }

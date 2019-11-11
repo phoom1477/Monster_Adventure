@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Enemy.cpp" />
     <ClCompile Include="src\SettingState.cpp" />
     <ClCompile Include="src\PauseMenu.cpp" />
     <ClCompile Include="src\HitboxComponent.cpp" />
@@ -35,6 +36,7 @@
     <ClCompile Include="src\Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Enemy.h" />
     <ClInclude Include="src\SettingState.h" />
     <ClInclude Include="src\PauseMenu.h" />
     <ClInclude Include="src\HitboxComponent.h" />

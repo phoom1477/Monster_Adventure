@@ -30,8 +30,10 @@ private:
 	void initVariable();
 
 protected:
+	//Resource
 	sf::Sprite sprite;
 	
+	//Builtin component
 	AnimationComponent* animationComponent;
 	HitboxComponent* hitboxComponent;	
 	MovementComponent* movementComponent;
@@ -44,7 +46,7 @@ public:
 	//Component function
 	/*void setTexture(sf::Texture& texture);*/
 	void createAnimationComponent(sf::Texture& texture_sheet);
-	void createHitboxComponent(const float offset_x, const float offset_y, const float width, const float height);
+	void createHitboxComponent(const float offset_x, const float offset_y, const float width, const float height, sf::Color line_color);
 	void createMovementComponent(const float maxVelocity, const float acceleration, const float deceleration);
 	
 	//Function
@@ -55,7 +57,6 @@ public:
 	virtual void updateEntity(const float &dt) = 0;
 
 	//render
-	virtual void renderEntity(sf::RenderTarget& target);
-
+	virtual void renderEntity(sf::RenderTarget& target) = 0;
 };  
 

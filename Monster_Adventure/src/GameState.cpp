@@ -93,22 +93,27 @@ void GameState::updateInput(const float &dt)
 
 void GameState::updatePlayer(const float &dt)
 {
-	//Update player direction input
+	//Update player input
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_LEFT")))) {
-		std::cout << "[Game State] >> Pressed A" << std::endl;
 		this->player->moveEntity(-1.0f,0.0f, dt);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_RIGHT")))) {
-		std::cout << "[Game State] >> Pressed D" << std::endl;
 		this->player->moveEntity(1.0f, 0.0f, dt);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_UP")))) {
-		std::cout << "[Game State] >> Pressed W" << std::endl;
 		this->player->moveEntity(0.0f, -1.0f, dt);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_DOWN")))) {
-		std::cout << "[Game State] >> Pressed S" << std::endl;
 		this->player->moveEntity(0.0f, 1.0f, dt);
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("ATTACK_MELEE"))) && !this->player->getAttacking()) {
+		this->player->attack(Player::ATTACK_MELEE);
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("ATTACK_RANGE"))) && !this->player->getAttacking()) {
+		this->player->attack(Player::ATTACK_RANGE);
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("ATTACK_SKILL"))) && !this->player->getAttacking()) {
+		this->player->attack(Player::ATTACK_SKILL);
 	}
 
 	//Update all player component

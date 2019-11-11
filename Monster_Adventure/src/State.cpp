@@ -11,12 +11,9 @@ void State::initVariable()
 
 //Constructor , Destructor
 State::State(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
+	:window(window), supportedKeys(supportedKeys), states(states)
 {
 	this->initVariable();
-
-	this->window = window;
-	this->supportedKeys = supportedKeys;
-	this->states = states;
 }
 
 State::~State()
@@ -41,19 +38,6 @@ const bool State::getKeyTime()
 }
 
 //Function
-void State::updateKeyTime(const float &dt)
-{
-	if (this->keyTime < this->keyTimeMax) {
-		this->keyTime += 50.f * dt;
-	}
-}
-void State::updateMousePosition()
-{
-	this->mousePosScreen = sf::Mouse::getPosition();
-	this->mousePosWindow = sf::Mouse::getPosition(*this->window);
-	this->mousePosView = this->window->mapPixelToCoords(sf::Mouse::getPosition(*this->window));
-}
-
 void State::pausedState()
 {
 	this->paused = true;
@@ -70,6 +54,20 @@ void State::endState()
 {
 	this->quit = true;
 	std::cout << "Quit State" << std::endl;
+}
+
+void State::updateKeyTime(const float &dt)
+{
+	if (this->keyTime < this->keyTimeMax) {
+		this->keyTime += 50.f * dt;
+	}
+}
+
+void State::updateMousePosition()
+{
+	this->mousePosScreen = sf::Mouse::getPosition();
+	this->mousePosWindow = sf::Mouse::getPosition(*this->window);
+	this->mousePosView = this->window->mapPixelToCoords(sf::Mouse::getPosition(*this->window));
 }
 
 

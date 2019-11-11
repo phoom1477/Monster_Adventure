@@ -12,14 +12,14 @@
 class MainMenuState : public State
 {
 private:
-	//variable
-	sf::SoundBuffer musicBuffer;
-	sf::Sound music;
-
+	//Resource
 	sf::Texture logoTexture;
 	sf::RectangleShape logo;
 	sf::Texture backgroundTexture;
-	sf::RectangleShape background;   
+	sf::RectangleShape background;  
+
+	sf::SoundBuffer musicBuffer;
+	sf::Sound music;
 
 	sf::Font font;
 	std::map<std::string, gui::Button*> buttons;

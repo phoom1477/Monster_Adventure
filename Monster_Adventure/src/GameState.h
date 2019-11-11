@@ -13,11 +13,11 @@
 class GameState : public State
 {
 private:
-	//variable
+	//Resource
+	Player* player;
+
 	sf::Font font;
 	PauseMenu* pauseMenu;
-
-	Player* player;
 
 	//Intialization
 	void initKeybinds();

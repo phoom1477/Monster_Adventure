@@ -10,13 +10,11 @@ void Game::initVariable()
 
 void Game::initWindow()
 {
-	this->videoModes = sf::VideoMode::getFullscreenModes();
-
 	//Load config window from window.ini
 	std::ifstream ifs("src/Config/window.ini");
 
 	//Set default if can't read file
-	std::string title = "None";
+	std::string title = "Monster Adventure";
 	sf::VideoMode window_bounds = sf::VideoMode::getDesktopMode();
 	bool fullscreen = false;
 	int framerate_limit = 120;
