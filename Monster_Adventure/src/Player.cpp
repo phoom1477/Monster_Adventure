@@ -5,6 +5,7 @@ void Player::initVariable()
 {
 	this->attacking = false;
 	this->attackStyle = ATTACK_NONE;
+	this->jumpping = false;
 	this->attackHitbox = NULL;
 }
 
@@ -19,6 +20,7 @@ Player::Player(float x, float y, sf::Texture& texture_sheet )
 	this->createAnimationComponent(texture_sheet);
 	this->animationComponent->addAnimation("IDLE", 10.0f, 0, 5, 3, 5, 32, 32);
 	this->animationComponent->addAnimation("WALK", 8.0f, 0, 1, 5, 1, 32, 32);
+	this->animationComponent->addAnimation("JUMP", 8.0f, 9, 1, 14, 1, 32, 32);
 	this->animationComponent->addAnimation("ATTACK_1", 8.0f, 0, 3, 3, 3, 32, 32);
 	this->animationComponent->addAnimation("ATTACK_2", 8.0f, 6, 5, 12, 5, 32, 32);
 	
@@ -26,7 +28,7 @@ Player::Player(float x, float y, sf::Texture& texture_sheet )
 	this->createHitboxComponent(16.0f, 16.0f, this->sprite.getGlobalBounds().width-40, this->sprite.getGlobalBounds().height-20, sf::Color::Green);
 	
 	//create movement component
-	this->createMovementComponent(400.0f, 30.0f, 10.0f);
+	this->createMovementComponent(400.0f, 30.0f, 10.0f, 50.0f, 35.0f);
 }
 
 Player::~Player()
@@ -38,6 +40,11 @@ Player::~Player()
 bool & Player::getAttacking()
 {
 	return this->attacking;
+}
+
+bool & Player::getJumpping()
+{
+	return this->jumpping;
 }
 
 const sf::Vector2f & Player::getHitBoxPosition()
@@ -52,6 +59,11 @@ void Player::attack(short unsigned attack_style)
 	this->attackStyle = attack_style;
 }
 
+void Player::jump()
+{
+	this->jumpping = true;
+	this->movementComponent->jump();
+}
 
 void Player::updateEntity(const float & dt)
 {
@@ -121,6 +133,11 @@ void Player::updateAnimation(const float & dt)
 		if (this->attackStyle == ATTACK_SKILL && this->animationComponent->play("IDLE", dt, true)) {
 			this->attacking = false;
 			this->attackStyle = ATTACK_NONE;
+		}
+	}
+	if (this->jumpping) {
+		if (this->animationComponent->play("JUMP", dt, this->movementComponent->getVelocity().y, this->movementComponent->getJumpVelocity(), true)) {
+			this->jumpping = false;
 		}
 	}
 	

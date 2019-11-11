@@ -15,6 +15,7 @@ private:
 	//Action
 	bool attacking;
 	short unsigned attackStyle;
+	bool jumpping;
 	
 	//Add on Component
 	HitboxComponent *attackHitbox;
@@ -24,7 +25,7 @@ private:
 
 public:
 	//Public enum
-	enum { ATTACK_NONE = 0, ATTACK_MELEE , ATTACK_RANGE, ATTACK_SKILL };
+	enum attackstyle{ ATTACK_NONE = 0, ATTACK_MELEE , ATTACK_RANGE, ATTACK_SKILL };
 
 	//Constructor , Destructor
 	Player(float x, float y, sf::Texture& texture_sheet);
@@ -32,11 +33,13 @@ public:
 
 	//Accessor
 	bool& getAttacking();
+	bool& getJumpping();
 	virtual const sf::Vector2f& getHitBoxPosition();
 
 
 	//Function
 	void attack(short unsigned attack_style);
+	void jump();
 
 	//update
 	void updateEntity(const float &dt);

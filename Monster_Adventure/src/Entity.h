@@ -46,7 +46,7 @@ public:
 	//Component function
 	void createAnimationComponent(sf::Texture& texture_sheet);
 	void createHitboxComponent(const float offset_x, const float offset_y, const float width, const float height, sf::Color line_color);
-	void createMovementComponent(const float maxVelocity, const float acceleration, const float deceleration);
+	void createMovementComponent(const float maxVelocity, const float acceleration, const float deceleration, const float jumpForce, const float gravity);
 	
 	//Accessor
 	virtual sf::FloatRect getHitBoxGlobalBounds();
@@ -56,7 +56,7 @@ public:
 
 	//Function
 	virtual void setPosition(const float x, const float y);
-	virtual void moveEntity(float direction_x, float direction_y, const float &dt);
+	virtual void moveEntity(float direction_x, const float &dt);
 	virtual void stopEntityX();
 	virtual void stopEntityY();
 

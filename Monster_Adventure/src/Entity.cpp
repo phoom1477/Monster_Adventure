@@ -32,9 +32,9 @@ void Entity::createHitboxComponent(const float offset_x, const float offset_y, c
 	this->hitboxComponent = new HitboxComponent(this->sprite, offset_x, offset_y, width, height, line_color);
 }
 
-void Entity::createMovementComponent(const float maxVelocity, const float acceleration, const float deceleration)
+void Entity::createMovementComponent(const float maxVelocity, const float acceleration, const float deceleration, const float jumpForce, const float gravity)
 {
-	this->movementComponent = new MovementComponent(this->sprite, maxVelocity, acceleration, deceleration);
+	this->movementComponent = new MovementComponent(this->sprite, maxVelocity, acceleration, deceleration, jumpForce, gravity);
 }
 
 //Accessor
@@ -59,10 +59,10 @@ void Entity::setPosition(const float x, const float y)
 	this->sprite.setPosition(x, y);
 }
 
-void Entity::moveEntity(float direction_x, float direction_y, const float &dt)
+void Entity::moveEntity(float direction_x, const float &dt)
 {
 	if (this->movementComponent) {
-		this->movementComponent->move(direction_x, direction_y ,dt);
+		this->movementComponent->move(direction_x, dt);
 	}
 }
 

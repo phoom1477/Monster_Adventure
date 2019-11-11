@@ -14,7 +14,7 @@
 #include <vector>
 #include <map>
 
-enum movement_state { IDLE = 0 ,MOVING ,MOVING_LEFT, MOVING_RIGHT, MOVING_UP, MOVING_DOWN};
+enum movement_state { IDLE = 0, MOVING, MOVING_LEFT, MOVING_RIGHT, MOVING_JUMP };
 
 class MovementComponent
 {
@@ -25,16 +25,19 @@ private:
 	float maxVelocity;
 	float acceleration;
 	float deceleration;
+	float gravity;
 
+	float jumpForce;
 	sf::Vector2f velocity;
 
-public:
+public:	
 	//Constructor , Destructor
-	MovementComponent(sf::Sprite& sprite, float maxVelocity, float acceleration, float deceleration);
+	MovementComponent(sf::Sprite& sprite, float maxVelocity, float acceleration, float deceleration, float jumpforce, float gravity);
 	virtual ~MovementComponent();
 
 	//Accessor
 	const sf::Vector2f& getVelocity();
+	const float& getJumpVelocity();
 	const float& getMaxVelocity();
 	const bool getState(const short unsigned state);
 
@@ -43,7 +46,8 @@ public:
 	void stopVelocityY();
 	
 	//Function
-	void move(const float direction_x, const float direction_y, const float &dt);
+	void move(const float direction_x, const float &dt);
+	void jump();
 	void updateComponent(const float &dt);
 };
 
