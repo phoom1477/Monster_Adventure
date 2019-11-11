@@ -4,7 +4,7 @@
 void Player::initVariable()
 {
 	this->attacking = false;
-	this->attackStyle = NONE;
+	this->attackStyle = ATTACK_NONE;
 	this->attackHitbox = NULL;
 }
 
@@ -34,25 +34,24 @@ Player::~Player()
 	delete this->attackHitbox;
 }
 
+//Accessor
 bool & Player::getAttacking()
 {
 	return this->attacking;
 }
 
-//Function
-/*bool Player::checkIntersect(const sf::FloatRect & frect)
+const sf::Vector2f & Player::getHitBoxPosition()
 {
-	if (this->attackHitbox) {
-		return this->attackHitbox->checkIntersect(frect);
-	}
-	return false;
-}*/
+	return this->hitboxComponent->getPosition();
+}
 
+//Function
 void Player::attack(short unsigned attack_style)
 {
 	this->attacking = true;
 	this->attackStyle = attack_style;
 }
+
 
 void Player::updateEntity(const float & dt)
 {
@@ -113,15 +112,15 @@ void Player::updateAnimation(const float & dt)
 	if (this->attacking) {
 		if (this->attackStyle == ATTACK_MELEE && this->animationComponent->play("ATTACK_1", dt, true)) {
 			this->attacking = false;
-			this->attackStyle = NONE;
+			this->attackStyle = ATTACK_NONE;
 		}
 		if (this->attackStyle == ATTACK_RANGE && this->animationComponent->play("ATTACK_2", dt, true)) {
 			this->attacking = false;
-			this->attackStyle = NONE;
+			this->attackStyle = ATTACK_NONE;
 		}
 		if (this->attackStyle == ATTACK_SKILL && this->animationComponent->play("IDLE", dt, true)) {
 			this->attacking = false;
-			this->attackStyle = NONE;
+			this->attackStyle = ATTACK_NONE;
 		}
 	}
 	

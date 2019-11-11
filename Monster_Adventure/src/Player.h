@@ -24,7 +24,7 @@ private:
 
 public:
 	//Public enum
-	enum { NONE = 0, ATTACK_MELEE , ATTACK_RANGE, ATTACK_SKILL };
+	enum { ATTACK_NONE = 0, ATTACK_MELEE , ATTACK_RANGE, ATTACK_SKILL };
 
 	//Constructor , Destructor
 	Player(float x, float y, sf::Texture& texture_sheet);
@@ -32,9 +32,10 @@ public:
 
 	//Accessor
 	bool& getAttacking();
+	virtual const sf::Vector2f& getHitBoxPosition();
+
 
 	//Function
-	/*bool checkIntersect(const sf::FloatRect& frect);*/
 	void attack(short unsigned attack_style);
 
 	//update

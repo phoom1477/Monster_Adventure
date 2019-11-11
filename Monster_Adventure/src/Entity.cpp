@@ -22,11 +22,6 @@ Entity::~Entity()
 }
 
 //Component Function
-/*void Entity::setTexture(sf::Texture& texture)
-{
-	this->sprite.setTexture(texture);
-}*/
-
 void Entity::createAnimationComponent(sf::Texture& texture_sheet)
 {
 	this->animationComponent = new AnimationComponent(this->sprite, texture_sheet);
@@ -42,6 +37,22 @@ void Entity::createMovementComponent(const float maxVelocity, const float accele
 	this->movementComponent = new MovementComponent(this->sprite, maxVelocity, acceleration, deceleration);
 }
 
+//Accessor
+sf::FloatRect Entity::getHitBoxGlobalBounds()
+{
+	return this->hitboxComponent->getGlobalBounds();
+}
+
+sf::Vector2f Entity::getHitBoxSize()
+{
+	return this->hitboxComponent->getSize();
+}
+
+sf::Vector2f Entity::getHitBoxOffSet()
+{
+	return sf::Vector2f(this->hitboxComponent->getOffSet().x, this->hitboxComponent->getOffSet().y);
+}
+
 //Function
 void Entity::setPosition(const float x, const float y)
 {
@@ -52,6 +63,20 @@ void Entity::moveEntity(float direction_x, float direction_y, const float &dt)
 {
 	if (this->movementComponent) {
 		this->movementComponent->move(direction_x, direction_y ,dt);
+	}
+}
+
+void Entity::stopEntityX()
+{
+	if (this->movementComponent) {
+		this->movementComponent->stopVelocityX();
+	}
+}
+
+void Entity::stopEntityY()
+{
+	if (this->movementComponent) {
+		this->movementComponent->stopVelocityY();
 	}
 }
 

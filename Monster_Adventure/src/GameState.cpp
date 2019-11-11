@@ -70,11 +70,45 @@ void GameState::updateState(const float &dt)
 
 	//Unpaused update
 	if (!this->paused) {
+		this->updateWindowCollision();
 		this->updatePlayer(dt);
 	}
 	//Paused update
 	else {
 		this->updatePauseMenuButton();
+	}
+}
+
+void GameState::updateWindowCollision()
+{
+	if (this->player) {
+		float position_x = this->player->getHitBoxPosition().x - this->player->getHitBoxOffSet().x;
+		float position_y = this->player->getHitBoxPosition().y - this->player->getHitBoxOffSet().y;
+
+		if (this->player->getHitBoxPosition().x < 0.0f) {
+			this->player->stopEntityX();
+
+			this->player->setPosition(-this->player->getHitBoxOffSet().x,
+				this->player->getHitBoxPosition().y - this->player->getHitBoxOffSet().x);
+		}
+		else if (this->player->getHitBoxPosition().x + this->player->getHitBoxSize().x > this->window->getSize().x) {
+			this->player->stopEntityX();
+
+			this->player->setPosition(this->window->getSize().x - this->player->getHitBoxSize().x -this->player->getHitBoxOffSet().x,
+				this->player->getHitBoxPosition().y - this->player->getHitBoxOffSet().y);
+		}
+		if (this->player->getHitBoxPosition().y < 0.0f) {
+			this->player->stopEntityY();
+
+			this->player->setPosition(this->player->getHitBoxPosition().x - this->player->getHitBoxOffSet().x,
+				-this->player->getHitBoxOffSet().y);
+		}
+		else if (this->player->getHitBoxPosition().y + this->player->getHitBoxSize().y > this->window->getSize().y) {
+			this->player->stopEntityY();
+
+			this->player->setPosition(this->player->getHitBoxPosition().x - this->player->getHitBoxOffSet().x,
+				this->window->getSize().y - this->player->getHitBoxSize().y - this->player->getHitBoxOffSet().y);
+		}
 	}
 }
 
@@ -94,16 +128,16 @@ void GameState::updateInput(const float &dt)
 void GameState::updatePlayer(const float &dt)
 {
 	//Update player input
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_LEFT")))) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_LEFT"))) && !this->player->getAttacking()) {
 		this->player->moveEntity(-1.0f,0.0f, dt);
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_RIGHT")))) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_RIGHT"))) && !this->player->getAttacking()) {
 		this->player->moveEntity(1.0f, 0.0f, dt);
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_UP")))) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_UP"))) && !this->player->getAttacking()) {
 		this->player->moveEntity(0.0f, -1.0f, dt);
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_DOWN")))) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_DOWN"))) && !this->player->getAttacking()) {
 		this->player->moveEntity(0.0f, 1.0f, dt);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("ATTACK_MELEE"))) && !this->player->getAttacking()) {

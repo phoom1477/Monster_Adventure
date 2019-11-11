@@ -36,10 +36,13 @@ public:
 	//Accessor
 	const sf::Vector2f& getVelocity();
 	const float& getMaxVelocity();
-
-	//Function
 	const bool getState(const short unsigned state);
 
+	//Modifier
+	void stopVelocityX();
+	void stopVelocityY();
+	
+	//Function
 	void move(const float direction_x, const float direction_y, const float &dt);
 	void updateComponent(const float &dt);
 };

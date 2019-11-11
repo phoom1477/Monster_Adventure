@@ -33,6 +33,7 @@ public:
 
 	//update
 	void updateState(const float &dt);
+	void updateWindowCollision();
 	void updateInput(const float &dt);
 	void updatePlayer(const float &dt);
 	void updatePauseMenuButton();
