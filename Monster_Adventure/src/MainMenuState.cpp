@@ -143,7 +143,7 @@ void MainMenuState::updateButton()
 
 	//Go Game State
 	if (this->buttons["New Game"]->isPressed() && this->getKeyTime()) {
-		this->states->push(new GameState(this->window, this->supportedKeys, this->states));
+		this->states->push(new GetInfoState(this->window, this->supportedKeys, this->states));
 	}
 	//Go Score 
 	if (this->buttons["Score"]->isPressed() && this->getKeyTime()) {

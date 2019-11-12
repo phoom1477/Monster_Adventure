@@ -68,6 +68,15 @@ void Game::initWindow()
 	this->window->setVerticalSyncEnabled(verticalsync_enabled);
 }
 
+void Game::initWindowIcon()
+{
+	sf::Image icon;
+	if (!icon.loadFromFile("src/Resource/Icon/Dude.png")) {
+		throw "[Can't load game icon]";
+	}
+	this->window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+}
+
 void Game::initKeys()
 {
 	std::ifstream ifs("src/Config/supportedKeys.ini");
@@ -94,6 +103,7 @@ Game::Game()
 	std::cout << "============== Show Game log in console ==============" << std::endl;
 	this->initVariable();
 	this->initWindow();
+	this->initWindowIcon();
 	this->initKeys();
 	this->initStates();
 }

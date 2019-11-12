@@ -33,6 +33,7 @@ private:
 	//Initialization
 	void initVariable();
 	void initWindow();
+	void initWindowIcon();
 	void initKeys();
 	void initStates();
 

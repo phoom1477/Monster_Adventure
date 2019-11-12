@@ -31,7 +31,7 @@ public:
 	enum attackstyle{ ATTACK_NONE = 0, ATTACK_MELEE , ATTACK_RANGE, ATTACK_SKILL };
 
 	//Constructor , Destructor
-	Player(float x, float y, sf::Texture& texture_sheet);
+	Player(float x, float y, sf::Texture& texture_sheet, std::string name);
 	virtual ~Player();
 
 	//Accessor

@@ -6,6 +6,7 @@
 #pragma once
 
 #include "GameState.h"
+#include "GetInfoState.h"
 #include "SettingState.h"
 #include "gui.h"
 

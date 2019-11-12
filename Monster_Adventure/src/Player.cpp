@@ -11,9 +11,10 @@ void Player::initVariable()
 }
 
 //Constructor , Destructor
-Player::Player(float x, float y, sf::Texture& texture_sheet )
+Player::Player(float x, float y, sf::Texture& texture_sheet ,std::string name)
 {
 	this->initVariable();
+	this->name = name;
 
 	this->setPosition(x, y);
 	

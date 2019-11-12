@@ -1,6 +1,14 @@
 #include "GameState.h"
 
 //Initialization
+void GameState::initFonts()
+{
+	//load font for this state
+	if (!this->font.loadFromFile("src/Resource/Font/Planes_ValMore.ttf")) {
+		throw("[GAME State] >> ..ERROR.. Could't load font");
+	}
+}
+
 void GameState::initKeybinds()
 {
 	std::ifstream fileconfig("src/Config/gamestate_keybinds.ini");
@@ -15,17 +23,16 @@ void GameState::initKeybinds()
 	fileconfig.close();
 }
 
-void GameState::initFonts()
-{
-	//load font for this state
-	if (!this->font.loadFromFile("src/Resource/Font/Planes_ValMore.ttf")) {
-		throw("[GAME State] >> ..ERROR.. Could't load font");
-	}
-}
-
 void GameState::initTexture()
 {
-	if (!this->textures["PLAYER_SHEET"].loadFromFile("src/Resource/Charector/Player/Dude/Dude_Animation_List.png")) {
+	//load all palyer texture
+	if (!this->textures["PLAYER_SHEET_DUDE"].loadFromFile("src/Resource/Charector/Player/Dude/Dude_Animation_List.png")) {
+		throw("[Game State] >> ERROR can't load player texture");
+	}
+	if (!this->textures["PLAYER_SHEET_PINK"].loadFromFile("src/Resource/Charector/Player/Pink/Pink_Animation_List.png")) {
+		throw("[Game State] >> ERROR can't load player texture");
+	}
+	if (!this->textures["PLAYER_SHEET_OWLET"].loadFromFile("src/Resource/Charector/Player/Owlet/Owlet_Animation_List.png")) {
 		throw("[Game State] >> ERROR can't load player texture");
 	}
 }
@@ -39,12 +46,21 @@ void GameState::initPauseMenu()
 
 void GameState::initPlayer()
 {
-	this->player = new Player(600, 0,this->textures["PLAYER_SHEET"]);
+	if (this->playerIndex == 0) {
+		this->player = new Player(600, 0, this->textures["PLAYER_SHEET_DUDE"], this->playerName);
+	}
+	if (this->playerIndex == 1) {
+		this->player = new Player(600, 0, this->textures["PLAYER_SHEET_PINK"], this->playerName);
+	}
+	if (this->playerIndex == 2) {
+		this->player = new Player(600, 0, this->textures["PLAYER_SHEET_OWLET"], this->playerName);
+	}
 }
 
 //Constructor , Destructor
-GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states) 
-	:State(window, supportedKeys, states)
+GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states,
+	short unsigned player_index, std::string player_name)
+	:State(window, supportedKeys, states), playerIndex(player_index), playerName(player_name)
 {
 	std::cout << "[Game State] >> On" << std::endl;
 	this->initKeybinds();
