@@ -5,6 +5,9 @@
 class Player : public Entity
 {
 private:
+	//Identification
+	std::string name;
+
 	//Status
 	short unsigned ATK;
 	short unsigned DEF;
@@ -40,6 +43,7 @@ public:
 	//Function
 	void attack(short unsigned attack_style);
 	void jump();
+	void checkHitCollision(std::vector<Entity> entity);
 
 	//update
 	void updateEntity(const float &dt);

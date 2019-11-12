@@ -3,6 +3,7 @@
 //Initialization
 void Player::initVariable()
 {
+	this->name = "Unknow";
 	this->attacking = false;
 	this->attackStyle = ATTACK_NONE;
 	this->jumpping = false;
@@ -63,6 +64,16 @@ void Player::jump()
 {
 	this->jumpping = true;
 	this->movementComponent->jump();
+}
+
+void Player::checkHitCollision(std::vector<Entity> entity)
+{
+	for (int i = 0; i < entity.size(); i++) {
+		if (this->attackHitbox->checkIntersect(entity[i].getHitBoxGlobalBounds())) {
+			/* action*/
+			std::cout << "Hit";
+		}
+	}
 }
 
 void Player::updateEntity(const float & dt)

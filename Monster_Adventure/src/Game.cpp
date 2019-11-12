@@ -22,15 +22,34 @@ void Game::initWindow()
 	unsigned antialising_level = 0;
 
 	//Reading file
-	if (ifs.is_open()) {
-		std::getline(ifs, title);
-		ifs >> window_bounds.width >> window_bounds.height;
-		ifs >> fullscreen;
-		ifs >> framerate_limit;
-		ifs >> verticalsync_enabled;
-		ifs >> antialising_level;
+	while (ifs.is_open()) {
+		std::string buff;
+		ifs >> buff;
+		if (buff == "title") {
+			getline(ifs, title);
+		}
+		if (buff == "width") {
+			ifs >> window_bounds.width;
+		}
+		if (buff == "height") {
+			ifs >> window_bounds.height;
+		}
+		if (buff == "fullscreen") {
+			ifs >> fullscreen;
+		}
+		if (buff == "frameratelimit") {
+			ifs >> framerate_limit;
+		}
+		if(buff == "vsync") {
+			ifs >> verticalsync_enabled;
+		}
+		if (buff == "antialisinglevel") {
+			ifs >> antialising_level;
+		}
+		if (buff == "") {
+			ifs.close();
+		}
 	}
-	ifs.close();
 
 	//Setup mode
 	this->fullscreen = fullscreen;

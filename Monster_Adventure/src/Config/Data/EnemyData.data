@@ -1,0 +1,7 @@
+ID 		0
+NAME 		Skeleton
+ATK 		2
+DEF 		5
+MSPD 		10
+maxHP 		1000
+spritePath	--------

@@ -70,8 +70,8 @@ void GameState::updateState(const float &dt)
 
 	//Unpaused update
 	if (!this->paused) {
-		this->updateWindowCollision();
 		this->updatePlayer(dt);
+		this->updateWindowCollision();
 	}
 	//Paused update
 	else {
@@ -82,11 +82,11 @@ void GameState::updateState(const float &dt)
 void GameState::updateWindowCollision()
 {
 	if (this->player) {
-		if (this->player->getHitBoxPosition().x <= 0.0f) {
+		if (this->player->getHitBoxPosition().x < 0.0f) {
 			this->player->stopEntityX();
 
 			this->player->setPosition(-this->player->getHitBoxOffSet().x,
-				this->player->getHitBoxPosition().y - this->player->getHitBoxOffSet().x);
+				this->player->getHitBoxPosition().y - this->player->getHitBoxOffSet().y);
 		}
 		else if (this->player->getHitBoxPosition().x + this->player->getHitBoxSize().x > this->window->getSize().x) {
 			this->player->stopEntityX();
@@ -94,7 +94,8 @@ void GameState::updateWindowCollision()
 			this->player->setPosition(this->window->getSize().x - this->player->getHitBoxSize().x -this->player->getHitBoxOffSet().x,
 				this->player->getHitBoxPosition().y - this->player->getHitBoxOffSet().y);
 		}
-		if (this->player->getHitBoxPosition().y <= 0.0f) {
+		
+		if (this->player->getHitBoxPosition().y < 0.0f) {
 			this->player->stopEntityY();
 
 			this->player->setPosition(this->player->getHitBoxPosition().x - this->player->getHitBoxOffSet().x,
