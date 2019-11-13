@@ -2,7 +2,7 @@
 
 //Constructor , Destructor
 HitboxComponent::HitboxComponent(sf::Sprite& sprite, float offset_x, float offset_y, float width, float height, sf::Color line_color)
-	:sprite(sprite), offsetX(offset_x), offsetY(offset_y), width(width), height(height)
+	:sprite(sprite), offsetX(offset_x), offsetY(offset_y)
 {
 	this->hitbox.setPosition(this->sprite.getPosition().x + offset_x , this->sprite.getPosition().y + offset_y);
 	this->hitbox.setSize(sf::Vector2f(width, height));
@@ -28,12 +28,20 @@ const sf::FloatRect HitboxComponent::getGlobalBounds()
 
 const sf::Vector2f HitboxComponent::getSize()
 {
-	return sf::Vector2f(this->width, this->height);
+	return this->hitbox.getSize();
 }
 
-const sf::Vector2f HitboxComponent::getOffSet()
+//Modifier
+void HitboxComponent::setPosition(const sf::Vector2f & position)
 {
-	return sf::Vector2f(this->offsetX, this->offsetY);
+	this->hitbox.setPosition(position);
+	this->sprite.setPosition(position.x - this->offsetX, position.y - this->offsetY);
+}
+
+void HitboxComponent::setPosition(const float x, const float y)
+{
+	this->hitbox.setPosition(x, y);
+	this->sprite.setPosition(x - this->offsetX, y - this->offsetY);
 }
 
 //Function

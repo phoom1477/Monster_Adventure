@@ -49,17 +49,15 @@ public:
 	void createMovementComponent(const float maxVelocity, const float acceleration, const float deceleration, const float jumpForce, const float gravity);
 	
 	//Accessor
-	virtual sf::FloatRect getHitBoxGlobalBounds();
-	virtual sf::Vector2f getHitBoxSize();
-	virtual sf::Vector2f getHitBoxOffSet();
-	virtual const sf::Vector2f& getHitBoxPosition() = 0;
+	virtual sf::FloatRect getGlobalBounds();
+	virtual const sf::Vector2f getPosition();
 
 	//Function
 	virtual void setPosition(const float x, const float y);
 	virtual void moveEntity(float direction_x, const float &dt);
 	virtual void stopEntityX();
 	virtual void stopEntityY();
-
+	
 	//update
 	virtual void updateEntity(const float &dt) = 0;
 

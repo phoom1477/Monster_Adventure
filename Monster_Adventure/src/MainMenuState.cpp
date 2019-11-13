@@ -34,35 +34,32 @@ void MainMenuState::initButton()
 		(this->window->getSize().y / 8) * 3.5f, 
 		button_width, button_height,
 		this->font, "NEW GAME", 40,
-		sf::Color(255, 255, 255, 255), sf::Color(150, 150, 150, 255), sf::Color(0, 0, 0, 255));
+		sf::Color(255, 255, 255, 255), sf::Color(150, 150, 150, 255), sf::Color(0, 0, 0, 255)
+	);
 
 	this->buttons["Score"] = new gui::Button(
 		(this->window->getSize().x / 2) - (button_width / 2),
-		(this->window->getSize().y / 8) * 4.25f, 
+		(this->window->getSize().y / 8) * 4.5f, 
 		button_width, button_height,
 		this->font, "SCORE", 40,
-		sf::Color(255, 255, 255, 255), sf::Color(150, 150, 150, 255), sf::Color(0, 0, 0, 255));
+		sf::Color(255, 255, 255, 255), sf::Color(150, 150, 150, 255), sf::Color(0, 0, 0, 255)
+	);
 
-	this->buttons["Editor"] = new gui::Button(
-		(this->window->getSize().x / 2) - (button_width / 2),
-		(this->window->getSize().y / 8) * 5.0f, 
-		button_width, button_height,
-		this->font, "EDITOR", 40,
-		sf::Color(255, 255, 255, 255), sf::Color(150, 150, 150, 255), sf::Color(0, 0, 0, 255));
-	
 	this->buttons["Options"] = new gui::Button(
 		(this->window->getSize().x / 2) - (button_width / 2),
-		(this->window->getSize().y / 8) * 5.75f, 
+		(this->window->getSize().y / 8) * 5.5f, 
 		button_width, button_height,
 		this->font, "OPTIONS", 40,
-		sf::Color(255, 255, 255, 255), sf::Color(150, 150, 150, 255), sf::Color(0, 0, 0, 255));
+		sf::Color(255, 255, 255, 255), sf::Color(150, 150, 150, 255), sf::Color(0, 0, 0, 255)
+	);
 	
 	this->buttons["Quit"] = new gui::Button(
 		(this->window->getSize().x / 2) - (button_width / 2),
-		(this->window->getSize().y / 8) * 6.50f, 
+		(this->window->getSize().y / 8) * 6.5f, 
 		button_width, button_height,
 		this->font, "QUIT", 40,
-		sf::Color(255, 255, 255, 255), sf::Color(150, 150, 150, 255), sf::Color(0, 0, 0, 255));
+		sf::Color(255, 255, 255, 255), sf::Color(150, 150, 150, 255), sf::Color(0, 0, 0, 255)
+	);
 }
 
 void MainMenuState::initBackground() 
@@ -148,10 +145,6 @@ void MainMenuState::updateButton()
 	//Go Score 
 	if (this->buttons["Score"]->isPressed() && this->getKeyTime()) {
 		
-	}
-	//Go Editor State
-	if (this->buttons["Editor"]->isPressed() && this->getKeyTime()) {
-
 	}
 	//Go Setting State
 	if (this->buttons["Options"]->isPressed() && this->getKeyTime()) {

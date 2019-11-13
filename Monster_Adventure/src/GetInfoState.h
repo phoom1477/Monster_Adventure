@@ -18,10 +18,10 @@ private:
 	short unsigned previewIndex;
 
 	//Resource
-	std::vector <sf::RectangleShape> previewPlayer;
+	sf::Text descriptText;
 	sf::Text previewName;
-
-
+	std::vector <sf::RectangleShape> previewPlayer;
+	
 	sf::Texture backgroundTexture;
 	sf::RectangleShape background;
 
@@ -29,14 +29,15 @@ private:
 	sf::Font temporaryFont;
 	std::map<std::string, gui::Button*> buttons;
 
-	sf::Event event;
+	sf::Event eventType;
 	sf::Clock timer;
-	bool cursor;
+	bool showCursor;
 
 	//Initialization
 	void initVariable();
 	void initFonts();
 	void initKeybinds();
+	void initDescriptText();
 	void initPreviewName();
 	void initPreviewPlayer();
 	void initButton();

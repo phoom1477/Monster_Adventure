@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Entity.h"
+#include "Player.h"
 
 class Enemy : public Entity
 {
@@ -9,15 +10,15 @@ private:
 	std::string enemyId;
 	std::string name;
 
+	//Resource
+	std::string spritePath;
+
 	//Status
 	short unsigned ATK;
 	short unsigned DEF;
 	short unsigned MSPD;
 	short unsigned currHP;
 	short unsigned maxHP;
-
-	//Resource
-	std::string spritePath;
 
 	//Action
 	bool attacking;
@@ -35,7 +36,7 @@ public:
 	enum attackstyle { ATTACK_NONE = 0, ATTACK_MELEE, ATTACK_RANGE, ATTACK_SKILL };
 
 	//Constructor , Destructor
-	Enemy(float x, float y, std::string id);
+	Enemy(float x, float y, sf::Texture& texture_sheet, std::string id);
 	virtual ~Enemy();
 
 	//Accessor
@@ -44,7 +45,7 @@ public:
 
 	//Function
 	void attack(short unsigned attack_style);
-	void checkHitCollision(std::vector<Entity> entity);
+	const bool checkHitCollision(Entity* player);
 
 	//update
 	void updateEntity(const float &dt);

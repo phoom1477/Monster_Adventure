@@ -15,69 +15,64 @@ void Enemy::initStatus(std::string id)
 
 	//Set defalult if can,t read file
 	this->enemyId = id;
-	this->name = "Unknow";
-	this->ATK = 0;
-	this->DEF = 0;
-	this->MSPD = 0;
-	this->maxHP = 0;
+	this->name = "Error Enemy";
+	this->ATK = 100;
+	this->DEF = 10;
+	this->MSPD = 10;
+	this->maxHP = 1000;
+	this->currHP = this->maxHP;
 
+	
 	//getdata from file
 	while(getdata.is_open()) {
 		std::string buff;
-		std::string subbuff;
 		getdata >> buff;
-		if (buff == "ID") {
-			while (getdata.is_open()) {
-				getdata >> subbuff;
-				if (subbuff == "NAME") {
-					getline(getdata, this->name);
-				}
-				if (subbuff == "ATK") {
-					getdata >> this->ATK;
-				}
-				if (subbuff == "DEF") {
-					getdata >> this->DEF;
-				}
-				if (subbuff == "MSPD") {
-					getdata >> this->MSPD;
-				}
-				if (subbuff == "maxHP") {
-					getdata >> this->maxHP;
-				}
-				if (subbuff == "spritePath") {
-					getdata >> this->spritePath;
-				}
+		if (buff == "ID" + this->enemyId + ":" + "NAME") {
+			getline(getdata, this->name);
+		}
+		if (buff == "ID" + this->enemyId + ":" + "ATK") {
+			getdata >> this->ATK;
+		}
+		if (buff == "ID" + this->enemyId + ":" + "DEF") {
+			getdata >> this->DEF;
+		}
+		if (buff == "ID" + this->enemyId + ":" + "MSPD") {
+			getdata >> this->MSPD;
+		}
+		if (buff == "ID" + this->enemyId + ":" + "maxHP") {
+			getdata >> this->maxHP;
+		}
 
-				if (subbuff == "ID") {
-					getdata.close();
-				}
-			}
+		if (buff == "") {
+			getdata.close();
 		}
 	}
-	
+	std::cout << this->spritePath;
 }
 
 //Constructor , Destructor
-Enemy::Enemy(float x, float y, std::string id)
+Enemy::Enemy(float x, float y, sf::Texture& texture_sheet, std::string id)
 {
 	this->initVariable();
 	this->initStatus(id);
-
 	this->setPosition(x, y);
 
-	/*//create animation component
+	//create animation component
 	this->createAnimationComponent(texture_sheet);
-	
+	this->animationComponent->addAnimation("IDLE", 10.0f, 0, 0, 10, 0, 24, 32);
+
 	//create hitbox component
-	this->createHitboxComponent();
+	this->createHitboxComponent(0.0f, 22.0f, this->sprite.getGlobalBounds().width - 20, this->sprite.getGlobalBounds().height - 20, sf::Color::Yellow);
 
 	//create movement component
-	this->createMovementComponent();*/
+	this->createMovementComponent(40.0f * this->MSPD, 30.0f, 10.0f, 50.0f, 35.0f);
 }
 
 Enemy::~Enemy()
 {
-	delete this->attackHitbox;
+	if (this->attackHitbox) {
+		delete this->attackHitbox;
+	}
 }
 
 //Accessor
@@ -92,14 +87,14 @@ void Enemy::attack(short unsigned attack_style)
 	this->attackStyle = attack_style;
 }
 
-void Enemy::checkHitCollision(std::vector<Entity> entity)
+const bool Enemy::checkHitCollision(Entity* player)
 {
-	for (int i = 0; i < entity.size(); i++) {
-		if (this->attackHitbox->checkIntersect(entity[i].getHitBoxGlobalBounds())) {
-			/* action*/
-			std::cout << "Hit";
+	if (this->attacking) {
+		if (this->attackHitbox->checkIntersect(player->getGlobalBounds())) {
+			return true;
 		}
 	}
+	return false;
 }
 
 //Function
@@ -125,6 +120,9 @@ void Enemy::updateAttackHitbox()
 
 void Enemy::updateAnimation(const float & dt)
 {
+	if (this->movementComponent->getState(IDLE)) {
+		this->animationComponent->play("IDLE", dt);
+	}
 }
 
 void Enemy::renderEntity(sf::RenderTarget & target)

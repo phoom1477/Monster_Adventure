@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Entity.h"
+#include "Enemy.h"
 
 class Player : public Entity
 {
@@ -25,6 +26,7 @@ private:
 
 	//Initialization
 	void initVariable();
+	void initStatus();
 
 public:
 	//Public enum
@@ -37,13 +39,11 @@ public:
 	//Accessor
 	bool& getAttacking();
 	bool& getJumpping();
-	virtual const sf::Vector2f& getHitBoxPosition();
-
 
 	//Function
 	void attack(short unsigned attack_style);
 	void jump();
-	void checkHitCollision(std::vector<Entity> entity);
+	const bool checkHitCollision(Entity* enemy);
 
 	//update
 	void updateEntity(const float &dt);

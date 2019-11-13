@@ -38,25 +38,31 @@ void Entity::createMovementComponent(const float maxVelocity, const float accele
 }
 
 //Accessor
-sf::FloatRect Entity::getHitBoxGlobalBounds()
+sf::FloatRect Entity::getGlobalBounds()
 {
-	return this->hitboxComponent->getGlobalBounds();
+	if (this->hitboxComponent) {
+		return this->hitboxComponent->getGlobalBounds();
+	}
+	return this->sprite.getGlobalBounds();
 }
 
-sf::Vector2f Entity::getHitBoxSize()
+const sf::Vector2f Entity::getPosition()
 {
-	return this->hitboxComponent->getSize();
-}
-
-sf::Vector2f Entity::getHitBoxOffSet()
-{
-	return sf::Vector2f(this->hitboxComponent->getOffSet().x, this->hitboxComponent->getOffSet().y);
+	if (this->hitboxComponent) {
+		return this->hitboxComponent->getPosition();
+	}
+	return this->sprite.getPosition();
 }
 
 //Function
 void Entity::setPosition(const float x, const float y)
 {
-	this->sprite.setPosition(x, y);
+	if (this->hitboxComponent) {
+		this->hitboxComponent->setPosition(x, y);
+	}
+	else {
+		this->sprite.setPosition(x, y);
+	}
 }
 
 void Entity::moveEntity(float direction_x, const float &dt)

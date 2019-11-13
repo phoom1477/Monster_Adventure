@@ -1,7 +1,5 @@
-ID 		0
-NAME 		Skeleton
-ATK 		2
-DEF 		5
-MSPD 		10
-maxHP 		1000
-spritePath	--------
+ID1:NAME 		Skeleton
+ID1:ATK 		2
+ID1:DEF 		5
+ID1:MSPD 		10
+ID1:maxHP 		1000

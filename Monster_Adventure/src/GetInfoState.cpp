@@ -5,7 +5,7 @@ void GetInfoState::initVariable()
 {
 	this->inputName = "Player name";
 	this->previewIndex = 0;
-	this->cursor = false;
+	this->showCursor = false;
 }
 
 void GetInfoState::initFonts()
@@ -31,6 +31,17 @@ void GetInfoState::initKeybinds()
 		}
 	}
 	ifs.close();
+}
+
+void GetInfoState::initDescriptText()
+{
+	this->descriptText.setFont(this->font);
+	this->descriptText.setCharacterSize(40);
+	this->descriptText.setString("Choose Charector");
+	this->descriptText.setPosition(sf::Vector2f(
+		this->window->getSize().x / 2.0f - this->descriptText.getGlobalBounds().width / 2.0f,
+		this->window->getSize().y / 16.0f
+	));
 }
 
 void GetInfoState::initPreviewName()
@@ -72,7 +83,7 @@ void GetInfoState::initButton()
 
 	this->buttons["Previous"] = new gui::Button(
 		(this->window->getSize().x / 2) - (button_width / 2) - (button_width / 2) * 1,
-		(this->window->getSize().y / 8) * 2.0f,
+		(this->window->getSize().y / 8) * 2.5f,
 		button_width, button_height,
 		this->temporaryFont, "<", 50,
 		sf::Color(255, 255, 255, 255), sf::Color(150, 150, 150, 255), sf::Color(0, 0, 0, 255),
@@ -81,7 +92,7 @@ void GetInfoState::initButton()
 
 	this->buttons["Next"] = new gui::Button(
 		(this->window->getSize().x / 2) - (button_width / 2) + (button_width / 2) * 1,
-		(this->window->getSize().y / 8) * 2.0f,
+		(this->window->getSize().y / 8) * 2.5f,
 		button_width, button_height,
 		this->temporaryFont, ">", 50,
 		sf::Color(255, 255, 255, 255), sf::Color(150, 150, 150, 255), sf::Color(0, 0, 0, 255),
@@ -125,6 +136,7 @@ GetInfoState::GetInfoState(sf::RenderWindow* window, std::map<std::string, int>*
 	this->initVariable();
 	this->initFonts();
 	this->initKeybinds();
+	this->initDescriptText();
 	this->initPreviewName();
 	this->initPreviewPlayer();
 	this->initButton();
@@ -188,10 +200,10 @@ void GetInfoState::updatePreviewName(const std::string name)
 	std::stringstream ss;
 	if (this->timer.getElapsedTime() >= sf::milliseconds(300)) {
 		this->timer.restart();
-		cursor = !cursor;
+		showCursor = !showCursor;
 	}
 
-	if (cursor) {
+	if (showCursor) {
 		ss << name << "|";
 	}
 	else {
@@ -206,19 +218,19 @@ void GetInfoState::updatePreviewName(const std::string name)
 
 void GetInfoState::updateName()
 {
-	this->window->pollEvent(this->event);
+	this->window->pollEvent(this->eventType);
 
-	if (this->event.type == sf::Event::TextEntered) {
-		if (event.text.unicode < 128 && event.text.unicode != 8) {	//typing
-			this->inputName += char(event.text.unicode);
+	if (this->eventType.type == sf::Event::TextEntered) {
+		if (eventType.text.unicode < 128 && eventType.text.unicode != 8) {	//typing
+			this->inputName += char(eventType.text.unicode);
 		}
-		if (event.text.unicode == 8) {								//delete
+		if (eventType.text.unicode == 8) {									//delete
 			if (!this->inputName.empty()) {
 				this->inputName.pop_back();
 			}
 		}
-		while (this->event.type == sf::Event::TextEntered) {		//debouncing
-			this->window->pollEvent(this->event);
+		while (this->eventType.type == sf::Event::TextEntered) {			//debouncing
+			this->window->pollEvent(this->eventType);
 		}
 	}
 }
@@ -228,7 +240,7 @@ void GetInfoState::updatePreviewPlayer()
 	this->previewPlayer[this->previewIndex].setSize(sf::Vector2f(100.0f,100.0f));
 	this->previewPlayer[this->previewIndex].setPosition(
 		static_cast<float>(this->window->getSize().x / 2.0f - this->previewPlayer[previewIndex].getSize().x / 2.0f + 13.0f),
-		static_cast<float>(this->window->getSize().y / 8)
+		static_cast<float>(this->window->getSize().y / 8 * 1.75f)
 	);
 }
 
@@ -239,6 +251,7 @@ void GetInfoState::renderState(sf::RenderTarget * target)
 	}
 
 	target->draw(this->background);
+	target->draw(this->descriptText);
 	target->draw(this->previewPlayer[previewIndex]);
 	target->draw(this->previewName);
 

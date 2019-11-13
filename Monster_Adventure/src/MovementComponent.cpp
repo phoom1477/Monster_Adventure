@@ -73,7 +73,6 @@ void MovementComponent::jump()
 
 void MovementComponent::updateComponent(const float &dt)
 {
-	std::cout << this->velocity.x << " " << this->velocity.y << '\n';
 	/*Deceleration the sprite and control the maximum velocity*/
 	if (this->velocity.x > 0.0f) {							//Check for positive x
 		//Max velocity check positive

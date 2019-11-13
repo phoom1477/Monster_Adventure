@@ -17,8 +17,6 @@ private:
 	sf::RectangleShape hitbox;
 	float offsetX;
 	float offsetY;
-	float width;
-	float height;
 
 public:
 	//Constrictor , Destructor
@@ -29,7 +27,10 @@ public:
 	const sf::Vector2f& getPosition();
 	const sf::FloatRect getGlobalBounds();
 	const sf::Vector2f getSize();
-	const sf::Vector2f getOffSet();
+
+	//Modifier
+	void setPosition(const sf::Vector2f& position);
+	void setPosition(const float x, const float y);
 
 	//Function
 	bool checkIntersect(const sf::FloatRect& frect);

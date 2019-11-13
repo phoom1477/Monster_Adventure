@@ -8,15 +8,19 @@
 
 #include "State.h"
 #include "Player.h"
+#include "Enemy.h"
 #include "PauseMenu.h"
 
 class GameState : public State
 {
 private:
-	//Resource
+	//Variable
 	short unsigned playerIndex;
 	std::string playerName;
+	
+	//Resource
 	Player* player;
+	std::vector<Enemy*> enemy;
 
 	sf::Font font;
 	PauseMenu* pauseMenu;
@@ -27,6 +31,7 @@ private:
 	void initTexture();
 	void initPauseMenu();
 	void initPlayer();
+	void initAllEnemy();
 
 public:
 	//Constructor , Destructor
@@ -36,12 +41,20 @@ public:
 
 	//update
 	void updateState(const float &dt);
-	void updateWindowCollision();
 	void updateInput(const float &dt);
+	
 	void updatePlayer(const float &dt);
+	void updateEnemy(const float &dt);
+	
+	void updateFrameCollision();
+	void updatePlayerCollisionFrame();
+	void updateEnemyCollisionFrame();
+	
 	void updatePauseMenuButton();
 
 	//render
 	void renderState(sf::RenderTarget* target = NULL);
+	void renderPlayer(sf::RenderTarget* target = NULL);
+	void renderEnemy(sf::RenderTarget* target = NULL);
 };
 

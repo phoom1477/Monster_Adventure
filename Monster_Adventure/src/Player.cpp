@@ -3,18 +3,27 @@
 //Initialization
 void Player::initVariable()
 {
-	this->name = "Unknow";
 	this->attacking = false;
 	this->attackStyle = ATTACK_NONE;
 	this->jumpping = false;
 	this->attackHitbox = NULL;
 }
 
+void Player::initStatus()
+{
+	this->ATK = 100;
+	this->DEF = 10;
+	this->MSPD = 10;
+	this->maxHP = 1000;
+	this->currHP = this->maxHP;
+}
+
 //Constructor , Destructor
 Player::Player(float x, float y, sf::Texture& texture_sheet ,std::string name)
 {
-	this->initVariable();
 	this->name = name;
+	this->initVariable();
+	this->initStatus();
 
 	this->setPosition(x, y);
 	
@@ -30,12 +39,14 @@ Player::Player(float x, float y, sf::Texture& texture_sheet ,std::string name)
 	this->createHitboxComponent(16.0f, 16.0f, this->sprite.getGlobalBounds().width-40, this->sprite.getGlobalBounds().height-20, sf::Color::Green);
 	
 	//create movement component
-	this->createMovementComponent(400.0f, 30.0f, 10.0f, 50.0f, 35.0f);
+	this->createMovementComponent(40.0f * this->MSPD, 30.0f, 10.0f, 50.0f, 35.0f);
 }
 
 Player::~Player()
 {
-	delete this->attackHitbox;
+	if (this->attackHitbox) {
+		delete this->attackHitbox;
+	}
 }
 
 //Accessor
@@ -47,11 +58,6 @@ bool & Player::getAttacking()
 bool & Player::getJumpping()
 {
 	return this->jumpping;
-}
-
-const sf::Vector2f & Player::getHitBoxPosition()
-{
-	return this->hitboxComponent->getPosition();
 }
 
 //Function
@@ -67,14 +73,15 @@ void Player::jump()
 	this->movementComponent->jump();
 }
 
-void Player::checkHitCollision(std::vector<Entity> entity)
+const bool Player::checkHitCollision(Entity* enemy)
 {
-	for (int i = 0; i < entity.size(); i++) {
-		if (this->attackHitbox->checkIntersect(entity[i].getHitBoxGlobalBounds())) {
-			/* action*/
-			std::cout << "Hit";
+	if (this->attacking) {
+		if (this->attackHitbox->checkIntersect(enemy->getGlobalBounds())) {
+			delete enemy; // << test
+			return true;
 		}
 	}
+	return false;
 }
 
 void Player::updateEntity(const float & dt)

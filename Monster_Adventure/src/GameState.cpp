@@ -35,6 +35,9 @@ void GameState::initTexture()
 	if (!this->textures["PLAYER_SHEET_OWLET"].loadFromFile("src/Resource/Charector/Player/Owlet/Owlet_Animation_List.png")) {
 		throw("[Game State] >> ERROR can't load player texture");
 	}
+	if (!this->textures["SKELETON_SHEET"].loadFromFile("src/Resource/Charector/Enemy/Skeleton/Skeleton_Idle.png")) {
+		throw("[Game State] >> ERROR can't load Enemy texture");
+	}
 }
 
 void GameState::initPauseMenu()
@@ -47,7 +50,7 @@ void GameState::initPauseMenu()
 void GameState::initPlayer()
 {
 	if (this->playerIndex == 0) {
-		this->player = new Player(600, 0, this->textures["PLAYER_SHEET_DUDE"], this->playerName);
+		this ->player = new Player(600, 0, this->textures["PLAYER_SHEET_DUDE"], this->playerName);
 	}
 	if (this->playerIndex == 1) {
 		this->player = new Player(600, 0, this->textures["PLAYER_SHEET_PINK"], this->playerName);
@@ -55,6 +58,11 @@ void GameState::initPlayer()
 	if (this->playerIndex == 2) {
 		this->player = new Player(600, 0, this->textures["PLAYER_SHEET_OWLET"], this->playerName);
 	}
+}
+
+void GameState::initAllEnemy()
+{
+	this->enemy.push_back(new Enemy(800, 0, this->textures["SKELETON_SHEET"], "1"));
 }
 
 //Constructor , Destructor
@@ -69,12 +77,20 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 	this->initPauseMenu();
 
 	this->initPlayer();
+	this->initAllEnemy();
 }
 
 GameState::~GameState()
 {
 	delete this->pauseMenu;
 	delete this->player;
+
+	if (!this->enemy.empty()) {
+		for (int i = 0; i < this->enemy.size(); i++) {
+			delete this->enemy[i];
+			this->enemy.pop_back();
+		}
+	}
 }
 
 //Function
@@ -87,42 +103,12 @@ void GameState::updateState(const float &dt)
 	//Unpaused update
 	if (!this->paused) {
 		this->updatePlayer(dt);
-		this->updateWindowCollision();
+		this->updateEnemy(dt);
+		this->updateFrameCollision();
 	}
 	//Paused update
 	else {
 		this->updatePauseMenuButton();
-	}
-}
-
-void GameState::updateWindowCollision()
-{
-	if (this->player) {
-		if (this->player->getHitBoxPosition().x < 0.0f) {
-			this->player->stopEntityX();
-
-			this->player->setPosition(-this->player->getHitBoxOffSet().x,
-				this->player->getHitBoxPosition().y - this->player->getHitBoxOffSet().y);
-		}
-		else if (this->player->getHitBoxPosition().x + this->player->getHitBoxSize().x > this->window->getSize().x) {
-			this->player->stopEntityX();
-
-			this->player->setPosition(this->window->getSize().x - this->player->getHitBoxSize().x -this->player->getHitBoxOffSet().x,
-				this->player->getHitBoxPosition().y - this->player->getHitBoxOffSet().y);
-		}
-		
-		if (this->player->getHitBoxPosition().y < 0.0f) {
-			this->player->stopEntityY();
-
-			this->player->setPosition(this->player->getHitBoxPosition().x - this->player->getHitBoxOffSet().x,
-				-this->player->getHitBoxOffSet().y);
-		}
-		else if (this->player->getHitBoxPosition().y + this->player->getHitBoxSize().y > this->window->getSize().y) {
-			this->player->stopEntityY();
-
-			this->player->setPosition(this->player->getHitBoxPosition().x - this->player->getHitBoxOffSet().x,
-				this->window->getSize().y - this->player->getHitBoxSize().y - this->player->getHitBoxOffSet().y);
-		}
 	}
 }
 
@@ -139,7 +125,7 @@ void GameState::updateInput(const float &dt)
 	}
 }
 
-void GameState::updatePlayer(const float &dt)
+void GameState::updatePlayer(const float & dt)
 {
 	//Update player input
 	if (!this->player->getAttacking()) {
@@ -161,13 +147,116 @@ void GameState::updatePlayer(const float &dt)
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("ATTACK_RANGE"))) && !this->player->getAttacking()) {
 			this->player->attack(Player::ATTACK_RANGE);
 		}
-		/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("ATTACK_SKILL"))) && !this->player->getAttacking()) {
-		this->player->attack(Player::ATTACK_SKILL);
-	}*/
 	}
-	
+
 	//Update all player component
 	this->player->updateEntity(dt);
+
+	//Check hit collision
+	for (int i = 0; i < this->enemy.size(); i++) {
+		if (this->player->checkHitCollision(enemy[i])) {
+			enemy.erase(enemy.begin()+i);
+		}
+	}
+}
+
+void GameState::updateEnemy(const float &dt)
+{
+	//Update all Entity component
+	if (!enemy.empty()) {
+		for (int i = 0; i < this->enemy.size(); i++) {
+			this->enemy[i]->updateEntity(dt);
+		}
+	}
+
+	//Check hit collision
+	for (int i = 0; i < this->enemy.size(); i++) {
+		if (this->enemy[i]->checkHitCollision(this->player)) {
+			/* action */
+		}
+	}
+}
+
+void GameState::updateFrameCollision()
+{
+	this->updatePlayerCollisionFrame();
+	this->updateEnemyCollisionFrame();
+}
+
+void GameState::updatePlayerCollisionFrame()
+{
+	if (this->player) {
+		if (this->player->getPosition().x < 0.0f) {
+			this->player->setPosition(
+				0.0f,
+				this->player->getPosition().y
+			);
+
+			this->player->stopEntityX();
+		}
+		else if (this->player->getPosition().x + this->player->getGlobalBounds().width > this->window->getSize().x) {
+			this->player->setPosition(
+				this->window->getSize().x - this->player->getGlobalBounds().width,
+				this->player->getPosition().y
+			);
+
+			this->player->stopEntityX();
+		}
+		if (this->player->getPosition().y < 0.0f) {
+			this->player->setPosition(
+				this->player->getPosition().x,
+				0.0f
+			);
+
+			this->player->stopEntityY();
+		}
+		else if (this->player->getPosition().y + this->player->getGlobalBounds().height > this->window->getSize().y) {
+			this->player->setPosition(
+				this->player->getPosition().x,
+				this->window->getSize().y - this->player->getGlobalBounds().height
+			);
+
+			this->player->stopEntityY();
+		}
+	}
+}
+
+void GameState::updateEnemyCollisionFrame()
+{
+	for (int i = 0; i < this->enemy.size(); i++) {
+		if (this->enemy[i]->getPosition().x < 0.0f) {
+			this->enemy[i]->setPosition(
+				0.0f,
+				this->enemy[i]->getPosition().y
+			);
+
+			this->enemy[i]->stopEntityX();
+		}
+		else if (this->enemy[i]->getPosition().x + this->enemy[i]->getGlobalBounds().width > this->window->getSize().x) {
+			this->enemy[i]->setPosition(
+				this->window->getSize().x - this->enemy[i]->getGlobalBounds().width,
+				this->enemy[i]->getPosition().y
+			);
+
+			this->enemy[i]->stopEntityX();
+		}
+		if (this->enemy[i]->getPosition().y < 0.0f) {
+			this->enemy[i]->setPosition(
+				this->enemy[i]->getPosition().x,
+				0.0f
+			);
+
+			this->enemy[i]->stopEntityY();
+		}
+		else if (this->enemy[i]->getPosition().y + this->enemy[i]->getGlobalBounds().height > this->window->getSize().y) {
+			this->enemy[i]->setPosition(
+				this->enemy[i]->getPosition().x,
+				this->window->getSize().y - this->enemy[i]->getGlobalBounds().height
+			);
+
+			this->enemy[i]->stopEntityY();
+		}
+	}
 }
 
 void GameState::updatePauseMenuButton()
@@ -189,10 +278,27 @@ void GameState::renderState(sf::RenderTarget* target)
 	if (!target) {
 		target = this->window;
 	}
-	this->player->renderEntity(*target);
+	
+	//render all entity 
+	this->renderEnemy(target);
+	this->renderPlayer(target);
 
 	//paused menu render
 	if (this->paused) {		
 		this->pauseMenu->renderPauseMenu(*target);
+	}
+}
+
+void GameState::renderPlayer(sf::RenderTarget * target)
+{
+	this->player->renderEntity(*target);
+}
+
+void GameState::renderEnemy(sf::RenderTarget* target)
+{
+	if (!this->enemy.empty()) {
+		for (int i = 0; i < this->enemy.size(); i++) {
+			this->enemy[i]->renderEntity(*target);
+		}
 	}
 }
