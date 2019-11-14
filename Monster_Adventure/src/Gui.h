@@ -17,13 +17,17 @@ namespace gui {
 	class Button
 	{
 	private:
-		//Variable
-		short unsigned buttonState;
+		//Identify
 		short unsigned id;
 
+		//Variable
+		short unsigned buttonState;
+
+		//Resource
 		sf::RectangleShape shape;
 		sf::Font& font;
 		sf::Text text;
+		float charectorSize;
 
 		sf::SoundBuffer pressedSoundBuffer;
 		sf::Sound pressedSound;
@@ -56,9 +60,13 @@ namespace gui {
 		const std::string getText();
 		const short unsigned& getId();
 
+		sf::Vector2f getSize();
+		sf::Vector2f getPosition();
+
 		//Modifier
 		void setText(const std::string text);
 		void setId(const short unsigned id);
+		void setPosition(const float position_x, const float position_y);
 
 		//Function
 		void updateButton(const sf::Vector2f& mousePosition);

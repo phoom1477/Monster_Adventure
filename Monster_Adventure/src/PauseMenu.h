@@ -26,7 +26,7 @@ private:
 
 public:
 	//Constructor , Destructor
-	PauseMenu(sf::RenderWindow& window, sf::Font& font);
+	PauseMenu(sf::View& view, sf::Font& font);
 	virtual ~PauseMenu();
 
 	//Accessor
@@ -36,7 +36,7 @@ public:
 	//Function
 	void addButton(const std::string key, float grid_y, const std::string text);
 	
-	void updatePauseMenu(const sf::Vector2f& mousePos);
+	void updatePauseMenu(const sf::Vector2f& mousePos,sf::View& view);
 	void renderPauseMenu(sf::RenderTarget& target);
 };
 

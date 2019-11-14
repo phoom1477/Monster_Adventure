@@ -50,17 +50,47 @@ Player::~Player()
 }
 
 //Accessor
-bool & Player::getAttacking()
+sf::Vector2f Player::getCenter()
+{
+	if (this->hitboxComponent) {
+		return sf::Vector2f(
+			this->hitboxComponent->getPosition().x + this->hitboxComponent->getGlobalBounds().width / 2.0f,
+			this->hitboxComponent->getPosition().y + this->hitboxComponent->getGlobalBounds().height / 2.0f
+		);
+	}
+
+	return sf::Vector2f(
+		this->sprite.getPosition().x + this->sprite.getGlobalBounds().width / 2.0f,
+		this->sprite.getPosition().y + this->sprite.getGlobalBounds().height / 2.0f
+	);
+}
+
+const bool & Player::getAttacking()
 {
 	return this->attacking;
 }
 
-bool & Player::getJumpping()
+const bool & Player::getJumpping()
 {
 	return this->jumpping;
 }
 
+const float Player::getATK()
+{
+	return this->ATK;
+}
+
 //Function
+const bool Player::checkHitCollision(Entity* enemy)
+{
+	if (this->attacking) {
+		if (this->attackHitbox->checkIntersect(enemy->getGlobalBounds())) {
+			return true;
+		}
+	}
+	return false;
+}
+
 void Player::attack(short unsigned attack_style)
 {
 	this->attacking = true;
@@ -71,17 +101,6 @@ void Player::jump()
 {
 	this->jumpping = true;
 	this->movementComponent->jump();
-}
-
-const bool Player::checkHitCollision(Entity* enemy)
-{
-	if (this->attacking) {
-		if (this->attackHitbox->checkIntersect(enemy->getGlobalBounds())) {
-			delete enemy; // << test
-			return true;
-		}
-	}
-	return false;
 }
 
 void Player::updateEntity(const float & dt)
@@ -113,26 +132,28 @@ void Player::updateAttackHitbox()
 		this->attackHitbox = NULL;
 	}
 	//create new attackHitbox
-	if (this->sprite.getScale().x > 0.0f) {
-		if (this->attackStyle == ATTACK_MELEE) {
-			this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Red);
+	if (this->attacking) {
+		if (this->sprite.getScale().x > 0.0f) {
+			if (this->attackStyle == ATTACK_MELEE) {
+				this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Red);
+			}
+			if (this->attackStyle == ATTACK_RANGE) {
+				this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Blue);
+			}
+			if (this->attackStyle == ATTACK_SKILL) {
+				this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Yellow);
+			}
 		}
-		if (this->attackStyle == ATTACK_RANGE) {
-			this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Blue);
-		}
-		if (this->attackStyle == ATTACK_SKILL) {
-			this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Yellow);
-		}
-	}
-	else {
-		if (this->attackStyle == ATTACK_MELEE) {
-			this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Red);
-		}
-		if (this->attackStyle == ATTACK_RANGE) {
-			this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Blue);
-		}
-		if (this->attackStyle == ATTACK_SKILL) {
-			this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Yellow);
+		else {
+			if (this->attackStyle == ATTACK_MELEE) {
+				this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Red);
+			}
+			if (this->attackStyle == ATTACK_RANGE) {
+				this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Blue);
+			}
+			if (this->attackStyle == ATTACK_SKILL) {
+				this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Yellow);
+			}
 		}
 	}
 }

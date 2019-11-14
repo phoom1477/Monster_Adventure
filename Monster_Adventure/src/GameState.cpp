@@ -40,13 +40,6 @@ void GameState::initTexture()
 	}
 }
 
-void GameState::initPauseMenu()
-{
-	this->pauseMenu = new PauseMenu(*this->window, this->font);
-	this->pauseMenu->addButton("Resume", 4.0f, "RESUME");
-	this->pauseMenu->addButton("Quit", 6.0f, "QUIT");
-}
-
 void GameState::initPlayer()
 {
 	if (this->playerIndex == 0) {
@@ -60,9 +53,26 @@ void GameState::initPlayer()
 	}
 }
 
-void GameState::initAllEnemy()
+void GameState::initEnemy()
 {
-	this->enemy.push_back(new Enemy(800, 0, this->textures["SKELETON_SHEET"], "1"));
+	for (short unsigned i = 1; i < 3; i++) {
+		this->enemy.push_back(new Enemy(200 * i, 0, this->textures["SKELETON_SHEET"], "1"));
+	}
+}
+
+void GameState::initView()
+{
+	this->view.setSize(this->window->getSize().x, this->window->getSize().y);
+	this->view.setCenter(this->player->getCenter().x, this->window->getSize().y / 2.0f);
+
+	this->window->setView(this->view);
+}
+
+void GameState::initPauseMenu()
+{
+	this->pauseMenu = new PauseMenu(this->view, this->font);
+	this->pauseMenu->addButton("Resume", 4.0f, "RESUME");
+	this->pauseMenu->addButton("Quit", 6.0f, "QUIT");
 }
 
 //Constructor , Destructor
@@ -74,10 +84,12 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 	this->initKeybinds();
 	this->initFonts();
 	this->initTexture();
-	this->initPauseMenu();
-
+	
 	this->initPlayer();
-	this->initAllEnemy();
+	this->initEnemy();
+
+	this->initView();
+	this->initPauseMenu();
 }
 
 GameState::~GameState()
@@ -104,12 +116,14 @@ void GameState::updateState(const float &dt)
 	if (!this->paused) {
 		this->updatePlayer(dt);
 		this->updateEnemy(dt);
-		this->updateFrameCollision();
+		this->updateCollision();
 	}
 	//Paused update
 	else {
 		this->updatePauseMenuButton();
 	}
+
+	this->updateView();
 }
 
 void GameState::updateInput(const float &dt)
@@ -152,32 +166,42 @@ void GameState::updatePlayer(const float & dt)
 	//Update all player component
 	this->player->updateEntity(dt);
 
-	//Check hit collision
-	for (int i = 0; i < this->enemy.size(); i++) {
-		if (this->player->checkHitCollision(enemy[i])) {
-			enemy.erase(enemy.begin()+i);
+	//Check attack collision
+	/*if (!this->enemy.empty()) {
+		for (int i = 0; i < this->enemy.size(); i++) {
+			if (this->player->checkHitCollision(enemy[i]) && this->getKeyTime()) {
+				
+				enemy[i]->decreaseHP(this->player->getATK());
+				
+				if (enemy[i]->getCurrHP() <= 0.0f) {
+					delete enemy[i];
+					enemy.erase(enemy.begin() + i);
+				}
+			}
 		}
-	}
+	}*/
 }
 
 void GameState::updateEnemy(const float &dt)
 {
 	//Update all Entity component
-	if (!enemy.empty()) {
+	if (!this->enemy.empty()) {
 		for (int i = 0; i < this->enemy.size(); i++) {
 			this->enemy[i]->updateEntity(dt);
 		}
 	}
 
-	//Check hit collision
-	for (int i = 0; i < this->enemy.size(); i++) {
-		if (this->enemy[i]->checkHitCollision(this->player)) {
-			/* action */
+	//Check attack collision
+	/*if (!this->enemy.empty()) {
+		for (int i = 0; i < this->enemy.size(); i++) {
+			if (this->enemy[i]->checkHitCollision(this->player)) {
+		
+			}
 		}
-	}
+	}*/
 }
 
-void GameState::updateFrameCollision()
+void GameState::updateCollision()
 {
 	this->updatePlayerCollisionFrame();
 	this->updateEnemyCollisionFrame();
@@ -259,10 +283,26 @@ void GameState::updateEnemyCollisionFrame()
 	}
 }
 
+void GameState::updateView()
+{
+	this->view.setSize(this->window->getSize().x, this->window->getSize().y);
+	this->view.setCenter(this->player->getCenter().x, this->window->getSize().y / 2.0f);
+
+	this->window->setView(this->view);
+
+	if (this->getQuit()) {
+		this->view.setCenter(
+			this->window->getSize().x / 2.0f,
+			this->window->getSize().y / 2.0f
+		);
+		this->window->setView(this->view);
+	}
+}
+
 void GameState::updatePauseMenuButton()
 {
 	//Update all the buttons in Paused Menu
-	this->pauseMenu->updatePauseMenu(this->mousePosView);
+	this->pauseMenu->updatePauseMenu(this->mousePosView, this->view);
 
 	//Action button
 	if (this->pauseMenu->isButtonPreesed("Resume")) {
@@ -273,6 +313,7 @@ void GameState::updatePauseMenuButton()
 	}
 }
 
+//render
 void GameState::renderState(sf::RenderTarget* target)
 {
 	if (!target) {

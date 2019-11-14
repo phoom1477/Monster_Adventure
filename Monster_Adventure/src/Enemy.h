@@ -2,6 +2,7 @@
 
 #include "Entity.h"
 #include "Player.h"
+#include <time.h>
 
 class Enemy : public Entity
 {
@@ -11,7 +12,6 @@ private:
 	std::string name;
 
 	//Resource
-	std::string spritePath;
 
 	//Status
 	short unsigned ATK;
@@ -41,11 +41,12 @@ public:
 
 	//Accessor
 	bool& getAttacking();
-
+	const float getCurrHP();
 
 	//Function
-	void attack(short unsigned attack_style);
 	const bool checkHitCollision(Entity* player);
+	void attack(short unsigned attack_style);
+	void decreaseHP(const float ATK);
 
 	//update
 	void updateEntity(const float &dt);

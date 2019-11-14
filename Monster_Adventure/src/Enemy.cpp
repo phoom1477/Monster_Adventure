@@ -47,7 +47,6 @@ void Enemy::initStatus(std::string id)
 			getdata.close();
 		}
 	}
-	std::cout << this->spritePath;
 }
 
 //Constructor , Destructor
@@ -62,7 +61,7 @@ Enemy::Enemy(float x, float y, sf::Texture& texture_sheet, std::string id)
 	this->animationComponent->addAnimation("IDLE", 10.0f, 0, 0, 10, 0, 24, 32);
 
 	//create hitbox component
-	this->createHitboxComponent(0.0f, 22.0f, this->sprite.getGlobalBounds().width - 20, this->sprite.getGlobalBounds().height - 20, sf::Color::Yellow);
+	this->createHitboxComponent(0.0f, 22.0f, this->sprite.getGlobalBounds().width - 20, this->sprite.getGlobalBounds().height - 20, sf::Color::Green);
 
 	//create movement component
 	this->createMovementComponent(40.0f * this->MSPD, 30.0f, 10.0f, 50.0f, 35.0f);
@@ -81,12 +80,12 @@ bool & Enemy::getAttacking()
 	return this->attacking;
 }
 
-void Enemy::attack(short unsigned attack_style)
+const float Enemy::getCurrHP()
 {
-	attacking = true;
-	this->attackStyle = attack_style;
+	return this->currHP;
 }
 
+//Function
 const bool Enemy::checkHitCollision(Entity* player)
 {
 	if (this->attacking) {
@@ -97,9 +96,21 @@ const bool Enemy::checkHitCollision(Entity* player)
 	return false;
 }
 
-//Function
+void Enemy::attack(short unsigned attack_style)
+{
+	attacking = true;
+	this->attackStyle = attack_style;
+}
+
+void Enemy::decreaseHP(const float ATK)
+{
+	srand(time(NULL));
+	this->currHP -= (rand() % 2) * ATK;
+}
+
 void Enemy::updateEntity(const float & dt)
 {
+	std::cout << this->currHP << "\n";
 	//Update movement
 	if (this->movementComponent) {
 		this->movementComponent->updateComponent(dt);
@@ -116,10 +127,54 @@ void Enemy::updateEntity(const float & dt)
 
 void Enemy::updateAttackHitbox()
 {
+	//delete attackHitbox if not NULL
+	if (this->attackHitbox) {
+		delete this->attackHitbox;
+		this->attackHitbox = NULL;
+	}
+	//create new attackHitbox
+	if (this->sprite.getScale().x > 0.0f) {
+		if (this->attackStyle == ATTACK_MELEE) {
+			this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Red);
+		}
+		if (this->attackStyle == ATTACK_RANGE) {
+			this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Blue);
+		}
+		if (this->attackStyle == ATTACK_SKILL) {
+			this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Yellow);
+		}
+	}
+	else {
+		if (this->attackStyle == ATTACK_MELEE) {
+			this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Red);
+		}
+		if (this->attackStyle == ATTACK_RANGE) {
+			this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Blue);
+		}
+		if (this->attackStyle == ATTACK_SKILL) {
+			this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Yellow);
+		}
+	}
 }
 
 void Enemy::updateAnimation(const float & dt)
 {
+	//Animate and check for animation end
+	if (this->attacking) {
+		if (this->attackStyle == ATTACK_MELEE && this->animationComponent->play("ATTACK_1", dt, true)) {
+			this->attacking = false;
+			this->attackStyle = ATTACK_NONE;
+		}
+		if (this->attackStyle == ATTACK_RANGE && this->animationComponent->play("ATTACK_2", dt, true)) {
+			this->attacking = false;
+			this->attackStyle = ATTACK_NONE;
+		}
+		if (this->attackStyle == ATTACK_SKILL && this->animationComponent->play("IDLE", dt, true)) {
+			this->attacking = false;
+			this->attackStyle = ATTACK_NONE;
+		}
+	}
+
 	if (this->movementComponent->getState(IDLE)) {
 		this->animationComponent->play("IDLE", dt);
 	}

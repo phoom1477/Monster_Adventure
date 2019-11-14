@@ -37,14 +37,18 @@ public:
 	virtual ~Player();
 
 	//Accessor
-	bool& getAttacking();
-	bool& getJumpping();
+	sf::Vector2f getCenter();
+
+	const bool& getAttacking();
+	const bool& getJumpping();
+	const float getATK();
+
 
 	//Function
+	const bool checkHitCollision(Entity* enemy);
 	void attack(short unsigned attack_style);
 	void jump();
-	const bool checkHitCollision(Entity* enemy);
-
+	
 	//update
 	void updateEntity(const float &dt);
 	void updateAttackHitbox();

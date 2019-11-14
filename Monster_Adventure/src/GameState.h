@@ -14,10 +14,13 @@
 class GameState : public State
 {
 private:
+	//Window
+	sf::View view;
+
 	//Variable
-	short unsigned playerIndex;
 	std::string playerName;
-	
+	short unsigned playerIndex;
+
 	//Resource
 	Player* player;
 	std::vector<Enemy*> enemy;
@@ -29,9 +32,12 @@ private:
 	void initFonts();
 	void initKeybinds();
 	void initTexture();
-	void initPauseMenu();
+
 	void initPlayer();
-	void initAllEnemy();
+	void initEnemy();
+	
+	void initView();
+	void initPauseMenu();
 
 public:
 	//Constructor , Destructor
@@ -46,10 +52,11 @@ public:
 	void updatePlayer(const float &dt);
 	void updateEnemy(const float &dt);
 	
-	void updateFrameCollision();
+	void updateCollision();
 	void updatePlayerCollisionFrame();
 	void updateEnemyCollisionFrame();
 	
+	void updateView();
 	void updatePauseMenuButton();
 
 	//render

@@ -3,8 +3,8 @@
 //initialization
 void GetInfoState::initVariable()
 {
-	this->inputName = "Player name";
-	this->previewIndex = 0;
+	this->playerName = "Player name";
+	this->playerIndex = 0;
 	this->showCursor = false;
 }
 
@@ -136,11 +136,13 @@ GetInfoState::GetInfoState(sf::RenderWindow* window, std::map<std::string, int>*
 	this->initVariable();
 	this->initFonts();
 	this->initKeybinds();
+	this->initBackground();
+
 	this->initDescriptText();
 	this->initPreviewName();
 	this->initPreviewPlayer();
+
 	this->initButton();
-	this->initBackground();
 }
 
 GetInfoState::~GetInfoState()
@@ -162,7 +164,7 @@ void GetInfoState::updateState(const float & dt)
 	this->updatePreviewPlayer();
 
 	this->updateName();
-	this->updatePreviewName(this->inputName);
+	this->updatePreviewName(this->playerName);
 }
 
 void GetInfoState::updateInput(const float & dt)
@@ -177,21 +179,49 @@ void GetInfoState::updateButton()
 	}
 	//Button Functionality
 	if (this->buttons["Previous"]->isPressed() && this->getKeyTime()) {	
-		if (this->previewIndex > 0) {
-			this->previewIndex--;
+		if (this->playerIndex > 0) {
+			this->playerIndex--;
 		}
 	}
 	if (this->buttons["Next"]->isPressed() && this->getKeyTime()) {	
-		if (this->previewIndex < this->previewPlayer.size() - 1) {
-			this->previewIndex++;
+		if (this->playerIndex < this->previewPlayer.size() - 1) {
+			this->playerIndex++;
 		}
 	}
 	if (this->buttons["Start"]->isPressed() && this->getKeyTime()) {	
 		this->endState();
-		this->states->push(new GameState(this->window, this->supportedKeys, this->states, this->previewIndex, this->inputName));
+		this->states->push(new GameState(this->window, this->supportedKeys, this->states, this->playerIndex, this->playerName));
 	}
 	if (this->buttons["Back"]->isPressed() && this->getKeyTime()) {	
 		this->endState();
+	}
+}
+
+void GetInfoState::updatePreviewPlayer()
+{
+	this->previewPlayer[this->playerIndex].setSize(sf::Vector2f(100.0f, 100.0f));
+	this->previewPlayer[this->playerIndex].setPosition(
+		static_cast<float>(this->window->getSize().x / 2.0f - this->previewPlayer[playerIndex].getSize().x / 2.0f + 13.0f),
+		static_cast<float>(this->window->getSize().y / 8 * 1.75f)
+	);
+}
+
+void GetInfoState::updateName()
+{
+	this->window->pollEvent(this->eventType);
+
+	if (this->eventType.type == sf::Event::TextEntered) {
+		if (eventType.text.unicode < 128 && eventType.text.unicode != 8) {	//typing
+			this->playerName += char(eventType.text.unicode);
+		}
+		if (eventType.text.unicode == 8) {									//delete
+			if (!this->playerName.empty()) {
+				this->playerName.pop_back();
+			}
+		}
+		while (this->eventType.type == sf::Event::TextEntered) {			//debouncing
+			this->window->pollEvent(this->eventType);
+		}
 	}
 }
 
@@ -216,34 +246,6 @@ void GetInfoState::updatePreviewName(const std::string name)
 		static_cast<float>(this->window->getSize().y / 2.0f));
 }
 
-void GetInfoState::updateName()
-{
-	this->window->pollEvent(this->eventType);
-
-	if (this->eventType.type == sf::Event::TextEntered) {
-		if (eventType.text.unicode < 128 && eventType.text.unicode != 8) {	//typing
-			this->inputName += char(eventType.text.unicode);
-		}
-		if (eventType.text.unicode == 8) {									//delete
-			if (!this->inputName.empty()) {
-				this->inputName.pop_back();
-			}
-		}
-		while (this->eventType.type == sf::Event::TextEntered) {			//debouncing
-			this->window->pollEvent(this->eventType);
-		}
-	}
-}
-
-void GetInfoState::updatePreviewPlayer()
-{
-	this->previewPlayer[this->previewIndex].setSize(sf::Vector2f(100.0f,100.0f));
-	this->previewPlayer[this->previewIndex].setPosition(
-		static_cast<float>(this->window->getSize().x / 2.0f - this->previewPlayer[previewIndex].getSize().x / 2.0f + 13.0f),
-		static_cast<float>(this->window->getSize().y / 8 * 1.75f)
-	);
-}
-
 void GetInfoState::renderState(sf::RenderTarget * target)
 {
 	if (target == NULL) {
@@ -252,7 +254,7 @@ void GetInfoState::renderState(sf::RenderTarget * target)
 
 	target->draw(this->background);
 	target->draw(this->descriptText);
-	target->draw(this->previewPlayer[previewIndex]);
+	target->draw(this->previewPlayer[playerIndex]);
 	target->draw(this->previewName);
 
 	this->renderButton(*target);

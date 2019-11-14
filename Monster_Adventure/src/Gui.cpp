@@ -21,6 +21,7 @@ gui::Button::Button(float x, float y, float width, float height
 
 	this->buttonState = BUTTON_IDLE;
 	this->id = id;
+	this->charectorSize = charector_size;
 
 	this->shape.setPosition(sf::Vector2f(x, y));
 	this->shape.setSize(sf::Vector2f(width, height));
@@ -31,7 +32,7 @@ gui::Button::Button(float x, float y, float width, float height
 	this->text.setCharacterSize(charector_size);
 	this->text.setPosition(
 		this->shape.getPosition().x - this->text.getGlobalBounds().width / 2.0f + this->shape.getGlobalBounds().width / 2.0f,
-		this->shape.getPosition().y - this->text.getGlobalBounds().height / 2.0f + this->shape.getGlobalBounds().height / 2.0f - charector_size * 0.3f
+		this->shape.getPosition().y - this->text.getGlobalBounds().height / 2.0f + this->shape.getGlobalBounds().height / 2.0f - this->charectorSize * 0.3f
 	);
 	
 	this->shapeIdleColor = shape_idle_color;
@@ -70,6 +71,16 @@ const short unsigned& gui::Button::getId()
 	return this->id;
 }
 
+sf::Vector2f gui::Button::getSize()
+{
+	return this->shape.getSize();
+}
+
+sf::Vector2f gui::Button::getPosition()
+{
+	return this->shape.getPosition();
+}
+
 //Modifier
 void gui::Button::setText(const std::string text)
 {
@@ -79,6 +90,15 @@ void gui::Button::setText(const std::string text)
 void gui::Button::setId(const short unsigned id)
 {
 	this->id = id;
+}
+
+void gui::Button::setPosition(const float position_x, const float position_y)
+{
+	this->shape.setPosition(position_x, position_y);
+	this->text.setPosition(
+		this->shape.getPosition().x - this->text.getGlobalBounds().width / 2.0f + this->shape.getGlobalBounds().width / 2.0f,
+		this->shape.getPosition().y - this->text.getGlobalBounds().height / 2.0f + this->shape.getGlobalBounds().height / 2.0f - this->charectorSize * 0.3f
+	);
 }
 
 //Function

@@ -21,6 +21,10 @@
 class State
 {
 private:
+	//Variable 
+	float keyTime;
+	float keyTimeMax;
+
 	//Intialization
 	void initVariable();
 
@@ -39,9 +43,6 @@ protected:
 	bool paused;
 	bool quit;
 	
-	float keyTime;
-	float keyTimeMax;
-
 	//Resource
 	std::map<std::string, sf::Texture> textures;
 

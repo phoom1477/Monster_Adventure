@@ -17,6 +17,7 @@ private:
 	sf::RectangleShape hitbox;
 	float offsetX;
 	float offsetY;
+	bool firstIntersact;
 
 public:
 	//Constrictor , Destructor
