@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\ScoreState.cpp" />
     <ClCompile Include="src\GetInfoState.cpp" />
     <ClCompile Include="src\Enemy.cpp" />
     <ClCompile Include="src\SettingState.cpp" />
@@ -37,6 +38,7 @@
     <ClCompile Include="src\Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ScoreState.h" />
     <ClInclude Include="src\GetInfoState.h" />
     <ClInclude Include="src\Enemy.h" />
     <ClInclude Include="src\SettingState.h" />

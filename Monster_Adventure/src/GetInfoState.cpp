@@ -8,17 +8,6 @@ void GetInfoState::initVariable()
 	this->showCursor = false;
 }
 
-void GetInfoState::initFonts()
-{
-	//load font for this state
-	if (!this->font.loadFromFile("src/Resource/Font/Planes_ValMore.ttf")) {
-		throw("[Get Info State] >> ..ERROR.. Could't load font");
-	}
-	if (!this->temporaryFont.loadFromFile("src/Resource/Font/joystix_monospace.ttf")) {
-		throw("[Get Info State] >> ..ERROR.. Could't load font");
-	}
-}
-
 void GetInfoState::initKeybinds()
 {
 	std::ifstream ifs("src/Config/getinfostate_keybinds.ini");
@@ -33,11 +22,36 @@ void GetInfoState::initKeybinds()
 	ifs.close();
 }
 
+void GetInfoState::initFonts()
+{
+	//load font for this state
+	if (!this->font.loadFromFile("src/Resource/Font/Planes_ValMore.ttf")) {
+		throw("[Get Info State] >> ..ERROR.. Could't load font");
+	}
+	if (!this->temporaryFont.loadFromFile("src/Resource/Font/joystix_monospace.ttf")) {
+		throw("[Get Info State] >> ..ERROR.. Could't load font");
+	}
+}
+
+void GetInfoState::initBackground()
+{
+	this->background.setSize(sf::Vector2f(static_cast<float>(this->window->getSize().x), static_cast<float>(this->window->getSize().y)));
+
+	if (!this->backgroundTexture.loadFromFile("src/Resource/Background/MainMenuState/background.png")) {
+		throw("[Get Info State] >> ..ERROR.. Could't load backgroundTexture");
+	}
+	this->background.setTexture(&this->backgroundTexture);
+}
+
 void GetInfoState::initDescriptText()
 {
 	this->descriptText.setFont(this->font);
-	this->descriptText.setCharacterSize(40);
+	this->descriptText.setCharacterSize(50);
+	this->descriptText.setOutlineThickness(5.0f);
+	this->descriptText.setOutlineColor(sf::Color::Black);
+	
 	this->descriptText.setString("Choose Charector");
+
 	this->descriptText.setPosition(sf::Vector2f(
 		this->window->getSize().x / 2.0f - this->descriptText.getGlobalBounds().width / 2.0f,
 		this->window->getSize().y / 16.0f
@@ -118,27 +132,19 @@ void GetInfoState::initButton()
 	);
 }
 
-void GetInfoState::initBackground()
-{
-	this->background.setSize(sf::Vector2f(static_cast<float>(this->window->getSize().x), static_cast<float>(this->window->getSize().y)));
-
-	if (!this->backgroundTexture.loadFromFile("src/Resource/Background/MainMenuState/background.png")) {
-		throw("[Main Menu State] >> ..ERROR.. Could't load backgroundTexture");
-	}
-	this->background.setTexture(&this->backgroundTexture);
-}
-
 //Constructor , Destructor
 GetInfoState::GetInfoState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
 	:State(window, supportedKeys, states)
 {
 	std::cout << "[Get Info State] >> on" << std::endl;
 	this->initVariable();
-	this->initFonts();
+	
 	this->initKeybinds();
+	this->initFonts();
+	
 	this->initBackground();
-
 	this->initDescriptText();
+	
 	this->initPreviewName();
 	this->initPreviewPlayer();
 
@@ -161,10 +167,10 @@ void GetInfoState::updateState(const float & dt)
 	this->updateMousePosition();
 
 	this->updateButton();
-	this->updatePreviewPlayer();
 
 	this->updateName();
-	this->updatePreviewName(this->playerName);
+	this->updatePreviewName(this->playerName); 
+	this->updatePreviewPlayer();
 }
 
 void GetInfoState::updateInput(const float & dt)
@@ -195,15 +201,6 @@ void GetInfoState::updateButton()
 	if (this->buttons["Back"]->isPressed() && this->getKeyTime()) {	
 		this->endState();
 	}
-}
-
-void GetInfoState::updatePreviewPlayer()
-{
-	this->previewPlayer[this->playerIndex].setSize(sf::Vector2f(100.0f, 100.0f));
-	this->previewPlayer[this->playerIndex].setPosition(
-		static_cast<float>(this->window->getSize().x / 2.0f - this->previewPlayer[playerIndex].getSize().x / 2.0f + 13.0f),
-		static_cast<float>(this->window->getSize().y / 8 * 1.75f)
-	);
 }
 
 void GetInfoState::updateName()
@@ -246,6 +243,16 @@ void GetInfoState::updatePreviewName(const std::string name)
 		static_cast<float>(this->window->getSize().y / 2.0f));
 }
 
+void GetInfoState::updatePreviewPlayer()
+{
+	this->previewPlayer[this->playerIndex].setSize(sf::Vector2f(100.0f, 100.0f));
+	this->previewPlayer[this->playerIndex].setPosition(
+		static_cast<float>(this->window->getSize().x / 2.0f - this->previewPlayer[playerIndex].getSize().x / 2.0f + 13.0f),
+		static_cast<float>(this->window->getSize().y / 8 * 1.75f)
+	);
+}
+
+
 void GetInfoState::renderState(sf::RenderTarget * target)
 {
 	if (target == NULL) {
@@ -254,8 +261,8 @@ void GetInfoState::renderState(sf::RenderTarget * target)
 
 	target->draw(this->background);
 	target->draw(this->descriptText);
-	target->draw(this->previewPlayer[playerIndex]);
 	target->draw(this->previewName);
+	target->draw(this->previewPlayer[playerIndex]);
 
 	this->renderButton(*target);
 }

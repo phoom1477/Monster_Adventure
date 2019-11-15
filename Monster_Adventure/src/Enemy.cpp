@@ -104,11 +104,13 @@ void Enemy::attack(short unsigned attack_style)
 
 void Enemy::decreaseHP(const float ATK)
 {
-	srand(time(NULL));
-	this->currHP -= (rand() % 2) * ATK;
+	float damage = ATK * 2;
+	
+	srand(int(time(NULL)));
+	this->currHP = this->currHP - ((rand() % 50 + damage) - (rand() % 20 + this->DEF));
 }
 
-void Enemy::updateEntity(const float & dt)
+void Enemy::updateEntity(const float & dt, sf::RenderWindow& window)
 {
 	std::cout << this->currHP << "\n";
 	//Update movement
@@ -123,6 +125,9 @@ void Enemy::updateEntity(const float & dt)
 	if (this->hitboxComponent) {
 		this->hitboxComponent->updateComponent();
 	}
+
+	//update collision
+	this->updateCollisionFrame(window);
 }
 
 void Enemy::updateAttackHitbox()
@@ -187,7 +192,9 @@ void Enemy::renderEntity(sf::RenderTarget & target)
 	if (this->hitboxComponent) {
 		this->hitboxComponent->renderComponent(target);
 	}
+	//---------------------- for debug
 	if (this->attackHitbox) {
 		this->attackHitbox->renderComponent(target);
 	}
+	//-----------------------
 }

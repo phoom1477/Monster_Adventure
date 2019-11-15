@@ -3,15 +3,13 @@
 //Initialization
 void SettingState::initVariable()
 {
-	this->videoModes = sf::VideoMode::getFullscreenModes();
-}
+	//initial framerate vector
+	this->framerateLimit.push_back(60);
+	this->framerateLimit.push_back(120);
 
-void SettingState::initFonts()
-{
-	//load font for this state
-	if (!this->font.loadFromFile("src/Resource/Font/Planes_ValMore.ttf")) {
-		throw("[Setting State] >> ..ERROR.. Could't load font");
-	}
+	//initial vsync vector
+	this->verticalsyncEnabled.push_back(false);
+	this->verticalsyncEnabled.push_back(true);
 }
 
 void SettingState::initKeybinds()
@@ -26,6 +24,52 @@ void SettingState::initKeybinds()
 		}
 	}
 	ifs.close();
+}
+
+void SettingState::initFonts()
+{
+	//load font for this state
+	if (!this->font.loadFromFile("src/Resource/Font/Planes_ValMore.ttf")) {
+		throw("[Setting State] >> ..ERROR.. Could't load font");
+	}
+}
+
+void SettingState::initBackground()
+{
+	this->background.setSize(sf::Vector2f(static_cast<float>(this->window->getSize().x), static_cast<float>(this->window->getSize().y)));
+	if (!this->backgroundTexture.loadFromFile("src/Resource/Background/SettingState/background.png")) {
+		throw("[Setting State] >> ..ERROR.. Could't load backgroundTexture");
+	}
+	this->background.setTexture(&this->backgroundTexture);
+}
+
+void SettingState::initDescriptText()
+{
+	this->descriptText.setFont(this->font);
+	this->descriptText.setCharacterSize(50);
+	this->descriptText.setOutlineThickness(5.0f);
+	this->descriptText.setOutlineColor(sf::Color::Red);
+
+	this->descriptText.setString("Options");
+
+	this->descriptText.setPosition(sf::Vector2f(
+		this->window->getSize().x / 2.0f - this->descriptText.getGlobalBounds().width / 2.0f,
+		this->window->getSize().y / 16.0f * 1.5f
+	));
+}
+
+void SettingState::InitOptionText()
+{
+	this->optionText.setFont(this->font);
+	this->optionText.setCharacterSize(40);
+	this->optionText.setLineSpacing(1.1f);
+	
+	this->optionText.setString("Frameratelimit\n\nVsync");
+
+	this->optionText.setPosition(sf::Vector2f(
+		this->window->getSize().x / 16.0f * 4.0f,
+		this->window->getSize().y / 16.0f * 3.5f)
+	);
 }
 
 void SettingState::initGui()
@@ -61,50 +105,63 @@ void SettingState::initButton()
 
 void SettingState::initDropdownBox()
 {
-	//create dropdownboxs
+	//Load config window from window.ini
+	std::ifstream ifs("src/Config/window.ini");
+
+	//set default for load config failed
+	int framerate_limit = 60;
+	bool verticalsync_enabled = false;
+
+	//Reading file
+	while (ifs.is_open()) {
+		std::string buff;
+		ifs >> buff;
+		if (buff == "frameratelimit") {
+			ifs >> framerate_limit;
+		}
+		if (buff == "vsync") {
+			ifs >> verticalsync_enabled;
+		}
+
+		if (buff == "") {
+			ifs.close();
+		}
+	}
+
+	//set dropdownboxs
 	float dropdawnbox_width = 200.0f;
 	float dropdawnbox_height = 50.0f;
-
-	short unsigned default_index = 0;
-	short unsigned count_index = 0;
-	std::vector<std::string> videomode_str;
-	for (auto &i : this->videoModes) {
-		if (i.width == this->window->getSize().x && i.height == this->window->getSize().y) {
-			default_index = count_index;
-		}
-		if ((float)i.width / i.height == 16.0f / 9.0f) {
-			videomode_str.push_back(std::to_string(i.width) + 'x' + std::to_string(i.height));
-			count_index++;
-		}
-	}
-	this->dropDownBoxs["Resolution"] = new gui::DropDownBox(
-		this->window->getSize().x / 8.0f * 3.0f,
-		this->window->getSize().y / 8.0f * 1.0f,
-		dropdawnbox_width, dropdawnbox_height,
-		font, videomode_str.data(), videomode_str.size(),
-		default_index
-	);
-}
-
-void SettingState::initBackground()
-{
-	this->background.setSize(sf::Vector2f(static_cast<float>(this->window->getSize().x), static_cast<float>(this->window->getSize().y)));
-	if (!this->backgroundTexture.loadFromFile("src/Resource/Background/SettingState/background.png")) {
-		throw("[Setting State] >> ..ERROR.. Could't load backgroundTexture");
-	}
-	this->background.setTexture(&this->backgroundTexture);
-}
-
-void SettingState::InitOptionText()
-{
-	this->optionText.setFont(this->font);
-	this->optionText.setCharacterSize(30);
-	this->optionText.setFillColor(sf::Color(255, 255, 255, 200));
-	this->optionText.setPosition(sf::Vector2f(
-		this->window->getSize().x / 8.0f * 1.0f,
-		this->window->getSize().y / 8.0f * 1.0f));
 	
-	this->optionText.setString("Resolution\n\nFullscreen\n\nVsync\n\nAntialiasing");
+	//create frameratelimit dropdownbox
+	std::vector<std::string> framerate_limit_list;
+	framerate_limit_list.push_back("60");
+	framerate_limit_list.push_back("120");
+	
+	int framerate_index = 0;
+	if (framerate_limit == 60) {
+		framerate_index = 0;
+	}
+	if (framerate_limit == 120) {
+		framerate_index = 1;
+	}
+	this->dropDownBoxs["Frameratelimit"] = new gui::DropDownBox(
+		this->window->getSize().x / 16.0f * 9.0f,
+		this->window->getSize().y / 16.0f * 3.5f,
+		dropdawnbox_width, dropdawnbox_height,
+		font, framerate_limit_list.data(), (int)framerate_limit_list.size(),framerate_index
+	);
+
+	//create vsync dropdownbox
+	std::vector<std::string> mode_string;
+	mode_string.push_back("OFF");
+	mode_string.push_back("ON");
+	
+	this->dropDownBoxs["Vsync"] = new gui::DropDownBox(
+		this->window->getSize().x / 16.0f * 9.0f,
+		this->window->getSize().y / 16.0f * 5.5f,
+		dropdawnbox_width, dropdawnbox_height,
+		font, mode_string.data(), (int)mode_string.size(), verticalsync_enabled
+	);	
 }
 
 //Constructor , Destructor
@@ -113,11 +170,14 @@ SettingState::SettingState(sf::RenderWindow* window, std::map<std::string, int>*
 {
 	std::cout << "[Setting State] >> On" << std::endl;
 	this->initVariable();
-	this->initFonts();
 	this->initKeybinds();
-	this->initGui();
+	this->initFonts();
+
 	this->initBackground();
+	this->initDescriptText();
 	this->InitOptionText();
+
+	this->initGui();
 }
 
 SettingState::~SettingState()
@@ -129,8 +189,6 @@ SettingState::~SettingState()
 		delete it->second;
 	}
 }
-
-//Accessor
 
 //Function
 void SettingState::updateState(const float &dt)
@@ -153,9 +211,10 @@ void  SettingState::updateGui(const float &dt)
 	}
 	//Button Functionality
 	if (this->buttons["Apply"]->isPressed()) {		//Apply selected setting
-		/*int width = this->videoModes[this->dropDownBoxs["Resolution"]->getActiveElementId()].width;
-		int height = this->videoModes[this->dropDownBoxs["Resolution"]->getActiveElementId()].height;
-		this->window->setSize(sf::Vector2u(width,height));*/
+		this->window->setFramerateLimit(this->framerateLimit[this->dropDownBoxs["Frameratelimit"]->getActiveElementId()]);
+		this->window->setVerticalSyncEnabled(this->verticalsyncEnabled[this->dropDownBoxs["Vsync"]->getActiveElementId()]);
+
+		//std::ofstream ofs("src/Config/window.ini")
 	}
 	if (this->buttons["Back"]->isPressed()) {		//quit state
 		this->endState();
@@ -172,11 +231,12 @@ void  SettingState::renderState(sf::RenderTarget* target)
 	if (target == NULL) {
 		target = this->window;
 	}
+
 	target->draw(this->background);
+	target->draw(this->descriptText);
+	target->draw(this->optionText);
 
 	this->renderGui(*target);
-
-	target->draw(this->optionText);
 }
 
 void  SettingState::renderGui(sf::RenderTarget& target)

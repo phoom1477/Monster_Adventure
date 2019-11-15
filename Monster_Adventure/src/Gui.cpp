@@ -138,6 +138,7 @@ void gui::Button::updateButton(const sf::Vector2f& mousePosition)
 		if (this->pressedSound.getStatus() != sf::Sound::Playing) {
 			this->pressedSound.play();
 		}
+
 	}
 }
 
@@ -164,7 +165,6 @@ gui::DropDownBox::DropDownBox(float x, float y, float width, float height,
 	);
 
 	for (size_t i = 0; i < num_Elements; i++) {
-		std::cout << i << std::endl;
 		this->list.push_back(
 			new gui::Button(
 				x, y + ((i + 1) * height), width, height,

@@ -15,11 +15,10 @@ void Game::initWindow()
 
 	//Set default if can't read file
 	std::string title = "Monster Adventure";
-	sf::VideoMode window_bounds = sf::VideoMode::getDesktopMode();
+	sf::VideoMode window_bounds = sf::VideoMode(1270,720);
 	bool fullscreen = false;
 	int framerate_limit = 120;
 	bool verticalsync_enabled = false;
-	unsigned antialising_level = 0;
 
 	//Reading file
 	while (ifs.is_open()) {
@@ -43,9 +42,6 @@ void Game::initWindow()
 		if(buff == "vsync") {
 			ifs >> verticalsync_enabled;
 		}
-		if (buff == "antialisinglevel") {
-			ifs >> antialising_level;
-		}
 		if (buff == "") {
 			ifs.close();
 		}
@@ -54,15 +50,12 @@ void Game::initWindow()
 	//Setup mode
 	this->fullscreen = fullscreen;
 
-	//Setup openGL 
-	this->windowSetting.antialiasingLevel = antialising_level;
-
 	//Setup window
 	if (this->fullscreen) {
-		this->window = new sf::RenderWindow(window_bounds, title, sf::Style::Fullscreen, this->windowSetting);
+		this->window = new sf::RenderWindow(window_bounds, title, sf::Style::Fullscreen);
 	}
 	else {
-		this->window = new sf::RenderWindow(window_bounds, title, sf::Style::Titlebar | sf::Style::Close, this->windowSetting);
+		this->window = new sf::RenderWindow(window_bounds, title, sf::Style::Titlebar | sf::Style::Close);
 	}
 	this->window->setFramerateLimit(framerate_limit);
 	this->window->setVerticalSyncEnabled(verticalsync_enabled);

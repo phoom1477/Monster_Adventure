@@ -21,17 +21,25 @@ private:
 	std::string playerName;
 	short unsigned playerIndex;
 
-	//Resource
+	//Resource1
 	Player* player;
 	std::vector<Enemy*> enemy;
 
+	//Resource2
+	std::map<std::string, sf::Texture> textures;
+	
+	sf::Texture backgroundTexture;
+	std::vector<sf::RectangleShape> background;
+
 	sf::Font font;
 	PauseMenu* pauseMenu;
-
+	
 	//Intialization
-	void initFonts();
 	void initKeybinds();
+	void initFonts();
+
 	void initTexture();
+	void initBackground();
 
 	void initPlayer();
 	void initEnemy();
@@ -51,11 +59,7 @@ public:
 	
 	void updatePlayer(const float &dt);
 	void updateEnemy(const float &dt);
-	
-	void updateCollision();
-	void updatePlayerCollisionFrame();
-	void updateEnemyCollisionFrame();
-	
+
 	void updateView();
 	void updatePauseMenuButton();
 

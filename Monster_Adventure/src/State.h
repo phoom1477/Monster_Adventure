@@ -43,9 +43,6 @@ protected:
 	bool paused;
 	bool quit;
 	
-	//Resource
-	std::map<std::string, sf::Texture> textures;
-
 	//Intialization
 	virtual void initKeybinds() = 0;
 

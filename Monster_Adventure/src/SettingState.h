@@ -14,7 +14,8 @@ class SettingState :
 {
 private:
 	//Variable
-	std::vector<sf::VideoMode> videoModes;
+	std::vector<int> framerateLimit;
+	std::vector<bool> verticalsyncEnabled;
 
 	//Resource
 	sf::Texture backgroundTexture;
@@ -24,24 +25,26 @@ private:
 	std::map<std::string, gui::Button*> buttons;
 	std::map<std::string, gui::DropDownBox*> dropDownBoxs;
 
+	sf::Text descriptText;
 	sf::Text optionText;
 	
 	//Initialization
 	void initVariable();
-	void initFonts();
 	void initKeybinds();
+	void initFonts();
+
+	void initBackground();
+	void initDescriptText();
+	void InitOptionText();
+
 	void initGui();
 	void initButton();
 	void initDropdownBox();
-	void initBackground();
-	void InitOptionText();
 
 public:
 	//Constructor , Destructor
 	SettingState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
 	virtual ~SettingState();
-
-	//Accessor
 
 	//Function
 

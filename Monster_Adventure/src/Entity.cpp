@@ -86,5 +86,41 @@ void Entity::stopEntityY()
 	}
 }
 
+void Entity::updateCollisionFrame(sf::RenderWindow& window)
+{
+	if (this->getPosition().x < 0.0f) {
+		this->setPosition(
+			0.0f,
+			this->getPosition().y
+		);
+
+		this->stopEntityX();
+	}
+	/*else if (this->getPosition().x + this->getGlobalBounds().width > window.getSize().x) {
+		this->setPosition(
+			window.getSize().x - this->getGlobalBounds().width,
+			this->getPosition().y
+		);
+
+		this->stopEntityX();
+	}*/
+	if (this->getPosition().y < 0.0f) {
+		this->setPosition(
+			this->getPosition().x,
+			0.0f
+		);
+
+		this->stopEntityY();
+	}
+	else if (this->getPosition().y + this->getGlobalBounds().height > window.getSize().y) {
+		this->setPosition(
+			this->getPosition().x,
+			window.getSize().y - this->getGlobalBounds().height
+		);
+
+		this->stopEntityY();
+	}
+}
+
 
 

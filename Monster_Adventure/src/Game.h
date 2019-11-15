@@ -21,7 +21,6 @@ private:
 	sf::Event event;
 	
 	bool fullscreen;
-	sf::ContextSettings windowSetting;
 
 	sf::Clock clock;
 	float dt;

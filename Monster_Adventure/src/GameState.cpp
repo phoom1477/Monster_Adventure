@@ -1,14 +1,6 @@
 #include "GameState.h"
 
 //Initialization
-void GameState::initFonts()
-{
-	//load font for this state
-	if (!this->font.loadFromFile("src/Resource/Font/Planes_ValMore.ttf")) {
-		throw("[GAME State] >> ..ERROR.. Could't load font");
-	}
-}
-
 void GameState::initKeybinds()
 {
 	std::ifstream fileconfig("src/Config/gamestate_keybinds.ini");
@@ -21,6 +13,14 @@ void GameState::initKeybinds()
 		}
 	}
 	fileconfig.close();
+}
+
+void GameState::initFonts()
+{
+	//load font for this state
+	if (!this->font.loadFromFile("src/Resource/Font/Planes_ValMore.ttf")) {
+		throw("[GAME State] >> ..ERROR.. Could't load font");
+	}
 }
 
 void GameState::initTexture()
@@ -40,6 +40,21 @@ void GameState::initTexture()
 	}
 }
 
+void GameState::initBackground()
+{
+	if (!this->backgroundTexture.loadFromFile("src/Resource/Background/MainMenuState/background.png")) {
+		throw("[Game State] >> ..ERROR.. Could't load backgroundTexture");
+	}
+
+	for (int i = 0; i < 10; i++) {
+		sf::RectangleShape buff;
+		buff.setTexture(&this->backgroundTexture);
+		this->background.push_back(buff);
+		this->background[i].setSize(sf::Vector2f(static_cast<float>(this->window->getSize().x), static_cast<float>(this->window->getSize().y)));
+		this->background[i].setPosition(static_cast<float>(this->window->getSize().x) * i, 0.0f);
+	}
+}
+
 void GameState::initPlayer()
 {
 	if (this->playerIndex == 0) {
@@ -55,14 +70,14 @@ void GameState::initPlayer()
 
 void GameState::initEnemy()
 {
-	for (short unsigned i = 1; i < 3; i++) {
-		this->enemy.push_back(new Enemy(200 * i, 0, this->textures["SKELETON_SHEET"], "1"));
+	for (short unsigned i = 1; i < 20; i++) {
+		this->enemy.push_back(new Enemy(200.0f * i, 0.0f, this->textures["SKELETON_SHEET"], "1"));
 	}
 }
 
 void GameState::initView()
 {
-	this->view.setSize(this->window->getSize().x, this->window->getSize().y);
+	this->view.setSize(static_cast<float>(this->window->getSize().x), static_cast<float>(this->window->getSize().y));
 	this->view.setCenter(this->player->getCenter().x, this->window->getSize().y / 2.0f);
 
 	this->window->setView(this->view);
@@ -83,8 +98,10 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 	std::cout << "[Game State] >> On" << std::endl;
 	this->initKeybinds();
 	this->initFonts();
+
 	this->initTexture();
-	
+	this->initBackground();
+
 	this->initPlayer();
 	this->initEnemy();
 
@@ -116,7 +133,17 @@ void GameState::updateState(const float &dt)
 	if (!this->paused) {
 		this->updatePlayer(dt);
 		this->updateEnemy(dt);
-		this->updateCollision();
+
+		//clear enemy when it die
+		if (!this->enemy.empty()) {
+			for (int i = 0; i < this->enemy.size(); i++) {
+				if (this->enemy[i]->getCurrHP() <= 0) {
+					delete enemy[i];
+					this->enemy.erase(this->enemy.begin() + i);
+				}
+			}
+		}
+
 	}
 	//Paused update
 	else {
@@ -155,31 +182,24 @@ void GameState::updatePlayer(const float & dt)
 	}
 
 	if (!this->player->getJumpping()) {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("ATTACK_MELEE"))) && !this->player->getAttacking()) {
-			this->player->attack(Player::ATTACK_MELEE);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("ATTACK_MELEE"))) && !this->player->getAttacking()) {	
+			if (!this->enemy.empty()) {
+				for (int i = 0; i < this->enemy.size(); i++) {
+					this->player->attack(Player::ATTACK_MELEE, this->enemy[i]);
+				}
+			}
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("ATTACK_RANGE"))) && !this->player->getAttacking()) {
-			this->player->attack(Player::ATTACK_RANGE);
+			if (!this->enemy.empty()) {
+				for (int i = 0; i < this->enemy.size(); i++) {
+					this->player->attack(Player::ATTACK_RANGE, this->enemy[i]);
+				}
+			}
 		}
 	}
 
 	//Update all player component
-	this->player->updateEntity(dt);
-
-	//Check attack collision
-	/*if (!this->enemy.empty()) {
-		for (int i = 0; i < this->enemy.size(); i++) {
-			if (this->player->checkHitCollision(enemy[i]) && this->getKeyTime()) {
-				
-				enemy[i]->decreaseHP(this->player->getATK());
-				
-				if (enemy[i]->getCurrHP() <= 0.0f) {
-					delete enemy[i];
-					enemy.erase(enemy.begin() + i);
-				}
-			}
-		}
-	}*/
+	this->player->updateEntity(dt, *this->window);
 }
 
 void GameState::updateEnemy(const float &dt)
@@ -187,110 +207,21 @@ void GameState::updateEnemy(const float &dt)
 	//Update all Entity component
 	if (!this->enemy.empty()) {
 		for (int i = 0; i < this->enemy.size(); i++) {
-			this->enemy[i]->updateEntity(dt);
+			this->enemy[i]->updateEntity(dt, *this->window);
 		}
 	}
-
-	//Check attack collision
-	/*if (!this->enemy.empty()) {
-		for (int i = 0; i < this->enemy.size(); i++) {
-			if (this->enemy[i]->checkHitCollision(this->player)) {
-		
-			}
-		}
-	}*/
-}
-
-void GameState::updateCollision()
-{
-	this->updatePlayerCollisionFrame();
-	this->updateEnemyCollisionFrame();
-}
-
-void GameState::updatePlayerCollisionFrame()
-{
-	if (this->player) {
-		if (this->player->getPosition().x < 0.0f) {
-			this->player->setPosition(
-				0.0f,
-				this->player->getPosition().y
-			);
-
-			this->player->stopEntityX();
-		}
-		else if (this->player->getPosition().x + this->player->getGlobalBounds().width > this->window->getSize().x) {
-			this->player->setPosition(
-				this->window->getSize().x - this->player->getGlobalBounds().width,
-				this->player->getPosition().y
-			);
-
-			this->player->stopEntityX();
-		}
-		if (this->player->getPosition().y < 0.0f) {
-			this->player->setPosition(
-				this->player->getPosition().x,
-				0.0f
-			);
-
-			this->player->stopEntityY();
-		}
-		else if (this->player->getPosition().y + this->player->getGlobalBounds().height > this->window->getSize().y) {
-			this->player->setPosition(
-				this->player->getPosition().x,
-				this->window->getSize().y - this->player->getGlobalBounds().height
-			);
-
-			this->player->stopEntityY();
-		}
-	}
-}
-
-void GameState::updateEnemyCollisionFrame()
-{
-	for (int i = 0; i < this->enemy.size(); i++) {
-		if (this->enemy[i]->getPosition().x < 0.0f) {
-			this->enemy[i]->setPosition(
-				0.0f,
-				this->enemy[i]->getPosition().y
-			);
-
-			this->enemy[i]->stopEntityX();
-		}
-		else if (this->enemy[i]->getPosition().x + this->enemy[i]->getGlobalBounds().width > this->window->getSize().x) {
-			this->enemy[i]->setPosition(
-				this->window->getSize().x - this->enemy[i]->getGlobalBounds().width,
-				this->enemy[i]->getPosition().y
-			);
-
-			this->enemy[i]->stopEntityX();
-		}
-		if (this->enemy[i]->getPosition().y < 0.0f) {
-			this->enemy[i]->setPosition(
-				this->enemy[i]->getPosition().x,
-				0.0f
-			);
-
-			this->enemy[i]->stopEntityY();
-		}
-		else if (this->enemy[i]->getPosition().y + this->enemy[i]->getGlobalBounds().height > this->window->getSize().y) {
-			this->enemy[i]->setPosition(
-				this->enemy[i]->getPosition().x,
-				this->window->getSize().y - this->enemy[i]->getGlobalBounds().height
-			);
-
-			this->enemy[i]->stopEntityY();
-		}
-	}
-}
+} 
 
 void GameState::updateView()
 {
-	this->view.setSize(this->window->getSize().x, this->window->getSize().y);
+	this->view.setSize(static_cast<float>(this->window->getSize().x), static_cast<float>(this->window->getSize().y));
 	this->view.setCenter(this->player->getCenter().x, this->window->getSize().y / 2.0f);
 
 	this->window->setView(this->view);
 
-	if (this->getQuit()) {
+	
+	if (this->view.getCenter().x - this->view.getSize().x / 2.0f < 0.0f || this->getQuit()) {
+		this->view.setSize(static_cast<float>(this->window->getSize().x), static_cast<float>(this->window->getSize().y));
 		this->view.setCenter(
 			this->window->getSize().x / 2.0f,
 			this->window->getSize().y / 2.0f
@@ -318,6 +249,9 @@ void GameState::renderState(sf::RenderTarget* target)
 {
 	if (!target) {
 		target = this->window;
+	}
+	for (int i = 0; i < this->background.size(); i++) {
+		target->draw(this->background[i]);
 	}
 	
 	//render all entity 

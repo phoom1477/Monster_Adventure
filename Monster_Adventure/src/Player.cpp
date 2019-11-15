@@ -31,7 +31,7 @@ Player::Player(float x, float y, sf::Texture& texture_sheet ,std::string name)
 	this->createAnimationComponent(texture_sheet);
 	this->animationComponent->addAnimation("IDLE", 10.0f, 0, 5, 3, 5, 32, 32);
 	this->animationComponent->addAnimation("WALK", 8.0f, 0, 1, 5, 1, 32, 32);
-	this->animationComponent->addAnimation("JUMP", 8.0f, 9, 1, 14, 1, 32, 32);
+	this->animationComponent->addAnimation("JUMP", 10.0f, 9, 1, 14, 1, 32, 32);
 	this->animationComponent->addAnimation("ATTACK_1", 8.0f, 0, 3, 3, 3, 32, 32);
 	this->animationComponent->addAnimation("ATTACK_2", 8.0f, 6, 5, 12, 5, 32, 32);
 	
@@ -75,62 +75,27 @@ const bool & Player::getJumpping()
 	return this->jumpping;
 }
 
-const float Player::getATK()
-{
-	return this->ATK;
-}
-
 //Function
-const bool Player::checkHitCollision(Entity* enemy)
-{
-	if (this->attacking) {
-		if (this->attackHitbox->checkIntersect(enemy->getGlobalBounds())) {
-			return true;
-		}
-	}
-	return false;
-}
-
-void Player::attack(short unsigned attack_style)
+void Player::attack(short unsigned attack_style, Entity* enemy)
 {
 	this->attacking = true;
 	this->attackStyle = attack_style;
+
+	this->createAttackHitbox();
+	if (this->checkHitCollision(enemy)) {
+		if (this->attackStyle == ATTACK_MELEE) {
+			enemy->decreaseHP(this->ATK);
+		}
+		if (this->attackStyle == ATTACK_RANGE) {
+			enemy->decreaseHP(this->ATK);
+			enemy->decreaseHP(this->ATK);
+		}
+	}
+	//this->clearAttackHitbox();
 }
 
-void Player::jump()
+void Player::createAttackHitbox()
 {
-	this->jumpping = true;
-	this->movementComponent->jump();
-}
-
-void Player::updateEntity(const float & dt)
-{
-	//Update movement
-	if (this->movementComponent) {
-		this->movementComponent->updateComponent(dt);
-	}
-	
-	this->updateAttackHitbox();
-	this->updateAnimation(dt);
-	
-	//Update hitboxComponent
-	if (this->hitboxComponent) {
-		this->hitboxComponent->updateComponent();
-	}
-
-	//Update Add on component
-	if (this->attackHitbox) {
-		this->attackHitbox->updateComponent();
-	}
-}
-
-void Player::updateAttackHitbox()
-{
-	//delete attackHitbox if not NULL
-	if (this->attackHitbox) {
-		delete this->attackHitbox;
-		this->attackHitbox = NULL;
-	}
 	//create new attackHitbox
 	if (this->attacking) {
 		if (this->sprite.getScale().x > 0.0f) {
@@ -156,6 +121,57 @@ void Player::updateAttackHitbox()
 			}
 		}
 	}
+}
+
+const bool Player::checkHitCollision(Entity* enemy)
+{
+	if (this->attacking) {
+		if (this->attackHitbox->checkIntersect(enemy->getGlobalBounds())) {
+			return true;
+		}
+	}
+	return false;
+}
+
+void Player::clearAttackHitbox()
+{
+	//delete attackHitbox if not NULL
+	if (this->attackHitbox) {
+		delete this->attackHitbox;
+		this->attackHitbox = NULL;
+	}
+}
+
+void Player::decreaseHP(const float ATK)
+{
+	float damage = ATK * 2;
+
+	srand(int(time(NULL)));
+	this->currHP = this->currHP - ((rand() % 50 + damage) - (rand() % 20 + this->DEF));
+}
+
+void Player::jump()
+{
+	this->jumpping = true;
+	this->movementComponent->jump();
+}
+
+void Player::updateEntity(const float & dt, sf::RenderWindow& window)
+{
+	//Update movement
+	if (this->movementComponent) {
+		this->movementComponent->updateComponent(dt);
+	}
+
+	this->updateAnimation(dt);
+	
+	//Update hitboxComponent
+	if (this->hitboxComponent) {
+		this->hitboxComponent->updateComponent();
+	}
+
+	//update collision
+	this->updateCollisionFrame(window);
 }
 
 void Player::updateAnimation(const float & dt)
@@ -202,6 +218,15 @@ void Player::updateAnimation(const float & dt)
 	}
 }
 
+void Player::updateCollisionEntity(Entity * entity)
+{
+	if (this->hitboxComponent->checkIntersect(entity->getGlobalBounds())) {
+		this->stopEntityX();
+		this->stopEntityY();
+		this->setPosition(this->getPosition().x, this->getPosition().y);
+	}
+}
+
 void Player::renderEntity(sf::RenderTarget& target)
 {
 	target.draw(this->sprite);
@@ -209,9 +234,11 @@ void Player::renderEntity(sf::RenderTarget& target)
 	if (this->hitboxComponent) {
 		this->hitboxComponent->renderComponent(target);
 	}
+	//---------------------- for debug
 	if (this->attackHitbox) {
 		this->attackHitbox->renderComponent(target);
 	}
+	//--------------------
 }
 
 

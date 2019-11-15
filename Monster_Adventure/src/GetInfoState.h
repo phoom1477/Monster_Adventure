@@ -17,12 +17,14 @@ private:
 	short unsigned playerIndex;
 
 	//Resource
+	std::map<std::string, sf::Texture> textures;
+
+	sf::Texture backgroundTexture;
+	sf::RectangleShape background;
+
 	sf::Text descriptText;
 	sf::Text previewName;
 	std::vector <sf::RectangleShape> previewPlayer;
-	
-	sf::Texture backgroundTexture;
-	sf::RectangleShape background;
 
 	sf::Font font;
 	sf::Font temporaryFont;
@@ -34,17 +36,20 @@ private:
 
 	//Initialization
 	void initVariable();
-	void initFonts();
-	void initKeybinds();
-	void initBackground();
 
+	void initKeybinds();
+	void initFonts();
+
+	void initBackground();
 	void initDescriptText();
+
 	void initPreviewName();
 	void initPreviewPlayer();
 
 	void initButton();
 		
 public:
+	//Constructor , Destructor
 	GetInfoState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
 	virtual ~GetInfoState();
 
@@ -54,9 +59,9 @@ public:
 	void updateInput(const float &dt);
 	void updateButton();
 
-	void updatePreviewPlayer();
 	void updateName();
-	void updatePreviewName(const std::string name);
+	void updatePreviewName(const std::string name); 
+	void updatePreviewPlayer();
 
 	//render
 	void renderState(sf::RenderTarget* target = NULL);

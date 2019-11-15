@@ -8,16 +8,17 @@
 #include "GameState.h"
 #include "GetInfoState.h"
 #include "SettingState.h"
+#include "ScoreState.h"
 #include "gui.h"
 
 class MainMenuState : public State
 {
 private:
 	//Resource
-	sf::Texture logoTexture;
-	sf::RectangleShape logo;
 	sf::Texture backgroundTexture;
 	sf::RectangleShape background;  
+	sf::Texture logoTexture;
+	sf::RectangleShape logo;
 
 	sf::SoundBuffer musicBuffer;
 	sf::Sound music;
@@ -26,12 +27,15 @@ private:
 	std::map<std::string, gui::Button*> buttons;
 
 	//Initialization
-	void initFonts();
 	void initKeybinds();
-	void initButton();
+	void initFonts();
+
 	void initBackground();
+	void initContainer();
 	void initLogo();
 	void initMusic();
+
+	void initButton();
 
 public:
 	//Constructor , Destructor

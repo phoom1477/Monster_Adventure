@@ -13,7 +13,7 @@ private:
 	short unsigned ATK;
 	short unsigned DEF;
 	short unsigned MSPD;
-	short unsigned currHP;
+	float  currHP;
 	short unsigned maxHP;
 
 	//Action
@@ -41,18 +41,22 @@ public:
 
 	const bool& getAttacking();
 	const bool& getJumpping();
-	const float getATK();
 
 
 	//Function
+	void attack(short unsigned attack_style, Entity* enemy);
+	void createAttackHitbox();
 	const bool checkHitCollision(Entity* enemy);
-	void attack(short unsigned attack_style);
+	void clearAttackHitbox();
+
+	void decreaseHP(const float ATK);
+
 	void jump();
 	
 	//update
-	void updateEntity(const float &dt);
-	void updateAttackHitbox();
+	void updateEntity(const float &dt, sf::RenderWindow& window);
 	void updateAnimation(const float &dt);
+	void updateCollisionEntity(Entity* entity);
 
 	//render
 	virtual void renderEntity(sf::RenderTarget& target);

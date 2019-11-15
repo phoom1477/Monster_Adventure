@@ -17,7 +17,7 @@ private:
 	short unsigned ATK;
 	short unsigned DEF;
 	short unsigned MSPD;
-	short unsigned currHP;
+	float currHP;
 	short unsigned maxHP;
 
 	//Action
@@ -49,7 +49,7 @@ public:
 	void decreaseHP(const float ATK);
 
 	//update
-	void updateEntity(const float &dt);
+	void updateEntity(const float &dt, sf::RenderWindow& window);
 	void updateAttackHitbox();
 	void updateAnimation(const float &dt);
 
