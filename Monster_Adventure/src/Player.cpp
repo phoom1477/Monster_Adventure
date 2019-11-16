@@ -14,7 +14,7 @@ void Player::initStatus()
 	this->ATK = 100;
 	this->DEF = 10;
 	this->MSPD = 10;
-	this->maxHP = 1000;
+	this->maxHP = 1000.0f;
 	this->currHP = this->maxHP;
 }
 
@@ -22,6 +22,7 @@ void Player::initStatus()
 Player::Player(float x, float y, sf::Texture& texture_sheet ,std::string name)
 {
 	this->name = name;
+	this->score = 0;
 	this->initVariable();
 	this->initStatus();
 
@@ -75,7 +76,48 @@ const bool & Player::getJumpping()
 	return this->jumpping;
 }
 
+const std::string & Player::getName()
+{
+	return this->name;
+}
+
+const float & Player::getCurrHP()
+{
+	return this->currHP;
+}
+
+const float & Player::getMaxHP()
+{
+	return this->maxHP;
+}
+
+const int & Player::getScore()
+{
+	return this->score;
+}
+
 //Function
+void Player::decreaseHP(const float ATK)
+{
+	srand(int(time(NULL)));
+
+	float damage = (ATK * 2) - (this->DEF / 100.0f);
+
+	if (rand() % 100 <= 5) {
+		//miss attack
+		this->currHP = this->currHP - 0.0f;
+	}
+	else {
+		//hit attack
+		this->currHP = this->currHP - ((rand() % 50 + damage));
+	}
+}
+
+void Player::increaseScore(const int point)
+{
+	this->score += point;
+}
+
 void Player::attack(short unsigned attack_style, Entity* enemy)
 {
 	this->attacking = true;
@@ -140,14 +182,6 @@ void Player::clearAttackHitbox()
 		delete this->attackHitbox;
 		this->attackHitbox = NULL;
 	}
-}
-
-void Player::decreaseHP(const float ATK)
-{
-	float damage = ATK * 2;
-
-	srand(int(time(NULL)));
-	this->currHP = this->currHP - ((rand() % 50 + damage) - (rand() % 20 + this->DEF));
 }
 
 void Player::jump()
@@ -215,15 +249,6 @@ void Player::updateAnimation(const float & dt)
 		}
 
 		this->animationComponent->play("WALK", dt, this->movementComponent->getVelocity().x, this->movementComponent->getMaxVelocity());
-	}
-}
-
-void Player::updateCollisionEntity(Entity * entity)
-{
-	if (this->hitboxComponent->checkIntersect(entity->getGlobalBounds())) {
-		this->stopEntityX();
-		this->stopEntityY();
-		this->setPosition(this->getPosition().x, this->getPosition().y);
 	}
 }
 

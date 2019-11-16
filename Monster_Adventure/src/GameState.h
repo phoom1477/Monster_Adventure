@@ -21,11 +21,18 @@ private:
 	std::string playerName;
 	short unsigned playerIndex;
 
-	//Resource1
+	//Game Resource
 	Player* player;
 	std::vector<Enemy*> enemy;
 
-	//Resource2
+	//UI Resource
+	sf::Text nameText;
+	sf::Text HPText;
+	sf::RectangleShape playerShowHPBar;
+	sf::Text scoreText;
+	sf::Text playerShowScoreText;
+	
+	//State Resource
 	std::map<std::string, sf::Texture> textures;
 	
 	sf::Texture backgroundTexture;
@@ -45,6 +52,7 @@ private:
 	void initEnemy();
 	
 	void initView();
+	void initUI();
 	void initPauseMenu();
 
 public:
@@ -59,13 +67,18 @@ public:
 	
 	void updatePlayer(const float &dt);
 	void updateEnemy(const float &dt);
+	void updateEnemyControl(const float& dt);
 
 	void updateView();
+	void updateUI();
 	void updatePauseMenuButton();
 
 	//render
 	void renderState(sf::RenderTarget* target = NULL);
+	
 	void renderPlayer(sf::RenderTarget* target = NULL);
 	void renderEnemy(sf::RenderTarget* target = NULL);
+	
+	void renderUI(sf::RenderTarget* target = NULL);
 };
 

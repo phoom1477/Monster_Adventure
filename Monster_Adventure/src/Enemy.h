@@ -18,7 +18,8 @@ private:
 	short unsigned DEF;
 	short unsigned MSPD;
 	float currHP;
-	short unsigned maxHP;
+	float maxHP;
+	int point;
 
 	//Action
 	bool attacking;
@@ -40,17 +41,23 @@ public:
 	virtual ~Enemy();
 
 	//Accessor
+	sf::Vector2f getCenter();
+
 	bool& getAttacking();
-	const float getCurrHP();
+
+	const float& getCurrHP();
+	const int& getPoint();
 
 	//Function
-	const bool checkHitCollision(Entity* player);
-	void attack(short unsigned attack_style);
 	void decreaseHP(const float ATK);
 
+	void attack(short unsigned attack_style, Entity* player);
+	void createAttackHitbox();
+	const bool checkHitCollision(Entity* player);
+	void clearAttackHitbox();
+	
 	//update
 	void updateEntity(const float &dt, sf::RenderWindow& window);
-	void updateAttackHitbox();
 	void updateAnimation(const float &dt);
 
 	//render

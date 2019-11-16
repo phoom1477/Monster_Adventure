@@ -78,9 +78,62 @@ void GameState::initEnemy()
 void GameState::initView()
 {
 	this->view.setSize(static_cast<float>(this->window->getSize().x), static_cast<float>(this->window->getSize().y));
+	
 	this->view.setCenter(this->player->getCenter().x, this->window->getSize().y / 2.0f);
 
 	this->window->setView(this->view);
+}
+
+void GameState::initUI()
+{
+	//create nameText
+	this->nameText.setFont(this->font);
+	this->nameText.setCharacterSize(30);
+	this->nameText.setString(this->player->getName());
+	this->nameText.setPosition(
+		this->view.getCenter().x + 300.0f,
+		10.0f
+	);
+	//create HPText
+	this->HPText.setFont(this->font);
+	this->HPText.setCharacterSize(30);
+	this->HPText.setString("HP");
+	this->HPText.setPosition(
+		this->view.getCenter().x - this->view.getSize().x / 2.0f + 20.0f,
+		10.0f
+	);
+	//create scoreText
+	this->scoreText.setFont(this->font);
+	this->scoreText.setCharacterSize(30);
+	this->scoreText.setString("SCORE :");
+	this->scoreText.setPosition(
+		this->view.getCenter().x + 300.0f,
+		50.0f
+	);
+
+
+	//create playerShowHPBar
+	this->playerShowHPBar.setOutlineThickness(5.0f);
+	this->playerShowHPBar.setOutlineColor(sf::Color::Black);
+	this->playerShowHPBar.setFillColor(sf::Color::Green);
+	this->playerShowHPBar.setSize(sf::Vector2f(
+		(this->view.getSize().x / 2.0f)*(this->player->getCurrHP() / this->player->getMaxHP()) , 
+		20.0f
+	));
+	this->playerShowHPBar.setPosition(
+		this->view.getCenter().x - this->view.getSize().x / 2.0f + 80.0f, 
+		20.0f
+	);
+	//create playerShowScoreText
+	std::stringstream int_to_string;
+	int_to_string << this->player->getScore();
+	this->playerShowScoreText.setFont(this->font);
+	this->playerShowScoreText.setCharacterSize(30);
+	this->playerShowScoreText.setString(int_to_string.str());
+	this->playerShowScoreText.setPosition(
+		this->view.getCenter().x + 420.0f,
+		50.0f
+	);
 }
 
 void GameState::initPauseMenu()
@@ -106,6 +159,7 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 	this->initEnemy();
 
 	this->initView();
+	this->initUI();
 	this->initPauseMenu();
 }
 
@@ -133,11 +187,14 @@ void GameState::updateState(const float &dt)
 	if (!this->paused) {
 		this->updatePlayer(dt);
 		this->updateEnemy(dt);
+		this->updateUI();
 
 		//clear enemy when it die
 		if (!this->enemy.empty()) {
 			for (int i = 0; i < this->enemy.size(); i++) {
 				if (this->enemy[i]->getCurrHP() <= 0) {
+					this->player->increaseScore(this->enemy[i]->getPoint());
+
 					delete enemy[i];
 					this->enemy.erase(this->enemy.begin() + i);
 				}
@@ -204,13 +261,38 @@ void GameState::updatePlayer(const float & dt)
 
 void GameState::updateEnemy(const float &dt)
 {
+	//Control enemy
+	this->updateEnemyControl(dt);
+
 	//Update all Entity component
 	if (!this->enemy.empty()) {
 		for (int i = 0; i < this->enemy.size(); i++) {
 			this->enemy[i]->updateEntity(dt, *this->window);
 		}
 	}
-} 
+}
+void GameState::updateEnemyControl(const float& dt)
+{
+	if (!this->enemy.empty()) {
+		for (int i = 0; i < this->enemy.size(); i++) {
+			//control bot walk to player
+			if (std::abs(this->player->getCenter().x - this->enemy[i]->getCenter().x) <= 300.0f && std::abs(this->player->getCenter().x - this->enemy[i]->getCenter().x) >=80) {
+				if (this->player->getCenter().x < this->enemy[i]->getCenter().x) {
+					this->enemy[i]->moveEntity(-1.0f, dt);
+				}
+				if (this->player->getCenter().x > this->enemy[i]->getCenter().x) {
+					this->enemy[i]->moveEntity(1.0f, dt);
+				}
+			}
+
+			//control bot attack player
+			if (std::abs(this->player->getCenter().x - this->enemy[i]->getCenter().x) <= 100.0f && !this->enemy[i]->getAttacking()) {
+				this->enemy[i]->attack(Enemy::ATTACK_MELEE, this->player);
+			}
+		}
+	}
+}
+
 
 void GameState::updateView()
 {
@@ -228,6 +310,54 @@ void GameState::updateView()
 		);
 		this->window->setView(this->view);
 	}
+}
+
+void GameState::updateUI()
+{
+	
+	//update nameText
+	this->nameText.setPosition(
+		this->view.getCenter().x + 300.0f,
+		10.0f
+	);
+	//update HPText
+	this->HPText.setPosition(
+		this->view.getCenter().x - this->view.getSize().x / 2.0f + 20.0f,
+		10.0f
+	);
+	//update scoreText
+	this->scoreText.setPosition(
+		this->view.getCenter().x + 300.0f,
+		50.0f
+	);
+
+
+	//update playerShowHPBar
+	if ((this->player->getCurrHP() / this->player->getMaxHP()) * 100.0f <= 50.0f) {
+		this->playerShowHPBar.setFillColor(sf::Color::Yellow);
+	}
+	if ((this->player->getCurrHP() / this->player->getMaxHP()) * 100.0f <= 20.0f) {
+		this->playerShowHPBar.setFillColor(sf::Color::Red);
+	}
+
+	this->playerShowHPBar.setSize(sf::Vector2f(
+		(this->view.getSize().x / 2.0f)*(this->player->getCurrHP() / this->player->getMaxHP()),
+		20.0f
+	));
+
+	this->playerShowHPBar.setPosition(
+		this->view.getCenter().x - this->view.getSize().x / 2.0f + 80.0f,
+		20.0f
+	);
+
+	//update playerShowScoreText
+	std::stringstream int_to_string;
+	int_to_string << this->player->getScore();
+	this->playerShowScoreText.setString(int_to_string.str());
+	this->playerShowScoreText.setPosition(
+		this->view.getCenter().x + 420.0f,
+		50.0f
+	);
 }
 
 void GameState::updatePauseMenuButton()
@@ -253,7 +383,10 @@ void GameState::renderState(sf::RenderTarget* target)
 	for (int i = 0; i < this->background.size(); i++) {
 		target->draw(this->background[i]);
 	}
-	
+
+	//render UI
+	this->renderUI(target);
+
 	//render all entity 
 	this->renderEnemy(target);
 	this->renderPlayer(target);
@@ -277,3 +410,15 @@ void GameState::renderEnemy(sf::RenderTarget* target)
 		}
 	}
 }
+
+void GameState::renderUI(sf::RenderTarget * target)
+{
+	target->draw(this->nameText);
+
+	target->draw(this->HPText);
+	target->draw(this->scoreText);
+
+	target->draw(this->playerShowHPBar);
+	target->draw(this->playerShowScoreText);
+}
+

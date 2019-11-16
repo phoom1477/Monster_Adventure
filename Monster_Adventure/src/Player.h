@@ -8,13 +8,14 @@ class Player : public Entity
 private:
 	//Identification
 	std::string name;
+	int score;
 
 	//Status
 	short unsigned ATK;
 	short unsigned DEF;
 	short unsigned MSPD;
-	float  currHP;
-	short unsigned maxHP;
+	float currHP;
+	float maxHP;
 
 	//Action
 	bool attacking;
@@ -42,21 +43,25 @@ public:
 	const bool& getAttacking();
 	const bool& getJumpping();
 
+	const std::string& getName();
+	const float& getCurrHP();
+	const float& getMaxHP();
+	const int& getScore();
 
 	//Function
+	void decreaseHP(const float ATK);
+	void increaseScore(const int point);
+
 	void attack(short unsigned attack_style, Entity* enemy);
 	void createAttackHitbox();
 	const bool checkHitCollision(Entity* enemy);
 	void clearAttackHitbox();
-
-	void decreaseHP(const float ATK);
 
 	void jump();
 	
 	//update
 	void updateEntity(const float &dt, sf::RenderWindow& window);
 	void updateAnimation(const float &dt);
-	void updateCollisionEntity(Entity* entity);
 
 	//render
 	virtual void renderEntity(sf::RenderTarget& target);

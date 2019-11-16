@@ -21,7 +21,7 @@ void Enemy::initStatus(std::string id)
 	this->MSPD = 10;
 	this->maxHP = 1000;
 	this->currHP = this->maxHP;
-
+	this->point = 100;
 	
 	//getdata from file
 	while(getdata.is_open()) {
@@ -41,6 +41,9 @@ void Enemy::initStatus(std::string id)
 		}
 		if (buff == "ID" + this->enemyId + ":" + "maxHP") {
 			getdata >> this->maxHP;
+		}
+		if (buff == "ID" + this->enemyId + ":" + "point") {
+			getdata >> this->point;
 		}
 
 		if (buff == "") {
@@ -74,18 +77,101 @@ Enemy::~Enemy()
 	}
 }
 
+sf::Vector2f Enemy::getCenter()
+{
+	if (this->hitboxComponent) {
+		return sf::Vector2f(
+			this->hitboxComponent->getPosition().x + this->hitboxComponent->getGlobalBounds().width / 2.0f,
+			this->hitboxComponent->getPosition().y + this->hitboxComponent->getGlobalBounds().height / 2.0f
+		);
+	}
+
+	return sf::Vector2f(
+		this->sprite.getPosition().x + this->sprite.getGlobalBounds().width / 2.0f,
+		this->sprite.getPosition().y + this->sprite.getGlobalBounds().height / 2.0f
+	);
+}
+
 //Accessor
 bool & Enemy::getAttacking()
 {
 	return this->attacking;
 }
 
-const float Enemy::getCurrHP()
+const float& Enemy::getCurrHP()
 {
 	return this->currHP;
 }
 
+const int & Enemy::getPoint()
+{
+	return this->point;
+}
+
 //Function
+void Enemy::decreaseHP(const float ATK)
+{
+	srand(int(time(NULL)));
+
+	float damage = (ATK * 2) - (this->DEF / 100.0f);
+
+	if (rand() % 100 <= 5) {
+		//miss attack
+		this->currHP = this->currHP - 0.0f;
+	}
+	else {
+		//hit attack
+		this->currHP = this->currHP - ((rand() % 50 + damage));
+	}
+}
+
+void Enemy::attack(short unsigned attack_style, Entity* player)
+{
+	attacking = true;
+	std::cout << this->attacking << " ";
+	this->attackStyle = attack_style;
+	this->createAttackHitbox();
+	if (this->checkHitCollision(player)) {
+		if (this->attackStyle == ATTACK_MELEE) {
+			player->decreaseHP(this->ATK);
+		}
+		if (this->attackStyle == ATTACK_RANGE) {
+			player->decreaseHP(this->ATK);
+			player->decreaseHP(this->ATK);
+		}
+	}
+	//this->clearAttackHitbox();
+}
+
+void Enemy::createAttackHitbox()
+{
+	//create new attackHitbox
+	if (this->attacking) {
+		if (this->sprite.getScale().x > 0.0f) {
+			if (this->attackStyle == ATTACK_MELEE) {
+				this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Red);
+			}
+			if (this->attackStyle == ATTACK_RANGE) {
+				this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Blue);
+			}
+			if (this->attackStyle == ATTACK_SKILL) {
+				this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Yellow);
+			}
+		}
+		else {
+			if (this->attackStyle == ATTACK_MELEE) {
+				this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Red);
+			}
+			if (this->attackStyle == ATTACK_RANGE) {
+				this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Blue);
+			}
+			if (this->attackStyle == ATTACK_SKILL) {
+				this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Yellow);
+			}
+		}
+	}
+}
+
 const bool Enemy::checkHitCollision(Entity* player)
 {
 	if (this->attacking) {
@@ -96,29 +182,22 @@ const bool Enemy::checkHitCollision(Entity* player)
 	return false;
 }
 
-void Enemy::attack(short unsigned attack_style)
+void Enemy::clearAttackHitbox()
 {
-	attacking = true;
-	this->attackStyle = attack_style;
-}
-
-void Enemy::decreaseHP(const float ATK)
-{
-	float damage = ATK * 2;
-	
-	srand(int(time(NULL)));
-	this->currHP = this->currHP - ((rand() % 50 + damage) - (rand() % 20 + this->DEF));
+	//delete attackHitbox if not NULL
+	if (this->attackHitbox) {
+		delete this->attackHitbox;
+		this->attackHitbox = NULL;
+	}
 }
 
 void Enemy::updateEntity(const float & dt, sf::RenderWindow& window)
 {
-	std::cout << this->currHP << "\n";
 	//Update movement
 	if (this->movementComponent) {
 		this->movementComponent->updateComponent(dt);
 	}
 
-	this->updateAttackHitbox();
 	this->updateAnimation(dt);
 
 	//update hitboxComponent
@@ -130,47 +209,17 @@ void Enemy::updateEntity(const float & dt, sf::RenderWindow& window)
 	this->updateCollisionFrame(window);
 }
 
-void Enemy::updateAttackHitbox()
-{
-	//delete attackHitbox if not NULL
-	if (this->attackHitbox) {
-		delete this->attackHitbox;
-		this->attackHitbox = NULL;
-	}
-	//create new attackHitbox
-	if (this->sprite.getScale().x > 0.0f) {
-		if (this->attackStyle == ATTACK_MELEE) {
-			this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Red);
-		}
-		if (this->attackStyle == ATTACK_RANGE) {
-			this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Blue);
-		}
-		if (this->attackStyle == ATTACK_SKILL) {
-			this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Yellow);
-		}
-	}
-	else {
-		if (this->attackStyle == ATTACK_MELEE) {
-			this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Red);
-		}
-		if (this->attackStyle == ATTACK_RANGE) {
-			this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Blue);
-		}
-		if (this->attackStyle == ATTACK_SKILL) {
-			this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Yellow);
-		}
-	}
-}
-
 void Enemy::updateAnimation(const float & dt)
 {
 	//Animate and check for animation end
 	if (this->attacking) {
-		if (this->attackStyle == ATTACK_MELEE && this->animationComponent->play("ATTACK_1", dt, true)) {
+		if (this->attackStyle == ATTACK_MELEE && this->animationComponent->play("IDLE", dt, true)) {
+		//if (this->attackStyle == ATTACK_MELEE && this->animationComponent->play("ATTACK_1", dt, true)) {
 			this->attacking = false;
 			this->attackStyle = ATTACK_NONE;
 		}
-		if (this->attackStyle == ATTACK_RANGE && this->animationComponent->play("ATTACK_2", dt, true)) {
+		if (this->attackStyle == ATTACK_RANGE && this->animationComponent->play("IDLE", dt, true)) {
+		//if (this->attackStyle == ATTACK_MELEE && this->animationComponent->play("ATTACK_2", dt, true)) {
 			this->attacking = false;
 			this->attackStyle = ATTACK_NONE;
 		}
@@ -182,6 +231,22 @@ void Enemy::updateAnimation(const float & dt)
 
 	if (this->movementComponent->getState(IDLE)) {
 		this->animationComponent->play("IDLE", dt);
+	}
+	else if (this->movementComponent->getState(MOVING_RIGHT)) {
+		if (this->sprite.getScale().x < 0.0f) {
+			this->sprite.setOrigin(0.0f, 0.0f);
+			this->sprite.setScale(3.0f, 3.0f);
+		}
+
+		this->animationComponent->play("IDLE", dt, this->movementComponent->getVelocity().x, this->movementComponent->getMaxVelocity());
+	}
+	else if (this->movementComponent->getState(MOVING_LEFT)) {
+		if (this->sprite.getScale().x > 0.0f) {
+			this->sprite.setOrigin(17.0f, 0.0f);
+			this->sprite.setScale(-3.0f, 3.0f);
+		}
+
+		this->animationComponent->play("IDLE", dt, this->movementComponent->getVelocity().x, this->movementComponent->getMaxVelocity());
 	}
 }
 
