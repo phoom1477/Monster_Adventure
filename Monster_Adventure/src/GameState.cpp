@@ -136,11 +136,17 @@ void GameState::initUI()
 	);
 }
 
-void GameState::initPauseMenu()
+void GameState::initPopUpMenu()
 {
-	this->pauseMenu = new PauseMenu(this->view, this->font);
+	this->pauseMenu = new PopUpMenu(this->view, this->font);
+	this->pauseMenu->setString("PAUSED");
 	this->pauseMenu->addButton("Resume", 4.0f, "RESUME");
 	this->pauseMenu->addButton("Quit", 6.0f, "QUIT");
+
+	this->gameOverMenu = new PopUpMenu(this->view, this->font);
+	this->gameOverMenu->setString("GAME OVER");
+	this->gameOverMenu->setWidth((this->view.getSize().x / 16.0f) * 6.0f);
+	this->gameOverMenu->addButton("Quit", 6.0f, "EXIT TO MENU");
 }
 
 //Constructor , Destructor
@@ -160,7 +166,7 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 
 	this->initView();
 	this->initUI();
-	this->initPauseMenu();
+	this->initPopUpMenu();
 }
 
 GameState::~GameState()
@@ -181,30 +187,46 @@ void GameState::updateState(const float &dt)
 {
 	this->updateMousePosition();
 	this->updateKeyTime(dt);
-	this->updateInput(dt);
 
-	//Unpaused update
-	if (!this->paused) {
-		this->updatePlayer(dt);
-		this->updateEnemy(dt);
-		this->updateUI();
+	//gameover update
+	if (this->gameover) {
+		this->updateGameOverMenuButton();
+	}
+	else {
+		this->updateInput(dt);
 
-		//clear enemy when it die
-		if (!this->enemy.empty()) {
-			for (int i = 0; i < this->enemy.size(); i++) {
-				if (this->enemy[i]->getCurrHP() <= 0) {
-					this->player->increaseScore(this->enemy[i]->getPoint());
+		//Unpaused update
+		if (!this->paused) {
+			this->updatePlayer(dt);
+			this->updateEnemy(dt);
+			this->updateUI();
 
-					delete enemy[i];
-					this->enemy.erase(this->enemy.begin() + i);
+			//clear enemy when it died
+			if (!this->enemy.empty()) {
+				for (int i = 0; i < this->enemy.size(); i++) {
+					if (this->enemy[i]->getDied()) {
+						this->player->increaseScore(this->enemy[i]->getPoint());
+
+						delete enemy[i];
+						this->enemy.erase(this->enemy.begin() + i);
+					}
 				}
 			}
-		}
 
-	}
-	//Paused update
-	else {
-		this->updatePauseMenuButton();
+			//clear player when died
+			if (this->player->getDied()) {
+				this->overState();
+				//write score in score.data
+				std::fstream scorefile("src/Config/Data/Score.data", std::ios::app);
+				scorefile << "\n" << this->player->getName();
+				scorefile << "\t\t" << this->player->getScore();
+				scorefile.close();
+			}
+		}
+		//Paused update
+		else if (this->paused) {
+			this->updatePauseMenuButton();
+		}
 	}
 
 	this->updateView();
@@ -239,7 +261,7 @@ void GameState::updatePlayer(const float & dt)
 	}
 
 	if (!this->player->getJumpping()) {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("ATTACK_MELEE"))) && !this->player->getAttacking()) {	
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("ATTACK_MELEE"))) && !this->player->getAttacking()) {
 			if (!this->enemy.empty()) {
 				for (int i = 0; i < this->enemy.size(); i++) {
 					this->player->attack(Player::ATTACK_MELEE, this->enemy[i]);
@@ -340,11 +362,18 @@ void GameState::updateUI()
 		this->playerShowHPBar.setFillColor(sf::Color::Red);
 	}
 
-	this->playerShowHPBar.setSize(sf::Vector2f(
-		(this->view.getSize().x / 2.0f)*(this->player->getCurrHP() / this->player->getMaxHP()),
-		20.0f
-	));
-
+	if (this->player->getCurrHP() <= 0.0f) {
+		this->playerShowHPBar.setSize(sf::Vector2f(
+			0.0f,
+			20.0f
+		));
+	}
+	else {
+		this->playerShowHPBar.setSize(sf::Vector2f(
+			(this->view.getSize().x / 2.0f)*(this->player->getCurrHP() / this->player->getMaxHP()),
+			20.0f
+		));
+	}
 	this->playerShowHPBar.setPosition(
 		this->view.getCenter().x - this->view.getSize().x / 2.0f + 80.0f,
 		20.0f
@@ -374,6 +403,17 @@ void GameState::updatePauseMenuButton()
 	}
 }
 
+void GameState::updateGameOverMenuButton()
+{
+	//Update all the buttons in Game Over Menu
+	this->gameOverMenu->updatePauseMenu(this->mousePosView, this->view);
+
+	//Action button
+	if (this->gameOverMenu->isButtonPreesed("Quit")) {
+		this->endState();
+	}
+}
+
 //render
 void GameState::renderState(sf::RenderTarget* target)
 {
@@ -394,6 +434,11 @@ void GameState::renderState(sf::RenderTarget* target)
 	//paused menu render
 	if (this->paused) {		
 		this->pauseMenu->renderPauseMenu(*target);
+	}
+
+	//gameover menu render
+	if (this->gameover) {
+		this->gameOverMenu->renderPauseMenu(*target);
 	}
 }
 

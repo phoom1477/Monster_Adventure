@@ -3,7 +3,7 @@
 //initialization
 void GetInfoState::initVariable()
 {
-	this->playerName = "Player name";
+	this->playerName = "PlayerName";
 	this->playerIndex = 0;
 	this->showCursor = false;
 }
@@ -208,7 +208,7 @@ void GetInfoState::updateName()
 	this->window->pollEvent(this->eventType);
 
 	if (this->eventType.type == sf::Event::TextEntered) {
-		if (eventType.text.unicode < 128 && eventType.text.unicode != 8) {	//typing
+		if (eventType.text.unicode < 128 && eventType.text.unicode != 8 && eventType.text.unicode != 32) {	//typing
 			this->playerName += char(eventType.text.unicode);
 		}
 		if (eventType.text.unicode == 8) {									//delete

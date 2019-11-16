@@ -42,6 +42,7 @@ protected:
 	
 	bool paused;
 	bool quit;
+	bool gameover;
 	
 	//Intialization
 	virtual void initKeybinds() = 0;
@@ -58,6 +59,7 @@ public:
 	//Function
 	void pausedState();
 	void unpausedState();
+	void overState();
 	void endState();
 
 	//update

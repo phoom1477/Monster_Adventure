@@ -9,7 +9,7 @@
 #include "State.h"
 #include "Player.h"
 #include "Enemy.h"
-#include "PauseMenu.h"
+#include "PopUpMenu.h"
 
 class GameState : public State
 {
@@ -39,7 +39,8 @@ private:
 	std::vector<sf::RectangleShape> background;
 
 	sf::Font font;
-	PauseMenu* pauseMenu;
+	PopUpMenu* pauseMenu;
+	PopUpMenu* gameOverMenu;
 	
 	//Intialization
 	void initKeybinds();
@@ -53,7 +54,7 @@ private:
 	
 	void initView();
 	void initUI();
-	void initPauseMenu();
+	void initPopUpMenu();
 
 public:
 	//Constructor , Destructor
@@ -72,6 +73,7 @@ public:
 	void updateView();
 	void updateUI();
 	void updatePauseMenuButton();
+	void updateGameOverMenuButton();
 
 	//render
 	void renderState(sf::RenderTarget* target = NULL);

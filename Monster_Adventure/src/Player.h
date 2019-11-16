@@ -21,6 +21,7 @@ private:
 	bool attacking;
 	short unsigned attackStyle;
 	bool jumpping;
+	bool died;
 	
 	//Add on Component
 	HitboxComponent *attackHitbox;
@@ -42,6 +43,7 @@ public:
 
 	const bool& getAttacking();
 	const bool& getJumpping();
+	const bool& getDied();
 
 	const std::string& getName();
 	const float& getCurrHP();

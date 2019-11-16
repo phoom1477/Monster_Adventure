@@ -24,6 +24,7 @@ private:
 	//Action
 	bool attacking;
 	short unsigned attackStyle;
+	bool died;
 
 	//Add on Component
 	HitboxComponent *attackHitbox;
@@ -43,7 +44,8 @@ public:
 	//Accessor
 	sf::Vector2f getCenter();
 
-	bool& getAttacking();
+	const bool& getAttacking();
+	const bool& getDied();
 
 	const float& getCurrHP();
 	const int& getPoint();

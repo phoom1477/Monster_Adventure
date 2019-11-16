@@ -5,8 +5,9 @@ void Player::initVariable()
 {
 	this->attacking = false;
 	this->attackStyle = ATTACK_NONE;
-	this->jumpping = false;
 	this->attackHitbox = NULL;
+	this->jumpping = false;
+	this->died = false;
 }
 
 void Player::initStatus()
@@ -35,6 +36,7 @@ Player::Player(float x, float y, sf::Texture& texture_sheet ,std::string name)
 	this->animationComponent->addAnimation("JUMP", 10.0f, 9, 1, 14, 1, 32, 32);
 	this->animationComponent->addAnimation("ATTACK_1", 8.0f, 0, 3, 3, 3, 32, 32);
 	this->animationComponent->addAnimation("ATTACK_2", 8.0f, 6, 5, 12, 5, 32, 32);
+	this->animationComponent->addAnimation("DEAD", 13.0f, 6, 4, 13, 4, 32, 32);
 	
 	//create hitbox component
 	this->createHitboxComponent(16.0f, 16.0f, this->sprite.getGlobalBounds().width-40, this->sprite.getGlobalBounds().height-20, sf::Color::Green);
@@ -74,6 +76,11 @@ const bool & Player::getAttacking()
 const bool & Player::getJumpping()
 {
 	return this->jumpping;
+}
+
+const bool & Player::getDied()
+{
+	return this->died;
 }
 
 const std::string & Player::getName()
@@ -211,44 +218,55 @@ void Player::updateEntity(const float & dt, sf::RenderWindow& window)
 void Player::updateAnimation(const float & dt)
 {
 	//Animate and check for animation end
-	if (this->attacking) {
-		if (this->attackStyle == ATTACK_MELEE && this->animationComponent->play("ATTACK_1", dt, true)) {
-			this->attacking = false;
-			this->attackStyle = ATTACK_NONE;
-		}
-		if (this->attackStyle == ATTACK_RANGE && this->animationComponent->play("ATTACK_2", dt, true)) {
-			this->attacking = false;
-			this->attackStyle = ATTACK_NONE;
-		}
-		if (this->attackStyle == ATTACK_SKILL && this->animationComponent->play("IDLE", dt, true)) {
-			this->attacking = false;
-			this->attackStyle = ATTACK_NONE;
+	if (this->currHP <= 0.0f) {
+		this->movementComponent->stopVelocityX();
+		this->movementComponent->stopVelocityY();
+
+		if (this->animationComponent->play("DEAD", dt, true)) {
+			this->died = true;
 		}
 	}
-	if (this->jumpping) {
-		if (this->animationComponent->play("JUMP", dt, this->movementComponent->getVelocity().y, this->movementComponent->getJumpVelocity(), true)) {
-			this->jumpping = false;
-		}
-	}
-	
-	if (this->movementComponent->getState(IDLE)) {
-		this->animationComponent->play("IDLE", dt);
-	}
-	else if (this->movementComponent->getState(MOVING_RIGHT)) {
-		if (this->sprite.getScale().x < 0.0f) {
-			this->sprite.setOrigin(0.0f, 0.0f);
-			this->sprite.setScale(3.0f, 3.0f);
+	else {
+		if (this->attacking) {
+			if (this->attackStyle == ATTACK_MELEE && this->animationComponent->play("ATTACK_1", dt, true)) {
+				this->attacking = false;
+				this->attackStyle = ATTACK_NONE;
+			}
+			if (this->attackStyle == ATTACK_RANGE && this->animationComponent->play("ATTACK_2", dt, true)) {
+				this->attacking = false;
+				this->attackStyle = ATTACK_NONE;
+			}
+			if (this->attackStyle == ATTACK_SKILL && this->animationComponent->play("IDLE", dt, true)) {
+				this->attacking = false;
+				this->attackStyle = ATTACK_NONE;
+			}
 		}
 
-		this->animationComponent->play("WALK", dt, this->movementComponent->getVelocity().x, this->movementComponent->getMaxVelocity());
-	}
-	else if (this->movementComponent->getState(MOVING_LEFT)) {
-		if (this->sprite.getScale().x > 0.0f) {
-			this->sprite.setOrigin(29.0f, 0.0f);
-			this->sprite.setScale(-3.0f, 3.0f);
+		if (this->jumpping) {
+			if (this->animationComponent->play("JUMP", dt, this->movementComponent->getVelocity().y, this->movementComponent->getJumpVelocity(), true)) {
+				this->jumpping = false;
+			}
 		}
 
-		this->animationComponent->play("WALK", dt, this->movementComponent->getVelocity().x, this->movementComponent->getMaxVelocity());
+		if (this->movementComponent->getState(IDLE)) {
+			this->animationComponent->play("IDLE", dt);
+		}
+		else if (this->movementComponent->getState(MOVING_RIGHT)) {
+			if (this->sprite.getScale().x < 0.0f) {
+				this->sprite.setOrigin(0.0f, 0.0f);
+				this->sprite.setScale(3.0f, 3.0f);
+			}
+
+			this->animationComponent->play("WALK", dt, this->movementComponent->getVelocity().x, this->movementComponent->getMaxVelocity());
+		}
+		else if (this->movementComponent->getState(MOVING_LEFT)) {
+			if (this->sprite.getScale().x > 0.0f) {
+				this->sprite.setOrigin(29.0f, 0.0f);
+				this->sprite.setScale(-3.0f, 3.0f);
+			}
+
+			this->animationComponent->play("WALK", dt, this->movementComponent->getVelocity().x, this->movementComponent->getMaxVelocity());
+		}
 	}
 }
 

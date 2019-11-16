@@ -93,9 +93,14 @@ sf::Vector2f Enemy::getCenter()
 }
 
 //Accessor
-bool & Enemy::getAttacking()
+const bool & Enemy::getAttacking()
 {
 	return this->attacking;
+}
+
+const bool & Enemy::getDied()
+{
+	return this->died;
 }
 
 const float& Enemy::getCurrHP()
@@ -247,6 +252,12 @@ void Enemy::updateAnimation(const float & dt)
 		}
 
 		this->animationComponent->play("IDLE", dt, this->movementComponent->getVelocity().x, this->movementComponent->getMaxVelocity());
+	}
+
+	if (this->currHP <= 0.0f) {
+		//if (this->animationComponent->play("DEAD", dt, true)) {
+			this->died = true;
+		//}
 	}
 }
 

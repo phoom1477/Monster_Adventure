@@ -5,6 +5,7 @@ void State::initVariable()
 {
 	this->quit = false;
 	this->paused = false;
+	this->gameover = false;
 	this->keyTime = 0.0f;
 	this->keyTimeMax = 10.0f;
 }
@@ -48,6 +49,12 @@ void State::unpausedState()
 {
 	this->paused = false;
 	std::cout << "Unpaused State" << std::endl;
+}
+
+void State::overState()
+{
+	this->gameover = true;
+	std::cout << "Game Over" << std::endl;
 }
 
 void State::endState()
