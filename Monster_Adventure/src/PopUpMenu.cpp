@@ -28,7 +28,7 @@ PopUpMenu::PopUpMenu(sf::View& view, sf::Font& font)
 		)
 	);
 
-	//Init text
+	//Init menutext
 	this->menuText.setFont(font);
 	this->menuText.setFillColor(sf::Color(255,255,255,255));
 	this->menuText.setCharacterSize(70);
@@ -36,8 +36,21 @@ PopUpMenu::PopUpMenu(sf::View& view, sf::Font& font)
 	this->menuText.setString("");
 	
 	this->menuText.setPosition(
-		this->container.getPosition().x + this->container.getSize().x / 2.0f - this->menuText.getGlobalBounds().width / 2.0f, 
-		this->container.getPosition().y + this->container.getSize().y / 16.0f * 1.0f - this->menuText.getGlobalBounds().height / 2.0f);
+		this->container.getPosition().x + this->container.getSize().x / 2.0f - this->menuText.getGlobalBounds().width / 2.0f,
+		this->container.getPosition().y + this->container.getSize().y / 16.0f - this->menuText.getGlobalBounds().height / 2.0f);
+
+	//Init descriptText
+	this->descriptText.setFont(font);
+	this->descriptText.setOutlineThickness(0.8f);
+	this->descriptText.setOutlineColor(sf::Color::Magenta);
+	this->descriptText.setFillColor(sf::Color(255, 255, 255, 255));
+	this->descriptText.setCharacterSize(45);
+
+	this->descriptText.setString("");
+
+	this->descriptText.setPosition(
+		this->container.getPosition().x + this->container.getSize().x / 2.0f - this->descriptText.getGlobalBounds().width / 2.0f,
+		this->container.getPosition().y + this->container.getSize().y / 16.0f * 5.0f  - this->descriptText.getGlobalBounds().height / 2.0f);
 }
 
 PopUpMenu::~PopUpMenu()
@@ -72,9 +85,14 @@ void PopUpMenu::addButton(const std::string key, float grid_y, const std::string
 		sf::Color(255, 255, 255, 255), sf::Color(150, 150, 150, 255), sf::Color(0, 0, 0, 255));
 }
 
-void PopUpMenu::setString(std::string menu_text)
+void PopUpMenu::setMenuTextString(std::string menu_text)
 {
 	this->menuText.setString(menu_text);
+}
+
+void PopUpMenu::setDescriptTextString(std::string descript_text)
+{
+	this->descriptText.setString(descript_text);
 }
 
 void PopUpMenu::setWidth(float width)
@@ -90,20 +108,27 @@ void PopUpMenu::updatePauseMenu(const sf::Vector2f& mousePos, sf::View& view)
 	}
 
 	//set all new position
+	//background
 	this->background.setPosition(
 		view.getCenter().x - view.getSize().x / 2.0f,
 		view.getCenter().y - view.getSize().y / 2.0f
 	);
+	//contrainer
 	this->container.setPosition(
 		view.getCenter().x - this->container.getGlobalBounds().width / 2.0f,
 		view.getCenter().y - this->container.getGlobalBounds().height / 2.0f
 	);
-
+	//manuText
 	this->menuText.setPosition(
 		this->container.getPosition().x + this->container.getSize().x / 2.0f - this->menuText.getGlobalBounds().width / 2.0f,
-		this->container.getPosition().y + this->container.getSize().y / 16.0f * 1.0f - this->menuText.getGlobalBounds().height / 2.0f
+		this->container.getPosition().y + this->container.getSize().y / 16.0f - this->menuText.getGlobalBounds().height / 2.0f
 	);
-
+	//descriptText
+	this->descriptText.setPosition(
+		this->container.getPosition().x + this->container.getSize().x / 2.0f - this->descriptText.getGlobalBounds().width / 2.0f,
+		this->container.getPosition().y + this->container.getSize().y / 16.0f * 5.0f - this->descriptText.getGlobalBounds().height / 2.0f
+	);
+	//buttons
 	for (auto it = this->buttons.begin(); it != this->buttons.end(); ++it) {
 		it->second->setPosition(
 			this->container.getPosition().x + this->container.getSize().x / 2.0f - it->second->getSize().x / 2.0f,
@@ -122,5 +147,6 @@ void PopUpMenu::renderPauseMenu(sf::RenderTarget& target)
 	}
 
 	target.draw(this->menuText);
+	target.draw(this->descriptText);
 }
 

@@ -37,7 +37,7 @@ Player::Player(float x, float y, sf::Texture& texture_sheet ,std::string name)
 	this->animationComponent->addAnimation("ATTACK_1", 8.0f, 0, 3, 3, 3, 32, 32);
 	this->animationComponent->addAnimation("ATTACK_2", 8.0f, 6, 5, 12, 5, 32, 32);
 	this->animationComponent->addAnimation("DEAD", 13.0f, 6, 4, 13, 4, 32, 32);
-	
+
 	//create hitbox component
 	this->createHitboxComponent(16.0f, 16.0f, this->sprite.getGlobalBounds().width-40, this->sprite.getGlobalBounds().height-20, sf::Color::Green);
 	
@@ -104,11 +104,11 @@ const int & Player::getScore()
 }
 
 //Function
-void Player::decreaseHP(const float ATK)
+void Player::decreaseHP(const float& dt, const float ATK, sf::Vector2f attacker_center)
 {
 	srand(int(time(NULL)));
 
-	float damage = (ATK * 2) - (this->DEF / 100.0f);
+	float damage = (ATK * 1.25f) - (this->DEF / 100.0f);
 
 	if (rand() % 100 <= 5) {
 		//miss attack
@@ -117,6 +117,16 @@ void Player::decreaseHP(const float ATK)
 	else {
 		//hit attack
 		this->currHP = this->currHP - ((rand() % 50 + damage));
+
+		/*//if on the floor
+		if (this->movementComponent->getVelocity().y >= 0.0f) {
+			if (this->getCenter().x < attacker_center.x) {
+				this->moveEntity(-5.0f, -20.0f, dt);
+			}
+			if (this->getCenter().x > attacker_center.x) {
+				this->moveEntity(5.0f, -20.0f, dt);
+			}
+		}*/
 	}
 }
 
@@ -125,19 +135,19 @@ void Player::increaseScore(const int point)
 	this->score += point;
 }
 
-void Player::attack(short unsigned attack_style, Entity* enemy)
+void Player::attack(const float& dt, short unsigned attack_style, Entity* enemy)
 {
 	this->attacking = true;
 	this->attackStyle = attack_style;
 
 	this->createAttackHitbox();
 	if (this->checkHitCollision(enemy)) {
-		if (this->attackStyle == ATTACK_MELEE) {
-			enemy->decreaseHP(this->ATK);
+		if (this->attackStyle == ATTACK_ONCE) {
+			enemy->decreaseHP(dt, this->ATK, this->getCenter());
 		}
-		if (this->attackStyle == ATTACK_RANGE) {
-			enemy->decreaseHP(this->ATK);
-			enemy->decreaseHP(this->ATK);
+		if (this->attackStyle == ATTACK_DOUBLE) {
+			enemy->decreaseHP(dt, this->ATK, this->getCenter());
+			enemy->decreaseHP(dt, this->ATK, this->getCenter());
 		}
 	}
 	//this->clearAttackHitbox();
@@ -148,10 +158,10 @@ void Player::createAttackHitbox()
 	//create new attackHitbox
 	if (this->attacking) {
 		if (this->sprite.getScale().x > 0.0f) {
-			if (this->attackStyle == ATTACK_MELEE) {
+			if (this->attackStyle == ATTACK_ONCE) {
 				this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Red);
 			}
-			if (this->attackStyle == ATTACK_RANGE) {
+			if (this->attackStyle == ATTACK_DOUBLE) {
 				this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Blue);
 			}
 			if (this->attackStyle == ATTACK_SKILL) {
@@ -159,10 +169,10 @@ void Player::createAttackHitbox()
 			}
 		}
 		else {
-			if (this->attackStyle == ATTACK_MELEE) {
+			if (this->attackStyle == ATTACK_ONCE) {
 				this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Red);
 			}
-			if (this->attackStyle == ATTACK_RANGE) {
+			if (this->attackStyle == ATTACK_DOUBLE) {
 				this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Blue);
 			}
 			if (this->attackStyle == ATTACK_SKILL) {
@@ -228,18 +238,18 @@ void Player::updateAnimation(const float & dt)
 	}
 	else {
 		if (this->attacking) {
-			if (this->attackStyle == ATTACK_MELEE && this->animationComponent->play("ATTACK_1", dt, true)) {
+			if (this->attackStyle == ATTACK_ONCE && this->animationComponent->play("ATTACK_1", dt, true)) {
 				this->attacking = false;
 				this->attackStyle = ATTACK_NONE;
 			}
-			if (this->attackStyle == ATTACK_RANGE && this->animationComponent->play("ATTACK_2", dt, true)) {
+			if (this->attackStyle == ATTACK_DOUBLE && this->animationComponent->play("ATTACK_2", dt, true)) {
 				this->attacking = false;
 				this->attackStyle = ATTACK_NONE;
 			}
-			if (this->attackStyle == ATTACK_SKILL && this->animationComponent->play("IDLE", dt, true)) {
+			/*if (this->attackStyle == ATTACK_SKILL && this->animationComponent->play("IDLE", dt, true)) {
 				this->attacking = false;
 				this->attackStyle = ATTACK_NONE;
-			}
+			}*/
 		}
 
 		if (this->jumpping) {

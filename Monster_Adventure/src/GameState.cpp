@@ -139,14 +139,14 @@ void GameState::initUI()
 void GameState::initPopUpMenu()
 {
 	this->pauseMenu = new PopUpMenu(this->view, this->font);
-	this->pauseMenu->setString("PAUSED");
+	this->pauseMenu->setMenuTextString("PAUSED");
 	this->pauseMenu->addButton("Resume", 4.0f, "RESUME");
 	this->pauseMenu->addButton("Quit", 6.0f, "QUIT");
 
 	this->gameOverMenu = new PopUpMenu(this->view, this->font);
-	this->gameOverMenu->setString("GAME OVER");
+	this->gameOverMenu->setMenuTextString("GAME OVER");
 	this->gameOverMenu->setWidth((this->view.getSize().x / 16.0f) * 6.0f);
-	this->gameOverMenu->addButton("Quit", 6.0f, "EXIT TO MENU");
+	this->gameOverMenu->addButton("Quit", 9.0f, "EXIT TO MENU");
 }
 
 //Constructor , Destructor
@@ -192,6 +192,7 @@ void GameState::updateState(const float &dt)
 	if (this->gameover) {
 		this->updateGameOverMenuButton();
 	}
+	//!gameover update
 	else {
 		this->updateInput(dt);
 
@@ -216,6 +217,7 @@ void GameState::updateState(const float &dt)
 			//clear player when died
 			if (this->player->getDied()) {
 				this->overState();
+
 				//write score in score.data
 				std::fstream scorefile("src/Config/Data/Score.data", std::ios::app);
 				scorefile << "\n" << this->player->getName();
@@ -250,10 +252,10 @@ void GameState::updatePlayer(const float & dt)
 	//Update player input
 	if (!this->player->getAttacking()) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_LEFT")))) {
-			this->player->moveEntity(-1.0f, dt);
+			this->player->moveEntity(-1.0f, 0.0f, dt);
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_RIGHT")))) {
-			this->player->moveEntity(1.0f, dt);
+			this->player->moveEntity(1.0f, 0.0f, dt);
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_UP"))) && !this->player->getJumpping()) {
 			this->player->jump();
@@ -261,17 +263,18 @@ void GameState::updatePlayer(const float & dt)
 	}
 
 	if (!this->player->getJumpping()) {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("ATTACK_MELEE"))) && !this->player->getAttacking()) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("ATTACK"))) && !this->player->getAttacking()) {
 			if (!this->enemy.empty()) {
+				srand(int(time(NULL)));
+				
 				for (int i = 0; i < this->enemy.size(); i++) {
-					this->player->attack(Player::ATTACK_MELEE, this->enemy[i]);
-				}
-			}
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("ATTACK_RANGE"))) && !this->player->getAttacking()) {
-			if (!this->enemy.empty()) {
-				for (int i = 0; i < this->enemy.size(); i++) {
-					this->player->attack(Player::ATTACK_RANGE, this->enemy[i]);
+					//random attack style [chance to double is 40%]
+					if (rand() % 100 <= 40) {
+						this->player->attack(dt, Player::ATTACK_DOUBLE, this->enemy[i]);
+					}
+					else {
+						this->player->attack(dt, Player::ATTACK_ONCE, this->enemy[i]);
+					}
 				}
 			}
 		}
@@ -293,29 +296,33 @@ void GameState::updateEnemy(const float &dt)
 		}
 	}
 }
+
 void GameState::updateEnemyControl(const float& dt)
 {
 	if (!this->enemy.empty()) {
+		srand(int(time(NULL)));
 		for (int i = 0; i < this->enemy.size(); i++) {
 			//control bot walk to player
-			if (std::abs(this->player->getCenter().x - this->enemy[i]->getCenter().x) <= 300.0f && std::abs(this->player->getCenter().x - this->enemy[i]->getCenter().x) >=80) {
+			if (std::abs(this->player->getCenter().x - this->enemy[i]->getCenter().x) <= 300.0f && std::abs(this->player->getCenter().x - this->enemy[i]->getCenter().x) >=50) {
 				if (this->player->getCenter().x < this->enemy[i]->getCenter().x) {
-					this->enemy[i]->moveEntity(-1.0f, dt);
+					this->enemy[i]->moveEntity(-1.0f, 0.0f, dt);
 				}
 				if (this->player->getCenter().x > this->enemy[i]->getCenter().x) {
-					this->enemy[i]->moveEntity(1.0f, dt);
+					this->enemy[i]->moveEntity(1.0f, 0.0f,dt);
 				}
 			}
 
-			//control bot attack player
-			if (std::abs(this->player->getCenter().x - this->enemy[i]->getCenter().x) <= 100.0f && !this->enemy[i]->getAttacking()) {
-				this->enemy[i]->attack(Enemy::ATTACK_MELEE, this->player);
+			//control bot attack player [enemy chance to attack is 80%]
+			if (rand() % 100 <= 80) {
+				if (std::abs(this->player->getCenter().x - this->enemy[i]->getCenter().x) <= 100.0f && !this->enemy[i]->getAttacking()) {
+					this->enemy[i]->attack(dt, Enemy::ATTACK_ONCE, this->player);
+				}
 			}
 		}
 	}
 }
 
-
+//update
 void GameState::updateView()
 {
 	this->view.setSize(static_cast<float>(this->window->getSize().x), static_cast<float>(this->window->getSize().y));
@@ -405,6 +412,11 @@ void GameState::updatePauseMenuButton()
 
 void GameState::updateGameOverMenuButton()
 {
+	//update content
+	std::stringstream int_to_string;
+	int_to_string << this->player->getScore();
+	this->gameOverMenu->setDescriptTextString("Score : " + int_to_string.str());
+
 	//Update all the buttons in Game Over Menu
 	this->gameOverMenu->updatePauseMenu(this->mousePosView, this->view);
 

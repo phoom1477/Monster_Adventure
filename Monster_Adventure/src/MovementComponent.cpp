@@ -60,10 +60,11 @@ void MovementComponent::stopVelocityY()
 }
 
 //Function
-void MovementComponent::move(const float direction_x, const float &dt)
+void MovementComponent::move(const float direction_x, const float direction_y,const float &dt)
 {
 	//acceleration increase to reaches maxVelocity
 	this->velocity.x += this->acceleration * direction_x;
+	this->velocity.y += this->acceleration * direction_y;
 }
 
 void MovementComponent::jump()

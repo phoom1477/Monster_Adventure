@@ -18,6 +18,7 @@ class PopUpMenu
 private:
 	sf::Font& font;
 	sf::Text menuText;
+	sf::Text descriptText;
 
 	sf::RectangleShape background;
 	sf::RectangleShape container;
@@ -37,7 +38,9 @@ public:
 	void addButton(const std::string key, float grid_y, const std::string text);
 	
 	//Modifier
-	void setString(std::string menu_text);
+	void setMenuTextString(std::string menu_text);
+	void setDescriptTextString(std::string descript_text);
+
 	void setWidth(float width);
 
 	void updatePauseMenu(const sf::Vector2f& mousePos,sf::View& view);

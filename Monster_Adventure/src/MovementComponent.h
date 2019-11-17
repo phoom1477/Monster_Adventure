@@ -46,7 +46,7 @@ public:
 	void stopVelocityY();
 	
 	//Function
-	void move(const float direction_x, const float &dt);
+	void move(const float direction_x, const float direction_y, const float &dt);
 	void jump();
 	void updateComponent(const float &dt);
 };

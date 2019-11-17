@@ -54,11 +54,11 @@ public:
 
 	//Function
 	virtual void setPosition(const float x, const float y);
-	virtual void moveEntity(float direction_x, const float &dt);
+	virtual void moveEntity(float direction_x, float direction_y, const float &dt);
 	virtual void stopEntityX();
 	virtual void stopEntityY();
 	
-	virtual void decreaseHP(const float ATK) = 0;
+	virtual void decreaseHP(const float& dt, const float ATK, sf::Vector2f attacker_center) = 0;
 
 	//update
 	virtual void updateEntity(const float &dt, sf::RenderWindow& window) = 0;

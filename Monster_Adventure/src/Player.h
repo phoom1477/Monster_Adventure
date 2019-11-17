@@ -32,7 +32,7 @@ private:
 
 public:
 	//Public enum
-	enum attackstyle{ ATTACK_NONE = 0, ATTACK_MELEE , ATTACK_RANGE, ATTACK_SKILL };
+	enum attackstyle{ ATTACK_NONE = 0, ATTACK_ONCE, ATTACK_DOUBLE, ATTACK_SKILL };
 
 	//Constructor , Destructor
 	Player(float x, float y, sf::Texture& texture_sheet, std::string name);
@@ -51,10 +51,10 @@ public:
 	const int& getScore();
 
 	//Function
-	void decreaseHP(const float ATK);
+	void decreaseHP(const float& dt, const float ATK, sf::Vector2f attacker_center);
 	void increaseScore(const int point);
 
-	void attack(short unsigned attack_style, Entity* enemy);
+	void attack(const float& dt, short unsigned attack_style, Entity* enemy);
 	void createAttackHitbox();
 	const bool checkHitCollision(Entity* enemy);
 	void clearAttackHitbox();

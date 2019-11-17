@@ -65,10 +65,10 @@ void Entity::setPosition(const float x, const float y)
 	}
 }
 
-void Entity::moveEntity(float direction_x, const float &dt)
+void Entity::moveEntity(float direction_x, float direction_y, const float &dt)
 {
 	if (this->movementComponent) {
-		this->movementComponent->move(direction_x, dt);
+		this->movementComponent->move(direction_x, direction_y, dt);
 	}
 }
 
