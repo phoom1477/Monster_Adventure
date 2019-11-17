@@ -35,7 +35,7 @@ void GameState::initTexture()
 	if (!this->textures["PLAYER_SHEET_OWLET"].loadFromFile("src/Resource/Charector/Player/Owlet/Owlet_Animation_List.png")) {
 		throw("[Game State] >> ERROR can't load player texture");
 	}
-	if (!this->textures["SKELETON_SHEET"].loadFromFile("src/Resource/Charector/Enemy/Skeleton/Skeleton_Idle.png")) {
+	if (!this->textures["ENEMY_SHEET_SKELETON"].loadFromFile("src/Resource/Charector/Enemy/Skeleton/Skeleton_Animation_List.png")) {
 		throw("[Game State] >> ERROR can't load Enemy texture");
 	}
 }
@@ -46,7 +46,7 @@ void GameState::initBackground()
 		throw("[Game State] >> ..ERROR.. Could't load backgroundTexture");
 	}
 
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 2; i++) {
 		sf::RectangleShape buff;
 		buff.setTexture(&this->backgroundTexture);
 		this->background.push_back(buff);
@@ -70,8 +70,8 @@ void GameState::initPlayer()
 
 void GameState::initEnemy()
 {
-	for (short unsigned i = 1; i < 20; i++) {
-		this->enemy.push_back(new Enemy(200.0f * i, 0.0f, this->textures["SKELETON_SHEET"], "1"));
+	for (short unsigned i = 1; i < 5; i++) {
+		this->enemy.push_back(new Enemy(200.0f * i, 0.0f, this->textures["ENEMY_SHEET_SKELETON"], "1"));
 	}
 }
 
@@ -188,11 +188,11 @@ void GameState::updateState(const float &dt)
 	this->updateMousePosition();
 	this->updateKeyTime(dt);
 
-	//gameover update
+	//gameover 
 	if (this->gameover) {
 		this->updateGameOverMenuButton();
 	}
-	//!gameover update
+	//not gameover
 	else {
 		this->updateInput(dt);
 
@@ -262,7 +262,7 @@ void GameState::updatePlayer(const float & dt)
 		}
 	}
 
-	if (!this->player->getJumpping()) {
+	if (!this->player->getJumpping() && !this->player->getHurting()) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("ATTACK"))) && !this->player->getAttacking()) {
 			if (!this->enemy.empty()) {
 				srand(int(time(NULL)));

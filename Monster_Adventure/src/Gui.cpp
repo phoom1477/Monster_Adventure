@@ -19,6 +19,7 @@ gui::Button::Button(float x, float y, float width, float height
 {
 	this->initPressedSound();
 
+	this->soundPlayed = false;
 	this->buttonState = BUTTON_IDLE;
 	this->id = id;
 	this->charectorSize = charector_size;
@@ -111,10 +112,17 @@ void gui::Button::updateButton(const sf::Vector2f& mousePosition)
 	//Hover
 	if (this->shape.getGlobalBounds().contains(mousePosition) || this->text.getGlobalBounds().contains(mousePosition)) {
 		this->buttonState = BUTTON_HOVER;
-
+	
 		//Pressed
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 			this->buttonState = BUTTON_ACTIVE;
+			//play click sound
+			if (this->pressedSound.getStatus() != sf::Sound::Playing && this->soundPlayed == false) {
+				this->pressedSound.play();
+				
+				//set soundplayed
+				this->soundPlayed = true;
+			}
 		}
 	}
 
@@ -125,6 +133,9 @@ void gui::Button::updateButton(const sf::Vector2f& mousePosition)
 		this->text.setFillColor(this->textIdleColor);
 	}
 	else if (this->buttonState == BUTTON_HOVER) {
+		//reset soundPlayed
+		this->soundPlayed = false;
+
 		//update color
 		this->shape.setFillColor(this->shapeHoverColor);
 		this->text.setFillColor(this->textHoverColor);
@@ -133,12 +144,6 @@ void gui::Button::updateButton(const sf::Vector2f& mousePosition)
 		//update color
 		this->shape.setFillColor(this->shapeActiveColor);
 		this->text.setFillColor(this->textActiveColor);
-
-		//play click sound
-		if (this->pressedSound.getStatus() != sf::Sound::Playing) {
-			this->pressedSound.play();
-		}
-
 	}
 }
 

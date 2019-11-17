@@ -3,6 +3,8 @@
 //Initialization
 void Enemy::initVariable()
 {
+	this->hurting = false;
+
 	this->attacking = false;
 	this->attackStyle = ATTACK_NONE;
 	this->attackHitbox = NULL;
@@ -61,10 +63,14 @@ Enemy::Enemy(float x, float y, sf::Texture& texture_sheet, std::string id)
 
 	//create animation component
 	this->createAnimationComponent(texture_sheet);
-	this->animationComponent->addAnimation("IDLE", 10.0f, 0, 0, 10, 0, 24, 32);
+	this->animationComponent->addAnimation("IDLE", 10.0f, 0, 0, 10, 0, 43, 37);
+	this->animationComponent->addAnimation("WALK", 8.0f, 0, 1, 12, 1, 43, 37);
+	this->animationComponent->addAnimation("ATTACK", 8.0f, 0, 2, 17, 2, 43, 37);
+	this->animationComponent->addAnimation("DEAD", 13.0f, 0, 3, 14, 3, 43, 37);
+	this->animationComponent->addAnimation("HURT", 13.0f, 0, 4, 7, 4, 43, 37);
 
 	//create hitbox component
-	this->createHitboxComponent(0.0f, 22.0f, this->sprite.getGlobalBounds().width - 20, this->sprite.getGlobalBounds().height - 20, sf::Color::Green);
+	this->createHitboxComponent(0.0f, 22.0f, this->sprite.getGlobalBounds().width - 80, this->sprite.getGlobalBounds().height - 20, sf::Color::Yellow);
 
 	//create movement component
 	this->createMovementComponent(40.0f * this->MSPD, 30.0f, 10.0f, 50.0f, 35.0f);
@@ -103,6 +109,11 @@ const bool & Enemy::getDied()
 	return this->died;
 }
 
+const bool & Enemy::getHurting()
+{
+	return this->hurting;
+}
+
 const float& Enemy::getCurrHP()
 {
 	return this->currHP;
@@ -127,6 +138,7 @@ void Enemy::decreaseHP(const float& dt, const float ATK, sf::Vector2f attacker_c
 	else {
 		//hit attack
 		this->currHP = this->currHP - ((rand() % 50 + damage));
+		this->hurting = true;
 
 		//if on the floor
 		if (this->movementComponent->getVelocity().y >= 0.0f) {
@@ -150,10 +162,6 @@ void Enemy::attack(const float& dt, short unsigned attack_style, Entity* player)
 		if (this->attackStyle == ATTACK_ONCE) {
 			player->decreaseHP(dt, this->ATK, this->getCenter());
 		}
-		if (this->attackStyle == ATTACK_DOUBLE) {
-			player->decreaseHP(dt, this->ATK, this->getCenter());
-			player->decreaseHP(dt, this->ATK, this->getCenter());
-		}
 	}
 	//this->clearAttackHitbox();
 }
@@ -166,22 +174,10 @@ void Enemy::createAttackHitbox()
 			if (this->attackStyle == ATTACK_ONCE) {
 				this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Red);
 			}
-			if (this->attackStyle == ATTACK_DOUBLE) {
-				this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Blue);
-			}
-			if (this->attackStyle == ATTACK_SKILL) {
-				this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Yellow);
-			}
 		}
 		else {
 			if (this->attackStyle == ATTACK_ONCE) {
 				this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Red);
-			}
-			if (this->attackStyle == ATTACK_DOUBLE) {
-				this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Blue);
-			}
-			if (this->attackStyle == ATTACK_SKILL) {
-				this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Yellow);
 			}
 		}
 	}
@@ -227,47 +223,48 @@ void Enemy::updateEntity(const float & dt, sf::RenderWindow& window)
 void Enemy::updateAnimation(const float & dt)
 {
 	//Animate and check for animation end
-	if (this->attacking) {
-		if (this->attackStyle == ATTACK_ONCE && this->animationComponent->play("IDLE", dt, true)) {
-		//if (this->attackStyle == ATTACK_ONCE && this->animationComponent->play("ATTACK_1", dt, true)) {
-			this->attacking = false;
-			this->attackStyle = ATTACK_NONE;
-		}
-		if (this->attackStyle == ATTACK_DOUBLE && this->animationComponent->play("IDLE", dt, true)) {
-		//if (this->attackStyle == ATTACK_DOUBLE && this->animationComponent->play("ATTACK_2", dt, true)) {
-			this->attacking = false;
-			this->attackStyle = ATTACK_NONE;
-		}
-		if (this->attackStyle == ATTACK_SKILL && this->animationComponent->play("IDLE", dt, true)) {
-			this->attacking = false;
-			this->attackStyle = ATTACK_NONE;
-		}
-	}
-
-	if (this->movementComponent->getState(IDLE)) {
-		this->animationComponent->play("IDLE", dt);
-	}
-	else if (this->movementComponent->getState(MOVING_RIGHT)) {
-		if (this->sprite.getScale().x < 0.0f) {
-			this->sprite.setOrigin(0.0f, 0.0f);
-			this->sprite.setScale(3.0f, 3.0f);
-		}
-
-		this->animationComponent->play("IDLE", dt, this->movementComponent->getVelocity().x, this->movementComponent->getMaxVelocity());
-	}
-	else if (this->movementComponent->getState(MOVING_LEFT)) {
-		if (this->sprite.getScale().x > 0.0f) {
-			this->sprite.setOrigin(17.0f, 0.0f);
-			this->sprite.setScale(-3.0f, 3.0f);
-		}
-
-		this->animationComponent->play("IDLE", dt, this->movementComponent->getVelocity().x, this->movementComponent->getMaxVelocity());
-	}
-
 	if (this->currHP <= 0.0f) {
-		//if (this->animationComponent->play("DEAD", dt, true)) {
+		this->movementComponent->stopVelocityX();
+		this->movementComponent->stopVelocityY();
+
+		if (this->animationComponent->play("DEAD", dt, true)) {
 			this->died = true;
-		//}
+		}
+	}
+	else {
+		if (this->hurting) {
+			if (this->animationComponent->play("HURT", dt, true)) {
+				this->hurting = false;
+			}
+		}
+		else {
+			if (this->attacking) {
+				if (this->attackStyle == ATTACK_ONCE && this->animationComponent->play("ATTACK", dt, true)) {
+					this->attacking = false;
+					this->attackStyle = ATTACK_NONE;
+				}
+			}
+
+			if (this->movementComponent->getState(IDLE)) {
+				this->animationComponent->play("IDLE", dt);
+			}
+			else if (this->movementComponent->getState(MOVING_RIGHT)) {
+				if (this->sprite.getScale().x < 0.0f) {
+					this->sprite.setOrigin(0.0f, 0.0f);
+					this->sprite.setScale(3.0f, 3.0f);
+				}
+
+				this->animationComponent->play("WALK", dt, this->movementComponent->getVelocity().x, this->movementComponent->getMaxVelocity());
+			}
+			else if (this->movementComponent->getState(MOVING_LEFT)) {
+				if (this->sprite.getScale().x > 0.0f) {
+					this->sprite.setOrigin(17.0f, 0.0f);
+					this->sprite.setScale(-3.0f, 3.0f);
+				}
+
+				this->animationComponent->play("WALK", dt, this->movementComponent->getVelocity().x, this->movementComponent->getMaxVelocity());
+			}
+		}
 	}
 }
 

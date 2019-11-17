@@ -31,6 +31,7 @@ namespace gui {
 
 		sf::SoundBuffer pressedSoundBuffer;
 		sf::Sound pressedSound;
+		bool soundPlayed;
 
 		sf::Color textIdleColor;
 		sf::Color textHoverColor;

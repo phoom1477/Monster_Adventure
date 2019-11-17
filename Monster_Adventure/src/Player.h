@@ -18,6 +18,7 @@ private:
 	float maxHP;
 
 	//Action
+	bool hurting;
 	bool attacking;
 	short unsigned attackStyle;
 	bool jumpping;
@@ -32,7 +33,7 @@ private:
 
 public:
 	//Public enum
-	enum attackstyle{ ATTACK_NONE = 0, ATTACK_ONCE, ATTACK_DOUBLE, ATTACK_SKILL };
+	enum attackstyle{ ATTACK_NONE = 0, ATTACK_ONCE, ATTACK_DOUBLE};
 
 	//Constructor , Destructor
 	Player(float x, float y, sf::Texture& texture_sheet, std::string name);
@@ -44,6 +45,7 @@ public:
 	const bool& getAttacking();
 	const bool& getJumpping();
 	const bool& getDied();
+	const bool& getHurting();
 
 	const std::string& getName();
 	const float& getCurrHP();

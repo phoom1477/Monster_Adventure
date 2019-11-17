@@ -8,8 +8,6 @@
 #include "State.h"
 #include "Gui.h"
 
-#include <algorithm>
-
 class ScoreState : public State
 {
 

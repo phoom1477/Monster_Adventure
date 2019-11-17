@@ -20,8 +20,6 @@ private:
 	sf::RenderWindow* window;
 	sf::Event event;
 	
-	bool fullscreen;
-
 	sf::Clock clock;
 	float dt;
 

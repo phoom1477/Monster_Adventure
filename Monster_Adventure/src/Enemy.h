@@ -22,6 +22,7 @@ private:
 	int point;
 
 	//Action
+	bool hurting;
 	bool attacking;
 	short unsigned attackStyle;
 	bool died;
@@ -35,7 +36,7 @@ private:
 
 public:
 	//Public enum
-	enum attackstyle { ATTACK_NONE = 0, ATTACK_ONCE, ATTACK_DOUBLE, ATTACK_SKILL };
+	enum attackstyle { ATTACK_NONE = 0, ATTACK_ONCE };
 
 	//Constructor , Destructor
 	Enemy(float x, float y, sf::Texture& texture_sheet, std::string id);
@@ -46,6 +47,7 @@ public:
 
 	const bool& getAttacking();
 	const bool& getDied();
+	const bool& getHurting();
 
 	const float& getCurrHP();
 	const int& getPoint();

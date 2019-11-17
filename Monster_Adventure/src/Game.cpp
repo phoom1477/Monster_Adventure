@@ -4,7 +4,6 @@
 void Game::initVariable()
 {
 	this->window = NULL;
-	this->fullscreen = false;
 	this->dt = 0.0f;
 }
 
@@ -15,8 +14,7 @@ void Game::initWindow()
 
 	//Set default if can't read file
 	std::string title = "Monster Adventure";
-	sf::VideoMode window_bounds = sf::VideoMode(1270,720);
-	bool fullscreen = false;
+	sf::VideoMode window_bounds = sf::VideoMode(1270, 720);
 	int framerate_limit = 120;
 	bool verticalsync_enabled = false;
 
@@ -33,13 +31,10 @@ void Game::initWindow()
 		if (buff == "height") {
 			ifs >> window_bounds.height;
 		}
-		if (buff == "fullscreen") {
-			ifs >> fullscreen;
-		}
 		if (buff == "frameratelimit") {
 			ifs >> framerate_limit;
 		}
-		if(buff == "vsync") {
+		if (buff == "vsync") {
 			ifs >> verticalsync_enabled;
 		}
 		if (buff == "") {
@@ -47,22 +42,12 @@ void Game::initWindow()
 		}
 	}
 
-	//Setup mode
-	this->fullscreen = fullscreen;
-
 	//Setup window
-	if (this->fullscreen) {
-		this->window = new sf::RenderWindow(window_bounds, title, sf::Style::Fullscreen);
-	}
-	else {
-		this->window = new sf::RenderWindow(window_bounds, title, sf::Style::Titlebar | sf::Style::Close);
-	}
+	this->window = new sf::RenderWindow(window_bounds, title, sf::Style::Titlebar | sf::Style::Close);
 	this->window->setFramerateLimit(framerate_limit);
 	this->window->setVerticalSyncEnabled(verticalsync_enabled);
-}
 
-void Game::initWindowIcon()
-{
+	//Setup window icon
 	sf::Image icon;
 	if (!icon.loadFromFile("src/Resource/Icon/Dude.png")) {
 		throw "[Can't load game icon]";
@@ -96,7 +81,6 @@ Game::Game()
 	std::cout << "============== Show Game log in console ==============" << std::endl;
 	this->initVariable();
 	this->initWindow();
-	this->initWindowIcon();
 	this->initKeys();
 	this->initStates();
 }

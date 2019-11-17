@@ -3,9 +3,12 @@
 //Initialization
 void Player::initVariable()
 {
+	this->hurting = false;
+
 	this->attacking = false;
 	this->attackStyle = ATTACK_NONE;
 	this->attackHitbox = NULL;
+	
 	this->jumpping = false;
 	this->died = false;
 }
@@ -37,6 +40,7 @@ Player::Player(float x, float y, sf::Texture& texture_sheet ,std::string name)
 	this->animationComponent->addAnimation("ATTACK_1", 8.0f, 0, 3, 3, 3, 32, 32);
 	this->animationComponent->addAnimation("ATTACK_2", 8.0f, 6, 5, 12, 5, 32, 32);
 	this->animationComponent->addAnimation("DEAD", 13.0f, 6, 4, 13, 4, 32, 32);
+	this->animationComponent->addAnimation("HURT", 13.0f, 6, 3, 9, 3, 32, 32);
 
 	//create hitbox component
 	this->createHitboxComponent(16.0f, 16.0f, this->sprite.getGlobalBounds().width-40, this->sprite.getGlobalBounds().height-20, sf::Color::Green);
@@ -83,6 +87,11 @@ const bool & Player::getDied()
 	return this->died;
 }
 
+const bool & Player::getHurting()
+{
+	return this->hurting;
+}
+
 const std::string & Player::getName()
 {
 	return this->name;
@@ -117,16 +126,7 @@ void Player::decreaseHP(const float& dt, const float ATK, sf::Vector2f attacker_
 	else {
 		//hit attack
 		this->currHP = this->currHP - ((rand() % 50 + damage));
-
-		/*//if on the floor
-		if (this->movementComponent->getVelocity().y >= 0.0f) {
-			if (this->getCenter().x < attacker_center.x) {
-				this->moveEntity(-5.0f, -20.0f, dt);
-			}
-			if (this->getCenter().x > attacker_center.x) {
-				this->moveEntity(5.0f, -20.0f, dt);
-			}
-		}*/
+		this->hurting = true;
 	}
 }
 
@@ -164,9 +164,6 @@ void Player::createAttackHitbox()
 			if (this->attackStyle == ATTACK_DOUBLE) {
 				this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Blue);
 			}
-			if (this->attackStyle == ATTACK_SKILL) {
-				this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Yellow);
-			}
 		}
 		else {
 			if (this->attackStyle == ATTACK_ONCE) {
@@ -174,9 +171,6 @@ void Player::createAttackHitbox()
 			}
 			if (this->attackStyle == ATTACK_DOUBLE) {
 				this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Blue);
-			}
-			if (this->attackStyle == ATTACK_SKILL) {
-				this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Yellow);
 			}
 		}
 	}
@@ -237,45 +231,48 @@ void Player::updateAnimation(const float & dt)
 		}
 	}
 	else {
-		if (this->attacking) {
-			if (this->attackStyle == ATTACK_ONCE && this->animationComponent->play("ATTACK_1", dt, true)) {
-				this->attacking = false;
-				this->attackStyle = ATTACK_NONE;
-			}
-			if (this->attackStyle == ATTACK_DOUBLE && this->animationComponent->play("ATTACK_2", dt, true)) {
-				this->attacking = false;
-				this->attackStyle = ATTACK_NONE;
-			}
-			/*if (this->attackStyle == ATTACK_SKILL && this->animationComponent->play("IDLE", dt, true)) {
-				this->attacking = false;
-				this->attackStyle = ATTACK_NONE;
-			}*/
-		}
-
-		if (this->jumpping) {
-			if (this->animationComponent->play("JUMP", dt, this->movementComponent->getVelocity().y, this->movementComponent->getJumpVelocity(), true)) {
-				this->jumpping = false;
+		if (this->hurting) {
+			if (this->animationComponent->play("HURT", dt, true)) {
+				this->hurting = false;
 			}
 		}
-
-		if (this->movementComponent->getState(IDLE)) {
-			this->animationComponent->play("IDLE", dt);
-		}
-		else if (this->movementComponent->getState(MOVING_RIGHT)) {
-			if (this->sprite.getScale().x < 0.0f) {
-				this->sprite.setOrigin(0.0f, 0.0f);
-				this->sprite.setScale(3.0f, 3.0f);
+		else {
+			if (this->attacking) {
+				if (this->attackStyle == ATTACK_ONCE && this->animationComponent->play("ATTACK_1", dt, true)) {
+					this->attacking = false;
+					this->attackStyle = ATTACK_NONE;
+				}
+				if (this->attackStyle == ATTACK_DOUBLE && this->animationComponent->play("ATTACK_2", dt, true)) {
+					this->attacking = false;
+					this->attackStyle = ATTACK_NONE;
+				}
 			}
 
-			this->animationComponent->play("WALK", dt, this->movementComponent->getVelocity().x, this->movementComponent->getMaxVelocity());
-		}
-		else if (this->movementComponent->getState(MOVING_LEFT)) {
-			if (this->sprite.getScale().x > 0.0f) {
-				this->sprite.setOrigin(29.0f, 0.0f);
-				this->sprite.setScale(-3.0f, 3.0f);
+			if (this->jumpping) {
+				if (this->animationComponent->play("JUMP", dt, this->movementComponent->getVelocity().y, this->movementComponent->getJumpVelocity(), true)) {
+					this->jumpping = false;
+				}
 			}
 
-			this->animationComponent->play("WALK", dt, this->movementComponent->getVelocity().x, this->movementComponent->getMaxVelocity());
+			if (this->movementComponent->getState(IDLE)) {
+				this->animationComponent->play("IDLE", dt);
+			}
+			else if (this->movementComponent->getState(MOVING_RIGHT)) {
+				if (this->sprite.getScale().x < 0.0f) {
+					this->sprite.setOrigin(0.0f, 0.0f);
+					this->sprite.setScale(3.0f, 3.0f);
+				}
+
+				this->animationComponent->play("WALK", dt, this->movementComponent->getVelocity().x, this->movementComponent->getMaxVelocity());
+			}
+			else if (this->movementComponent->getState(MOVING_LEFT)) {
+				if (this->sprite.getScale().x > 0.0f) {
+					this->sprite.setOrigin(29.0f, 0.0f);
+					this->sprite.setScale(-3.0f, 3.0f);
+				}
+
+				this->animationComponent->play("WALK", dt, this->movementComponent->getVelocity().x, this->movementComponent->getMaxVelocity());
+			}
 		}
 	}
 }
