@@ -20,6 +20,9 @@
     <Filter Include="GUI">
       <UniqueIdentifier>{eb94bc39-cf29-4754-a1f1-50b07e0d0edd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="State\Stage">
+      <UniqueIdentifier>{591f0761-0809-40a8-a235-92cd16c966b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp">
@@ -55,9 +58,6 @@
     <ClCompile Include="src\Tile.cpp">
       <Filter>Tile</Filter>
     </ClCompile>
-    <ClCompile Include="src\SettingState.cpp">
-      <Filter>State</Filter>
-    </ClCompile>
     <ClCompile Include="src\Gui.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
@@ -72,6 +72,9 @@
     </ClCompile>
     <ClCompile Include="src\PopUpMenu.cpp">
       <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Stage.cpp">
+      <Filter>State\Stage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -105,9 +108,6 @@
     <ClInclude Include="src\Tile.h">
       <Filter>Tile</Filter>
     </ClInclude>
-    <ClInclude Include="src\SettingState.h">
-      <Filter>State</Filter>
-    </ClInclude>
     <ClInclude Include="src\Gui.h">
       <Filter>GUI</Filter>
     </ClInclude>
@@ -122,6 +122,9 @@
     </ClInclude>
     <ClInclude Include="src\PopUpMenu.h">
       <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Stage.h">
+      <Filter>State\Stage</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

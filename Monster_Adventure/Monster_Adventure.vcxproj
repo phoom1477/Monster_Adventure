@@ -22,7 +22,6 @@
     <ClCompile Include="src\ScoreState.cpp" />
     <ClCompile Include="src\GetInfoState.cpp" />
     <ClCompile Include="src\Enemy.cpp" />
-    <ClCompile Include="src\SettingState.cpp" />
     <ClCompile Include="src\PopUpMenu.cpp" />
     <ClCompile Include="src\HitboxComponent.cpp" />
     <ClCompile Include="src\AnimationComponent.cpp" />
@@ -36,12 +35,12 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\State.cpp" />
     <ClCompile Include="src\Tile.cpp" />
+    <ClCompile Include="src\Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ScoreState.h" />
     <ClInclude Include="src\GetInfoState.h" />
     <ClInclude Include="src\Enemy.h" />
-    <ClInclude Include="src\SettingState.h" />
     <ClInclude Include="src\PopUpMenu.h" />
     <ClInclude Include="src\HitboxComponent.h" />
     <ClInclude Include="src\AnimationComponent.h" />
@@ -54,6 +53,7 @@
     <ClInclude Include="src\MainMenuState.h" />
     <ClInclude Include="src\State.h" />
     <ClInclude Include="src\Tile.h" />
+    <ClInclude Include="src\Stage.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

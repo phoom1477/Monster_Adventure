@@ -35,9 +35,9 @@ PopUpMenu::PopUpMenu(sf::View& view, sf::Font& font)
 
 	this->menuText.setString("");
 	
-	this->menuText.setPosition(
+	/*this->menuText.setPosition(
 		this->container.getPosition().x + this->container.getSize().x / 2.0f - this->menuText.getGlobalBounds().width / 2.0f,
-		this->container.getPosition().y + this->container.getSize().y / 16.0f - this->menuText.getGlobalBounds().height / 2.0f);
+		this->container.getPosition().y + this->container.getSize().y / 16.0f - this->menuText.getGlobalBounds().height / 2.0f);*/
 
 	//Init descriptText
 	this->descriptText.setFont(font);
@@ -48,9 +48,9 @@ PopUpMenu::PopUpMenu(sf::View& view, sf::Font& font)
 
 	this->descriptText.setString("");
 
-	this->descriptText.setPosition(
+	/*this->descriptText.setPosition(
 		this->container.getPosition().x + this->container.getSize().x / 2.0f - this->descriptText.getGlobalBounds().width / 2.0f,
-		this->container.getPosition().y + this->container.getSize().y / 16.0f * 5.0f  - this->descriptText.getGlobalBounds().height / 2.0f);
+		this->container.getPosition().y + this->container.getSize().y / 16.0f * 5.0f  - this->descriptText.getGlobalBounds().height / 2.0f);*/
 }
 
 PopUpMenu::~PopUpMenu()
@@ -83,6 +83,20 @@ void PopUpMenu::addButton(const std::string key, float grid_y, const std::string
 		x,y,button_width, button_height,
 		this->font, text, 40,
 		sf::Color(255, 255, 255, 255), sf::Color(150, 150, 150, 255), sf::Color(0, 0, 0, 255));
+}
+
+void PopUpMenu::setMenuTextPosition(float grid_y)
+{
+	float x = this->container.getPosition().x + this->container.getSize().x / 2.0f - this->menuText.getGlobalBounds().width / 2.0f;
+	float y = this->container.getPosition().y + (this->container.getSize().y / 16.0f) * grid_y;
+	this->menuText.setPosition(x, y);
+}
+
+void PopUpMenu::setDescriptTextPosition(float grid_y)
+{
+	float x = this->container.getPosition().x + this->container.getSize().x / 2.0f - this->descriptText.getGlobalBounds().width / 2.0f;
+	float y = this->container.getPosition().y + (this->container.getSize().y / 16.0f) * grid_y;
+	this->descriptText.setPosition(x ,y);
 }
 
 void PopUpMenu::setMenuTextString(std::string menu_text)
@@ -121,12 +135,14 @@ void PopUpMenu::updatePauseMenu(const sf::Vector2f& mousePos, sf::View& view)
 	//manuText
 	this->menuText.setPosition(
 		this->container.getPosition().x + this->container.getSize().x / 2.0f - this->menuText.getGlobalBounds().width / 2.0f,
-		this->container.getPosition().y + this->container.getSize().y / 16.0f - this->menuText.getGlobalBounds().height / 2.0f
+		//this->container.getPosition().y + this->container.getSize().y / 16.0f - this->menuText.getGlobalBounds().height / 2.0f
+		this->menuText.getPosition().y
 	);
 	//descriptText
 	this->descriptText.setPosition(
 		this->container.getPosition().x + this->container.getSize().x / 2.0f - this->descriptText.getGlobalBounds().width / 2.0f,
-		this->container.getPosition().y + this->container.getSize().y / 16.0f * 5.0f - this->descriptText.getGlobalBounds().height / 2.0f
+		//this->container.getPosition().y + this->container.getSize().y / 16.0f * 5.0f - this->descriptText.getGlobalBounds().height / 2.0f
+		this->descriptText.getPosition().y
 	);
 	//buttons
 	for (auto it = this->buttons.begin(); it != this->buttons.end(); ++it) {

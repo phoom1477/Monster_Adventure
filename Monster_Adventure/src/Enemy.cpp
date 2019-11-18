@@ -217,7 +217,7 @@ void Enemy::updateEntity(const float & dt, sf::RenderWindow& window)
 	}
 
 	//update collision
-	this->updateCollisionFrame(window);
+	this->updateCollisionFrame(window, 2);
 }
 
 void Enemy::updateAnimation(const float & dt)

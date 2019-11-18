@@ -1,6 +1,7 @@
 //////////////////////////////////////////////////
 //	Object list that used by dynamic allocated  //
 //		-player									//
+//		-Stage									//
 //		-pauseMenu								//
 //////////////////////////////////////////////////
 
@@ -8,7 +9,7 @@
 
 #include "State.h"
 #include "Player.h"
-#include "Enemy.h"
+#include "Stage.h"
 #include "PopUpMenu.h"
 
 class GameState : public State
@@ -20,10 +21,13 @@ private:
 	//Variable
 	std::string playerName;
 	short unsigned playerIndex;
+	int currStage;
+	int maxStage;
 
 	//Game Resource
 	Player* player;
-	std::vector<Enemy*> enemy;
+	std::vector<Enemy*>* enemy;
+	Stage* stages;
 
 	//UI Resource
 	sf::Text nameText;
@@ -35,26 +39,26 @@ private:
 	//State Resource
 	std::map<std::string, sf::Texture> textures;
 	
-	sf::Texture backgroundTexture;
-	std::vector<sf::RectangleShape> background;
-
 	sf::Font font;
 	PopUpMenu* pauseMenu;
 	PopUpMenu* gameOverMenu;
+	PopUpMenu* gameWinMenu;
 	
 	//Intialization
+	void initVariable();
 	void initKeybinds();
 	void initFonts();
 
 	void initTexture();
-	void initBackground();
 
 	void initPlayer();
-	void initEnemy();
 	
 	void initView();
 	void initUI();
 	void initPopUpMenu();
+
+	//load
+	void loadStage();
 
 public:
 	//Constructor , Destructor
@@ -67,19 +71,19 @@ public:
 	void updateInput(const float &dt);
 	
 	void updatePlayer(const float &dt);
-	void updateEnemy(const float &dt);
-	void updateEnemyControl(const float& dt);
-
+	void updateStage(const float &dt);
+	
 	void updateView();
 	void updateUI();
 	void updatePauseMenuButton();
 	void updateGameOverMenuButton();
+	void updateGameWinButton();
 
 	//render
 	void renderState(sf::RenderTarget* target = NULL);
 	
 	void renderPlayer(sf::RenderTarget* target = NULL);
-	void renderEnemy(sf::RenderTarget* target = NULL);
+	void renderStage(sf::RenderTarget* target = NULL);
 	
 	void renderUI(sf::RenderTarget* target = NULL);
 };

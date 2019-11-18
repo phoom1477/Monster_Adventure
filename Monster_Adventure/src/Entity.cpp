@@ -86,7 +86,7 @@ void Entity::stopEntityY()
 	}
 }
 
-void Entity::updateCollisionFrame(sf::RenderWindow& window)
+void Entity::updateCollisionFrame(sf::RenderWindow& window, int num_window)
 {
 	if (this->getPosition().x < 0.0f) {
 		this->setPosition(
@@ -96,14 +96,14 @@ void Entity::updateCollisionFrame(sf::RenderWindow& window)
 
 		this->stopEntityX();
 	}
-	/*else if (this->getPosition().x + this->getGlobalBounds().width > window.getSize().x) {
+	else if (this->getPosition().x + this->getGlobalBounds().width > window.getSize().x * num_window) {
 		this->setPosition(
-			window.getSize().x - this->getGlobalBounds().width,
+			window.getSize().x * num_window - this->getGlobalBounds().width,
 			this->getPosition().y
 		);
 
 		this->stopEntityX();
-	}*/
+	}
 	if (this->getPosition().y < 0.0f) {
 		this->setPosition(
 			this->getPosition().x,

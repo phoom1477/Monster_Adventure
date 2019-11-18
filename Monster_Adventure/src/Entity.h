@@ -62,7 +62,7 @@ public:
 
 	//update
 	virtual void updateEntity(const float &dt, sf::RenderWindow& window) = 0;
-	virtual void updateCollisionFrame(sf::RenderWindow& window);
+	virtual void updateCollisionFrame(sf::RenderWindow& window, int num_window);
 
 	//render
 	virtual void renderEntity(sf::RenderTarget& target) = 0;

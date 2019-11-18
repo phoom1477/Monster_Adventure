@@ -216,7 +216,7 @@ void Player::updateEntity(const float & dt, sf::RenderWindow& window)
 	}
 
 	//update collision
-	this->updateCollisionFrame(window);
+	this->updateCollisionFrame(window, 2);
 }
 
 void Player::updateAnimation(const float & dt)

@@ -1,6 +1,12 @@
 #include "GameState.h"
 
 //Initialization
+void GameState::initVariable()
+{
+	this->currStage = 1;
+	this->maxStage = 2;
+}
+
 void GameState::initKeybinds()
 {
 	std::ifstream fileconfig("src/Config/gamestate_keybinds.ini");
@@ -25,7 +31,7 @@ void GameState::initFonts()
 
 void GameState::initTexture()
 {
-	//load all palyer texture
+	//load all player texture
 	if (!this->textures["PLAYER_SHEET_DUDE"].loadFromFile("src/Resource/Charector/Player/Dude/Dude_Animation_List.png")) {
 		throw("[Game State] >> ERROR can't load player texture");
 	}
@@ -35,23 +41,10 @@ void GameState::initTexture()
 	if (!this->textures["PLAYER_SHEET_OWLET"].loadFromFile("src/Resource/Charector/Player/Owlet/Owlet_Animation_List.png")) {
 		throw("[Game State] >> ERROR can't load player texture");
 	}
+
+	//load all enemy texture
 	if (!this->textures["ENEMY_SHEET_SKELETON"].loadFromFile("src/Resource/Charector/Enemy/Skeleton/Skeleton_Animation_List.png")) {
 		throw("[Game State] >> ERROR can't load Enemy texture");
-	}
-}
-
-void GameState::initBackground()
-{
-	if (!this->backgroundTexture.loadFromFile("src/Resource/Background/MainMenuState/background.png")) {
-		throw("[Game State] >> ..ERROR.. Could't load backgroundTexture");
-	}
-
-	for (int i = 0; i < 2; i++) {
-		sf::RectangleShape buff;
-		buff.setTexture(&this->backgroundTexture);
-		this->background.push_back(buff);
-		this->background[i].setSize(sf::Vector2f(static_cast<float>(this->window->getSize().x), static_cast<float>(this->window->getSize().y)));
-		this->background[i].setPosition(static_cast<float>(this->window->getSize().x) * i, 0.0f);
 	}
 }
 
@@ -65,13 +58,6 @@ void GameState::initPlayer()
 	}
 	if (this->playerIndex == 2) {
 		this->player = new Player(600, 0, this->textures["PLAYER_SHEET_OWLET"], this->playerName);
-	}
-}
-
-void GameState::initEnemy()
-{
-	for (short unsigned i = 1; i < 5; i++) {
-		this->enemy.push_back(new Enemy(200.0f * i, 0.0f, this->textures["ENEMY_SHEET_SKELETON"], "1"));
 	}
 }
 
@@ -140,13 +126,57 @@ void GameState::initPopUpMenu()
 {
 	this->pauseMenu = new PopUpMenu(this->view, this->font);
 	this->pauseMenu->setMenuTextString("PAUSED");
-	this->pauseMenu->addButton("Resume", 4.0f, "RESUME");
-	this->pauseMenu->addButton("Quit", 6.0f, "QUIT");
+	this->pauseMenu->setMenuTextPosition(0.5f);
+	this->pauseMenu->addButton("Resume", 4.5f, "RESUME");
+	this->pauseMenu->addButton("Quit", 6.5f, "QUIT");
 
 	this->gameOverMenu = new PopUpMenu(this->view, this->font);
 	this->gameOverMenu->setMenuTextString("GAME OVER");
 	this->gameOverMenu->setWidth((this->view.getSize().x / 16.0f) * 6.0f);
-	this->gameOverMenu->addButton("Quit", 9.0f, "EXIT TO MENU");
+	this->gameOverMenu->setMenuTextPosition(0.5f);
+	this->gameOverMenu->setDescriptTextPosition(7.0f);
+	this->gameOverMenu->addButton("Quit", 14.25f, "EXIT TO MENU");
+
+	this->gameWinMenu = new PopUpMenu(this->view, this->font);
+	this->gameWinMenu->setMenuTextString("!! Congratulation !!");
+	this->gameWinMenu->setWidth((this->view.getSize().x / 16.0f) * 8.0f);
+	this->gameWinMenu->setMenuTextPosition(0.5f);
+	this->gameWinMenu->setDescriptTextPosition(7.0f);
+	this->gameWinMenu->addButton("Quit", 14.25f, "EXIT TO MENU");
+}
+
+//load
+void GameState::loadStage()
+{
+	//create new stage
+	if (this->currStage == 1) {
+		this->stages = new Stage(this->window, this->player);
+		
+		//set up background
+		this->stages->addBackground(1);
+
+		//set up enemy
+		for (int i = 0; i < 1; i++) {
+			this->stages->addEnemy(i * 100.0f, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+		}
+
+		//return enemy address to enemy in gamestate
+		this->enemy = &this->stages->getEnemy();
+	}
+	if(this->currStage == 2){
+		this->stages = new Stage(this->window, this->player);
+
+		//set up background
+		this->stages->addBackground(1);
+
+		//set up enemy
+		for (int i = 0; i < 2; i++) {
+			this->stages->addEnemy(i * 100.0f, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+		}
+
+		//return enemy address to enemy in gamestate
+		this->enemy = &this->stages->getEnemy();
+	}
 }
 
 //Constructor , Destructor
@@ -155,31 +185,28 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 	:State(window, supportedKeys, states), playerIndex(player_index), playerName(player_name)
 {
 	std::cout << "[Game State] >> On" << std::endl;
+	this->initVariable();
 	this->initKeybinds();
 	this->initFonts();
 
 	this->initTexture();
-	this->initBackground();
+	//this->initBackground();
 
 	this->initPlayer();
-	this->initEnemy();
 
 	this->initView();
 	this->initUI();
 	this->initPopUpMenu();
+
+	//load first stage
+	this->loadStage();
 }
 
 GameState::~GameState()
 {
 	delete this->pauseMenu;
 	delete this->player;
-
-	if (!this->enemy.empty()) {
-		for (int i = 0; i < this->enemy.size(); i++) {
-			delete this->enemy[i];
-			this->enemy.pop_back();
-		}
-	}
+	delete this->stages;
 }
 
 //Function
@@ -188,9 +215,13 @@ void GameState::updateState(const float &dt)
 	this->updateMousePosition();
 	this->updateKeyTime(dt);
 
-	//gameover 
+	//game over 
 	if (this->gameover) {
 		this->updateGameOverMenuButton();
+	}
+	//win this game
+	else if (this->gamewin) {
+		this->updateGameWinButton();
 	}
 	//not gameover
 	else {
@@ -199,31 +230,9 @@ void GameState::updateState(const float &dt)
 		//Unpaused update
 		if (!this->paused) {
 			this->updatePlayer(dt);
-			this->updateEnemy(dt);
+			this->updateStage(dt);
+
 			this->updateUI();
-
-			//clear enemy when it died
-			if (!this->enemy.empty()) {
-				for (int i = 0; i < this->enemy.size(); i++) {
-					if (this->enemy[i]->getDied()) {
-						this->player->increaseScore(this->enemy[i]->getPoint());
-
-						delete enemy[i];
-						this->enemy.erase(this->enemy.begin() + i);
-					}
-				}
-			}
-
-			//clear player when died
-			if (this->player->getDied()) {
-				this->overState();
-
-				//write score in score.data
-				std::fstream scorefile("src/Config/Data/Score.data", std::ios::app);
-				scorefile << "\n" << this->player->getName();
-				scorefile << "\t\t" << this->player->getScore();
-				scorefile.close();
-			}
 		}
 		//Paused update
 		else if (this->paused) {
@@ -264,16 +273,15 @@ void GameState::updatePlayer(const float & dt)
 
 	if (!this->player->getJumpping() && !this->player->getHurting()) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("ATTACK"))) && !this->player->getAttacking()) {
-			if (!this->enemy.empty()) {
+			if (!this->enemy->empty()) {
 				srand(int(time(NULL)));
-				
-				for (int i = 0; i < this->enemy.size(); i++) {
+				for (int i = 0; i < this->enemy->size(); i++) {
 					//random attack style [chance to double is 40%]
 					if (rand() % 100 <= 40) {
-						this->player->attack(dt, Player::ATTACK_DOUBLE, this->enemy[i]);
+						this->player->attack(dt, Player::ATTACK_DOUBLE, this->enemy->at(i));
 					}
 					else {
-						this->player->attack(dt, Player::ATTACK_ONCE, this->enemy[i]);
+						this->player->attack(dt, Player::ATTACK_ONCE, this->enemy->at(i));
 					}
 				}
 			}
@@ -282,47 +290,48 @@ void GameState::updatePlayer(const float & dt)
 
 	//Update all player component
 	this->player->updateEntity(dt, *this->window);
+
+	//clear player when died
+	if (this->player->getDied()) {
+		this->gameOverState();
+
+		//write score in score.data
+		std::fstream scorefile("src/Config/Data/Score.data", std::ios::app);
+		scorefile << "\n" << this->player->getName();
+		scorefile << "\t\t" << this->player->getScore();
+		scorefile.close();
+	}
 }
 
-void GameState::updateEnemy(const float &dt)
+void GameState::updateStage(const float & dt)
 {
-	//Control enemy
-	this->updateEnemyControl(dt);
+	this->stages->updateStage(dt);
 
-	//Update all Entity component
-	if (!this->enemy.empty()) {
-		for (int i = 0; i < this->enemy.size(); i++) {
-			this->enemy[i]->updateEntity(dt, *this->window);
+	//add new stage
+	if (this->stages->getClear()) {
+		if (this->currStage < this->maxStage) {
+			//clear old stage
+			if (this->stages) {
+				delete this->stages;
+				this->stages = NULL;
+			}
+
+			//create new stage
+			currStage++;
+			this->loadStage();
+		}
+		else {
+			this->gameWinState();
+
+			//write score in score.data
+			std::fstream scorefile("src/Config/Data/Score.data", std::ios::app);
+			scorefile << "\n" << this->player->getName();
+			scorefile << "\t\t" << this->player->getScore();
+			scorefile.close();
 		}
 	}
 }
 
-void GameState::updateEnemyControl(const float& dt)
-{
-	if (!this->enemy.empty()) {
-		srand(int(time(NULL)));
-		for (int i = 0; i < this->enemy.size(); i++) {
-			//control bot walk to player
-			if (std::abs(this->player->getCenter().x - this->enemy[i]->getCenter().x) <= 300.0f && std::abs(this->player->getCenter().x - this->enemy[i]->getCenter().x) >=50) {
-				if (this->player->getCenter().x < this->enemy[i]->getCenter().x) {
-					this->enemy[i]->moveEntity(-1.0f, 0.0f, dt);
-				}
-				if (this->player->getCenter().x > this->enemy[i]->getCenter().x) {
-					this->enemy[i]->moveEntity(1.0f, 0.0f,dt);
-				}
-			}
-
-			//control bot attack player [enemy chance to attack is 80%]
-			if (rand() % 100 <= 80) {
-				if (std::abs(this->player->getCenter().x - this->enemy[i]->getCenter().x) <= 100.0f && !this->enemy[i]->getAttacking()) {
-					this->enemy[i]->attack(dt, Enemy::ATTACK_ONCE, this->player);
-				}
-			}
-		}
-	}
-}
-
-//update
 void GameState::updateView()
 {
 	this->view.setSize(static_cast<float>(this->window->getSize().x), static_cast<float>(this->window->getSize().y));
@@ -330,11 +339,20 @@ void GameState::updateView()
 
 	this->window->setView(this->view);
 
-	
-	if (this->view.getCenter().x - this->view.getSize().x / 2.0f < 0.0f || this->getQuit()) {
+
+	if (this->view.getCenter().x <= this->view.getSize().x / 2.0f || this->getQuit()) {
 		this->view.setSize(static_cast<float>(this->window->getSize().x), static_cast<float>(this->window->getSize().y));
 		this->view.setCenter(
 			this->window->getSize().x / 2.0f,
+			this->window->getSize().y / 2.0f
+		);
+		this->window->setView(this->view);
+	}
+
+	if (this->view.getCenter().x >= this->stages->getStageSize().x - this->view.getSize().x / 2.0f) {
+		this->view.setSize(static_cast<float>(this->window->getSize().x), static_cast<float>(this->window->getSize().y));
+		this->view.setCenter(
+			this->stages->getStageSize().x - this->window->getSize().x / 2.0f,
 			this->window->getSize().y / 2.0f
 		);
 		this->window->setView(this->view);
@@ -426,21 +444,37 @@ void GameState::updateGameOverMenuButton()
 	}
 }
 
+void GameState::updateGameWinButton()
+{
+	//update content
+	std::stringstream int_to_string;
+	int_to_string << this->player->getScore();
+	this->gameWinMenu->setDescriptTextString("Score : " + int_to_string.str());
+
+	//Update all the buttons in Game Over Menu
+	this->gameWinMenu->updatePauseMenu(this->mousePosView, this->view);
+
+	//Action button
+	if (this->gameWinMenu->isButtonPreesed("Quit")) {
+		this->endState();
+	}
+}
+
 //render
 void GameState::renderState(sf::RenderTarget* target)
 {
 	if (!target) {
 		target = this->window;
 	}
-	for (int i = 0; i < this->background.size(); i++) {
-		target->draw(this->background[i]);
-	}
+
+	//render stages
+	this->renderStage(target);
 
 	//render UI
 	this->renderUI(target);
 
 	//render all entity 
-	this->renderEnemy(target);
+	//this->renderEnemy(target);
 	this->renderPlayer(target);
 
 	//paused menu render
@@ -452,6 +486,11 @@ void GameState::renderState(sf::RenderTarget* target)
 	if (this->gameover) {
 		this->gameOverMenu->renderPauseMenu(*target);
 	}
+
+	//win menu render
+	if (this->gamewin) {
+		this->gameWinMenu->renderPauseMenu(*target);
+	}
 }
 
 void GameState::renderPlayer(sf::RenderTarget * target)
@@ -459,13 +498,9 @@ void GameState::renderPlayer(sf::RenderTarget * target)
 	this->player->renderEntity(*target);
 }
 
-void GameState::renderEnemy(sf::RenderTarget* target)
+void GameState::renderStage(sf::RenderTarget * target)
 {
-	if (!this->enemy.empty()) {
-		for (int i = 0; i < this->enemy.size(); i++) {
-			this->enemy[i]->renderEntity(*target);
-		}
-	}
+	this->stages->renderStage();
 }
 
 void GameState::renderUI(sf::RenderTarget * target)

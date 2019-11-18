@@ -36,7 +36,9 @@ public:
 
 	//Function
 	void addButton(const std::string key, float grid_y, const std::string text);
-	
+	void setMenuTextPosition(float grid_y);
+	void setDescriptTextPosition(float grid_y);
+
 	//Modifier
 	void setMenuTextString(std::string menu_text);
 	void setDescriptTextString(std::string descript_text);
