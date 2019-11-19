@@ -21,11 +21,7 @@ Stage::~Stage()
 	}
 }
 
-const bool& Stage::getClear()
-{
-	return this->clear;
-}
-
+//Accessor
 const sf::Vector2f Stage::getStageSize()
 {
 	if (!this->background.empty()) {
@@ -42,22 +38,34 @@ const sf::Vector2f Stage::getStageSize()
 	}
 }
 
+const bool& Stage::getClear()
+{
+	return this->clear;
+}
+
 std::vector<Enemy*>& Stage::getEnemy()
 {
 	return this->enemy;
 }
 
+//Function
 void Stage::addBackground(short unsigned background_id)
 {
+	//select background
 	if (background_id == 1) {
 		if (!this->background_texture.loadFromFile("src/Resource/Background/GameState/background_1.png")) {
 			throw("[Stage] >> ..ERROR.. Could't load backgroundTexture");
 		}
 	}
+	if (background_id == 2) {
+		if (!this->background_texture.loadFromFile("src/Resource/Background/GameState/background_2.png")) {
+			throw("[Stage] >> ..ERROR.. Could't load backgroundTexture");
+		}
+	}
 		
+	//create background
 	int start_count = (int)this->background.size();
 	int end_count = start_count + 2;
-
 	for (int i = start_count; i < end_count; i++) {
 		sf::RectangleShape buff;
 		buff.setTexture(&this->background_texture);
@@ -70,6 +78,7 @@ void Stage::addBackground(short unsigned background_id)
 
 void Stage::addEnemy(const float x, const float y, sf::Texture & texture_sheet, std::string id)
 {
+	//push enemy into enemy vactor
 	this->enemy.push_back(new Enemy(x,y,texture_sheet,id));
 }
 
@@ -78,6 +87,7 @@ void Stage::updateStage(const float & dt)
 	//update enemy
 	this->updateEnemy(dt);
 
+	//cleared stage if all enemy down
 	if (this->enemy.empty()) {
 		this->clear = true;
 	}

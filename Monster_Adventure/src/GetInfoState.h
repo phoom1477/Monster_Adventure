@@ -55,8 +55,8 @@ public:
 
 	//update
 	void updateState(const float &dt);
-
 	void updateInput(const float &dt);
+
 	void updateButton();
 
 	void updateName();

@@ -3,8 +3,8 @@
 //Initialization
 void GameState::initVariable()
 {
-	this->currStage = 1;
 	this->maxStage = 2;
+	this->currStage = 1;
 }
 
 void GameState::initKeybinds()
@@ -156,7 +156,7 @@ void GameState::loadStage()
 		this->stages->addBackground(1);
 
 		//set up enemy
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < 5; i++) {
 			this->stages->addEnemy(i * 100.0f, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
 		}
 
@@ -167,10 +167,10 @@ void GameState::loadStage()
 		this->stages = new Stage(this->window, this->player);
 
 		//set up background
-		this->stages->addBackground(1);
+		this->stages->addBackground(2);
 
 		//set up enemy
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < 10; i++) {
 			this->stages->addEnemy(i * 100.0f, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
 		}
 
@@ -258,7 +258,7 @@ void GameState::updateInput(const float &dt)
 
 void GameState::updatePlayer(const float & dt)
 {
-	//Update player input
+	//Control player
 	if (!this->player->getAttacking()) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_LEFT")))) {
 			this->player->moveEntity(-1.0f, 0.0f, dt);
@@ -270,7 +270,6 @@ void GameState::updatePlayer(const float & dt)
 			this->player->jump();
 		}
 	}
-
 	if (!this->player->getJumpping() && !this->player->getHurting()) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("ATTACK"))) && !this->player->getAttacking()) {
 			if (!this->enemy->empty()) {
@@ -310,7 +309,7 @@ void GameState::updateStage(const float & dt)
 	//add new stage
 	if (this->stages->getClear()) {
 		if (this->currStage < this->maxStage) {
-			//clear old stage
+			//clear old stage for create new
 			if (this->stages) {
 				delete this->stages;
 				this->stages = NULL;
@@ -339,7 +338,7 @@ void GameState::updateView()
 
 	this->window->setView(this->view);
 
-
+	//limit left view frame
 	if (this->view.getCenter().x <= this->view.getSize().x / 2.0f || this->getQuit()) {
 		this->view.setSize(static_cast<float>(this->window->getSize().x), static_cast<float>(this->window->getSize().y));
 		this->view.setCenter(
@@ -348,7 +347,7 @@ void GameState::updateView()
 		);
 		this->window->setView(this->view);
 	}
-
+	//limit right view frame
 	if (this->view.getCenter().x >= this->stages->getStageSize().x - this->view.getSize().x / 2.0f) {
 		this->view.setSize(static_cast<float>(this->window->getSize().x), static_cast<float>(this->window->getSize().y));
 		this->view.setCenter(
@@ -469,13 +468,12 @@ void GameState::renderState(sf::RenderTarget* target)
 
 	//render stages
 	this->renderStage(target);
-
+	
+	//render player
+	this->renderPlayer(target);
+	
 	//render UI
 	this->renderUI(target);
-
-	//render all entity 
-	//this->renderEnemy(target);
-	this->renderPlayer(target);
 
 	//paused menu render
 	if (this->paused) {		

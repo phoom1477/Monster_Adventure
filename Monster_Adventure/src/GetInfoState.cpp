@@ -252,7 +252,6 @@ void GetInfoState::updatePreviewPlayer()
 	);
 }
 
-
 void GetInfoState::renderState(sf::RenderTarget * target)
 {
 	if (target == NULL) {

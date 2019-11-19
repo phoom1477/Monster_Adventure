@@ -21,8 +21,8 @@ private:
 	//Variable
 	std::string playerName;
 	short unsigned playerIndex;
-	int currStage;
 	int maxStage;
+	int currStage;
 
 	//Game Resource
 	Player* player;

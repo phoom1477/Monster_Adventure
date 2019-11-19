@@ -20,17 +20,16 @@
 class Stage
 {
 private:
-	//Variable1
+	//Window
+	sf::RenderWindow *window;
+	
+	//Variable
 	bool clear;
 
-	//Variable2
-	sf::RenderWindow *window;
-
-	//Resource1
+	//Resource
 	Player *player;
 	std::vector<Enemy*> enemy;
 	
-	//Resource2
 	sf::Texture background_texture;
 	std::vector<sf::RectangleShape> background;
 
@@ -43,10 +42,10 @@ public:
 	virtual ~Stage();
 
 	//Accessor
+	const sf::Vector2f getStageSize();
+
 	const bool& getClear();
 	std::vector<Enemy*>& getEnemy();
-
-	const sf::Vector2f getStageSize();
 
 	//Function
 	void addBackground(short unsigned background_id);

@@ -43,31 +43,31 @@ const bool State::getKeyTime()
 void State::pausedState()
 {
 	this->paused = true;
-	std::cout << "Paused State" << std::endl;
+	std::cout << "[ Paused State ]" << std::endl;
 }
 
 void State::unpausedState()
 {
 	this->paused = false;
-	std::cout << "Unpaused State" << std::endl;
+	std::cout << "[ Unpaused State ]" << std::endl;
 }
 
 void State::gameOverState()
 {
 	this->gameover = true;
-	std::cout << "Game Over" << std::endl;
+	std::cout << "[ Game Over ]" << std::endl;
 }
 
 void State::gameWinState()
 {
 	this->gamewin = true;
-	std::cout << "Win" << std::endl;
+	std::cout << "[ Win ]" << std::endl;
 }
 
 void State::endState()
 {
 	this->quit = true;
-	std::cout << "Quit State" << std::endl;
+	std::cout << "[ Quit State ]" << std::endl;
 }
 
 void State::updateKeyTime(const float &dt)

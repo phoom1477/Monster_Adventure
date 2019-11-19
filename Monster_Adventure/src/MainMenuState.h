@@ -31,7 +31,6 @@ private:
 	void initFonts();
 
 	void initBackground();
-	void initContainer();
 	void initLogo();
 	void initMusic();
 
