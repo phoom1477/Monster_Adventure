@@ -15,9 +15,9 @@ void Player::initVariable()
 
 void Player::initStatus()
 {
-	this->ATK = 100;
-	this->DEF = 10;
-	this->MSPD = 10;
+	this->ATK = 100.0f;
+	this->DEF = 10.0f;
+	this->MSPD = 10.0f;
 	this->maxHP = 1000.0f;
 	this->currHP = this->maxHP;
 }
@@ -47,6 +47,11 @@ Player::Player(float x, float y, sf::Texture& texture_sheet ,std::string name)
 	
 	//create movement component
 	this->createMovementComponent(40.0f * this->MSPD, 30.0f, 10.0f, 50.0f, 35.0f);
+
+	//create sound component
+	this->createSoundComponent();
+	this->soundComponent->addSound("JUMP", "src/Resource/SoundFX/Player/jump.ogg");
+	this->soundComponent->addSound("ATTACK", "src/Resource/SoundFX/Player/attack.ogg");
 }
 
 Player::~Player()
@@ -113,6 +118,17 @@ const int & Player::getScore()
 }
 
 //Function
+void Player::increaseHP(const float heal_point)
+{
+	//increase hp with % point
+	this->currHP += (heal_point / 100.0f) * this->maxHP;
+	
+	//limit HP with max
+	if (this->currHP >= this->maxHP) {
+		this->currHP = this->maxHP;
+	}
+}
+
 void Player::decreaseHP(const float& dt, const float ATK, sf::Vector2f attacker_center)
 {
 	srand(int(time(NULL)));
@@ -137,9 +153,12 @@ void Player::increaseScore(const int point)
 
 void Player::attack(const float& dt, short unsigned attack_style, Entity* enemy)
 {
+	//play sound effect
+	this->soundComponent->play("ATTACK");
+
 	this->attacking = true;
 	this->attackStyle = attack_style;
-
+	
 	this->createAttackHitbox();
 	if (this->checkHitCollision(enemy)) {
 		if (this->attackStyle == ATTACK_ONCE) {
@@ -197,6 +216,9 @@ void Player::clearAttackHitbox()
 
 void Player::jump()
 {
+	//play sound effect
+	this->soundComponent->play("JUMP");
+
 	this->jumpping = true;
 	this->movementComponent->jump();
 }

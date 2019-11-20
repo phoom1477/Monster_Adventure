@@ -46,6 +46,9 @@ void GameState::initTexture()
 	if (!this->textures["ENEMY_SHEET_SKELETON"].loadFromFile("src/Resource/Charector/Enemy/Skeleton/Skeleton_Animation_List.png")) {
 		throw("[Game State] >> ERROR can't load Enemy texture");
 	}
+	if (!this->textures["ENEMY_SHEET_MINOTAUR"].loadFromFile("src/Resource/Charector/Enemy/Minotaur/Minotaur_Animation_List.png")) {
+		throw("[Game State] >> ERROR can't load Enemy texture");
+	}
 }
 
 void GameState::initPlayer()
@@ -170,13 +173,16 @@ void GameState::loadStage()
 		this->stages->addBackground(2);
 
 		//set up enemy
-		for (int i = 0; i < 10; i++) {
-			this->stages->addEnemy(i * 100.0f, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+		for (int i = 0; i < 5; i++) {
+			this->stages->addEnemy(i * 100.0f, 50.0f, this->textures["ENEMY_SHEET_MINOTAUR"], "2");
 		}
 
 		//return enemy address to enemy in gamestate
 		this->enemy = &this->stages->getEnemy();
 	}
+
+	//fit size vector
+	this->enemy->shrink_to_fit();
 }
 
 //Constructor , Destructor
@@ -205,6 +211,9 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 GameState::~GameState()
 {
 	delete this->pauseMenu;
+	delete this->gameOverMenu;
+	delete this->gameWinMenu;
+
 	delete this->player;
 	delete this->stages;
 }
@@ -259,6 +268,10 @@ void GameState::updateInput(const float &dt)
 void GameState::updatePlayer(const float & dt)
 {
 	//Control player
+	/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::K)&&this->getKeyTime()) {  // for test healing
+		this->player->increaseHP(10);
+	}*/
+
 	if (!this->player->getAttacking()) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_LEFT")))) {
 			this->player->moveEntity(-1.0f, 0.0f, dt);
@@ -311,6 +324,7 @@ void GameState::updateStage(const float & dt)
 		if (this->currStage < this->maxStage) {
 			//clear old stage for create new
 			if (this->stages) {
+				std::cout << "xxxx";
 				delete this->stages;
 				this->stages = NULL;
 			}
@@ -379,6 +393,9 @@ void GameState::updateUI()
 
 
 	//update playerShowHPBar
+	if ((this->player->getCurrHP() / this->player->getMaxHP()) * 100.0f > 50.0f) {
+		this->playerShowHPBar.setFillColor(sf::Color::Green);
+	}
 	if ((this->player->getCurrHP() / this->player->getMaxHP()) * 100.0f <= 50.0f) {
 		this->playerShowHPBar.setFillColor(sf::Color::Yellow);
 	}

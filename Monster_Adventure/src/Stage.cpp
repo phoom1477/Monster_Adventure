@@ -17,7 +17,12 @@ Stage::~Stage()
 	if (!this->enemy.empty()) {
 		for (int i = 0; i < this->enemy.size(); i++) {
 			delete this->enemy[i];
+
+			this->enemy.erase(this->enemy.begin() + i);
 		}
+
+		// fit size vector
+		this->enemy.shrink_to_fit();
 	}
 }
 
@@ -80,6 +85,9 @@ void Stage::addEnemy(const float x, const float y, sf::Texture & texture_sheet, 
 {
 	//push enemy into enemy vactor
 	this->enemy.push_back(new Enemy(x,y,texture_sheet,id));
+
+	// fit size vector
+	this->enemy.shrink_to_fit();
 }
 
 void Stage::updateStage(const float & dt)
@@ -113,6 +121,9 @@ void Stage::updateEnemy(const float & dt)
 
 				delete enemy[i];
 				this->enemy.erase(this->enemy.begin() + i);
+
+				// fit size vector
+				this->enemy.shrink_to_fit();
 			}
 		}
 	}

@@ -76,6 +76,9 @@
     <ClCompile Include="src\Stage.cpp">
       <Filter>State\Stage</Filter>
     </ClCompile>
+    <ClCompile Include="src\SoundComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Game.h">
@@ -125,6 +128,9 @@
     </ClInclude>
     <ClInclude Include="src\Stage.h">
       <Filter>State\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SoundComponent.h">
+      <Filter>Component</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

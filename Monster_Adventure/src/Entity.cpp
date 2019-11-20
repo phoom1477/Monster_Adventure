@@ -37,6 +37,11 @@ void Entity::createMovementComponent(const float maxVelocity, const float accele
 	this->movementComponent = new MovementComponent(this->sprite, maxVelocity, acceleration, deceleration, jumpForce, gravity);
 }
 
+void Entity::createSoundComponent()
+{
+	this->soundComponent = new SoundComponent();
+}
+
 //Accessor
 sf::FloatRect Entity::getGlobalBounds()
 {

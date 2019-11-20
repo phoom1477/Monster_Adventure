@@ -22,6 +22,7 @@
 #include "HitboxComponent.h"
 #include "MovementComponent.h"
 #include "AnimationComponent.h"
+#include "SoundComponent.h"
 
 class Entity
 {
@@ -37,6 +38,7 @@ protected:
 	AnimationComponent* animationComponent;
 	HitboxComponent* hitboxComponent;	
 	MovementComponent* movementComponent;
+	SoundComponent* soundComponent;
 
 public:
 	//Constructor , Destructor
@@ -47,7 +49,8 @@ public:
 	void createAnimationComponent(sf::Texture& texture_sheet);
 	void createHitboxComponent(const float offset_x, const float offset_y, const float width, const float height, sf::Color line_color);
 	void createMovementComponent(const float maxVelocity, const float acceleration, const float deceleration, const float jumpForce, const float gravity);
-	
+	void createSoundComponent();
+
 	//Accessor
 	virtual sf::FloatRect getGlobalBounds();
 	virtual const sf::Vector2f getPosition();

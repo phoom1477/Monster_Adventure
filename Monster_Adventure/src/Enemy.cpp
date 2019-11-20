@@ -10,70 +10,159 @@ void Enemy::initVariable()
 	this->attackHitbox = NULL;
 }
 
-void Enemy::initStatus(std::string id)
+void Enemy::initData(std::string id)
 {
-	//Load data from EnemyData.data
-	std::ifstream getdata("src/Config/Data/EnemyData.data");
-
 	//Set defalult if can,t read file
 	this->enemyId = id;
 	this->name = "Error Enemy";
-	this->ATK = 100;
-	this->DEF = 10;
-	this->MSPD = 10;
-	this->maxHP = 1000;
+	this->ATK = 100.0f;
+	this->DEF = 10.0f;
+	this->MSPD = 10.0f;
+	this->maxHP = 1000.0f;
 	this->currHP = this->maxHP;
 	this->point = 100;
-	
-	//getdata from file
-	while(getdata.is_open()) {
-		std::string buff;
-		getdata >> buff;
-		if (buff == "ID" + this->enemyId + ":" + "NAME") {
-			getline(getdata, this->name);
-		}
-		if (buff == "ID" + this->enemyId + ":" + "ATK") {
-			getdata >> this->ATK;
-		}
-		if (buff == "ID" + this->enemyId + ":" + "DEF") {
-			getdata >> this->DEF;
-		}
-		if (buff == "ID" + this->enemyId + ":" + "MSPD") {
-			getdata >> this->MSPD;
-		}
-		if (buff == "ID" + this->enemyId + ":" + "maxHP") {
-			getdata >> this->maxHP;
-		}
-		if (buff == "ID" + this->enemyId + ":" + "point") {
-			getdata >> this->point;
-		}
 
-		if (buff == "") {
-			getdata.close();
-		}
-	}
+	this->faceRightOrigin = sf::Vector2f(0, 0);
+	this->faceLeftOrigin = sf::Vector2f(0, 0);
 }
 
 //Constructor , Destructor
 Enemy::Enemy(float x, float y, sf::Texture& texture_sheet, std::string id)
 {
 	this->initVariable();
-	this->initStatus(id);
+	this->initData(id);
 	this->setPosition(x, y);
+
+	//Getdata Variable -------------------
+	
+	//animation
+	sf::Vector2i sprite_size;
+	
+	float idle_time;
+	sf::Vector2i idle_start;
+	sf::Vector2i idle_end;
+
+	float walk_time;
+	sf::Vector2i walk_start;
+	sf::Vector2i walk_end;
+
+	float attack_time;
+	sf::Vector2i attack_start;
+	sf::Vector2i attack_end;
+
+	float dead_time;
+	sf::Vector2i dead_start;
+	sf::Vector2i dead_end;
+
+	float hurt_time;
+	sf::Vector2i hurt_start;
+	sf::Vector2i hurt_end;
+	
+	//hitbox
+	sf::Vector2f offset;
+	sf::Vector2f minus_size;
+	
+	//sound
+	std::string attack_sound_path;
+	
+	//------------------------------------
+
+	//Load data from EnemyData.data
+	std::string data_path = "src/Config/Data/EnemyData";
+	data_path = data_path + id + ".data";
+	std::ifstream getdata(data_path);
+
+	//getdata from file
+	while (getdata.is_open()) {
+		std::string buff;
+		getdata >> buff;
+		//get status
+		if (buff == "NAME") {
+			getline(getdata, this->name);
+			//trim [this->name]
+			this->name.erase(std::remove_if(this->name.begin(), this->name.end(), isspace), this->name.end());
+		}
+		if (buff == "ATK") {
+			getdata >> this->ATK;
+		}
+		if (buff == "DEF") {
+			getdata >> this->DEF;
+		}
+		if (buff == "MSPD") {
+			getdata >> this->MSPD;
+		}
+		if (buff == "maxHP") {
+			getdata >> this->maxHP;
+			this->currHP = this->maxHP;
+		}
+		if (buff == "point") {
+			getdata >> this->point;
+		}
+
+		//getdata to class varible for animation
+		if (buff == "face_right_origin") {
+			getdata >> this->faceRightOrigin.x >> this->faceRightOrigin.y;
+		}
+		if (buff == "face_left_origin") {
+			getdata >> this->faceLeftOrigin.x >> this->faceLeftOrigin.y;
+		}
+
+		//getdata animation component
+		if (buff == "sprite_size") {
+			getdata >> sprite_size.x >> sprite_size.y;
+		}
+		if (buff == "idle") {
+			getdata >> idle_time >> idle_start.x >> idle_start.y >> idle_end.x >> idle_end.y;
+		}
+		if (buff == "walk") {
+			getdata >> walk_time >> walk_start.x >> walk_start.y >> walk_end.x >> walk_end.y;
+		}
+		if (buff == "attack") {
+			getdata >> attack_time >> attack_start.x >> attack_start.y >> attack_end.x >> attack_end.y;
+		}
+		if (buff == "dead") {
+			getdata >> dead_time >> dead_start.x >> dead_start.y >> dead_end.x >> dead_end.y;
+		}
+		if (buff == "hurt") {
+			getdata >> hurt_time >> hurt_start.x >> hurt_start.y >> hurt_end.x >> hurt_end.y;
+		}
+
+		//getdata hitbox component
+		if (buff == "offset") {
+			getdata >> offset.x >> offset.y;
+		}
+		if (buff == "minus_size") {
+			getdata >> minus_size.x >> minus_size.y;
+		}
+		if (buff == "attackSoundPath") {
+			getline(getdata, attack_sound_path);
+			attack_sound_path.erase(std::remove_if(attack_sound_path.begin(), attack_sound_path.end(), isspace), attack_sound_path.end());
+		}
+
+		//close file
+		if (buff == "") {
+			getdata.close();
+		}
+
+	}
 
 	//create animation component
 	this->createAnimationComponent(texture_sheet);
-	this->animationComponent->addAnimation("IDLE", 10.0f, 0, 0, 10, 0, 43, 37);
-	this->animationComponent->addAnimation("WALK", 8.0f, 0, 1, 12, 1, 43, 37);
-	this->animationComponent->addAnimation("ATTACK", 8.0f, 0, 2, 17, 2, 43, 37);
-	this->animationComponent->addAnimation("DEAD", 13.0f, 0, 3, 14, 3, 43, 37);
-	this->animationComponent->addAnimation("HURT", 13.0f, 0, 4, 7, 4, 43, 37);
+	this->animationComponent->addAnimation("IDLE", idle_time, idle_start.x, idle_start.y, idle_end.x, idle_end.y, sprite_size.x, sprite_size.y);
+	this->animationComponent->addAnimation("WALK", walk_time, walk_start.x, walk_start.y, walk_end.x, walk_end.y, sprite_size.x, sprite_size.y);
+	this->animationComponent->addAnimation("ATTACK", attack_time, attack_start.x, attack_start.y, attack_end.x, attack_end.y, sprite_size.x, sprite_size.y);
+	this->animationComponent->addAnimation("DEAD", dead_time, dead_start.x, dead_start.y, dead_end.x, dead_end.y, sprite_size.x, sprite_size.y);
+	this->animationComponent->addAnimation("HURT", hurt_time, hurt_start.x, hurt_start.y, hurt_end.x, hurt_end.y, sprite_size.x, sprite_size.y);
 
 	//create hitbox component
-	this->createHitboxComponent(0.0f, 22.0f, this->sprite.getGlobalBounds().width - 80, this->sprite.getGlobalBounds().height - 20, sf::Color::Yellow);
+	this->createHitboxComponent(offset.x, offset.y, this->sprite.getGlobalBounds().width - minus_size.x, this->sprite.getGlobalBounds().height - minus_size.y, sf::Color::Yellow);
 
 	//create movement component
-	this->createMovementComponent(40.0f * this->MSPD, 30.0f, 10.0f, 50.0f, 35.0f);
+	this->createMovementComponent(40.0f * this->MSPD, 30.0f, 10.0f, 0.0f, 35.0f);
+
+	//create sound component
+	this->createSoundComponent();
+	this->soundComponent->addSound("ATTACK", attack_sound_path);
 }
 
 Enemy::~Enemy()
@@ -83,6 +172,7 @@ Enemy::~Enemy()
 	}
 }
 
+//Accessor
 sf::Vector2f Enemy::getCenter()
 {
 	if (this->hitboxComponent) {
@@ -98,7 +188,6 @@ sf::Vector2f Enemy::getCenter()
 	);
 }
 
-//Accessor
 const bool & Enemy::getAttacking()
 {
 	return this->attacking;
@@ -150,12 +239,16 @@ void Enemy::decreaseHP(const float& dt, const float ATK, sf::Vector2f attacker_c
 			}
 		}
 	}
+
+	std::cout << this->currHP << "/" << this->maxHP << '\n';
 }
 
 void Enemy::attack(const float& dt, short unsigned attack_style, Entity* player)
 {
+	//play sound effect
+	this->soundComponent->play("ATTACK");
+
 	attacking = true;
-	std::cout << this->attacking << " ";
 	this->attackStyle = attack_style;
 	this->createAttackHitbox();
 	if (this->checkHitCollision(player)) {
@@ -250,7 +343,7 @@ void Enemy::updateAnimation(const float & dt)
 			}
 			else if (this->movementComponent->getState(MOVING_RIGHT)) {
 				if (this->sprite.getScale().x < 0.0f) {
-					this->sprite.setOrigin(0.0f, 0.0f);
+					this->sprite.setOrigin(this->faceRightOrigin.x, this->faceRightOrigin.y);
 					this->sprite.setScale(3.0f, 3.0f);
 				}
 
@@ -258,7 +351,7 @@ void Enemy::updateAnimation(const float & dt)
 			}
 			else if (this->movementComponent->getState(MOVING_LEFT)) {
 				if (this->sprite.getScale().x > 0.0f) {
-					this->sprite.setOrigin(17.0f, 0.0f);
+					this->sprite.setOrigin(this->faceLeftOrigin.x, this->faceLeftOrigin.y);
 					this->sprite.setScale(-3.0f, 3.0f);
 				}
 

@@ -24,6 +24,8 @@ void Game::initWindow()
 		ifs >> buff;
 		if (buff == "title") {
 			getline(ifs, title);
+			//trim [title]
+			title.erase(std::remove_if(title.begin(), title.end(), isspace), title.end());
 		}
 		if (buff == "width") {
 			ifs >> window_bounds.width;

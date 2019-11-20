@@ -123,6 +123,7 @@ private:
 		}
 	};
 
+	//Resource
 	sf::Sprite& sprite;
 	sf::Texture& textureSheet;
 
@@ -134,7 +135,6 @@ public:
 	//Constructor , Destructor
 	AnimationComponent(sf::Sprite& sprite, sf::Texture& texture_sheet);
 	virtual ~AnimationComponent();
-
 
 	//Function
 	void addAnimation(

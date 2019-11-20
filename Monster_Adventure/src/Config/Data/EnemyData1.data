@@ -1,0 +1,22 @@
+NAME 			Skeleton
+ATK 			10
+DEF 			10
+MSPD 			3
+maxHP 			1000
+point			100
+
+face_right_origin	0 0
+face_left_origin        17 0
+
+sprite_size		43 37
+idle			10 	0 0	10 0
+walk			8 	0 1	12 1
+attack			8 	0 2	17 2
+dead			13 	0 3	14 3
+hurt			13 	0 4	7 4
+
+offset			0 22
+minus_size		80 25
+
+attackSoundPath		src/Resource/SoundFX/Enemy/attack_slash.ogg
+

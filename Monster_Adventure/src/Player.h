@@ -11,9 +11,9 @@ private:
 	int score;
 
 	//Status
-	short unsigned ATK;
-	short unsigned DEF;
-	short unsigned MSPD;
+	float ATK;
+	float DEF;
+	float MSPD;
 	float currHP;
 	float maxHP;
 
@@ -53,6 +53,8 @@ public:
 	const int& getScore();
 
 	//Function
+	void increaseHP(const float heal_point);
+
 	void decreaseHP(const float& dt, const float ATK, sf::Vector2f attacker_center);
 	void increaseScore(const int point);
 

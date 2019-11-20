@@ -2,6 +2,7 @@
 
 #include "Entity.h"
 #include "Player.h"
+
 #include <time.h>
 
 class Enemy : public Entity
@@ -11,15 +12,17 @@ private:
 	std::string enemyId;
 	std::string name;
 
-	//Resource
-
 	//Status
-	short unsigned ATK;
-	short unsigned DEF;
-	short unsigned MSPD;
+	float ATK;
+	float DEF;
+	float MSPD;
 	float currHP;
 	float maxHP;
 	int point;
+
+	//Getdata variable for animation
+	sf::Vector2f faceRightOrigin;
+	sf::Vector2f faceLeftOrigin;
 
 	//Action
 	bool hurting;
@@ -32,7 +35,7 @@ private:
 
 	//Initialization
 	void initVariable();
-	void initStatus(std::string id);
+	void initData(std::string id);
 
 public:
 	//Public enum

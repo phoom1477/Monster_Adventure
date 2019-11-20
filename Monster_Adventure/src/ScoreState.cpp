@@ -54,7 +54,7 @@ void ScoreState::initBackground()
 {
 	this->background.setSize(sf::Vector2f(static_cast<float>(this->window->getSize().x), static_cast<float>(this->window->getSize().y)));
 
-	if (!this->backgroundTexture.loadFromFile("src/Resource/Background/MainMenuState/background.png")) {
+	if (!this->backgroundTexture.loadFromFile("src/Resource/Background/ScoreState/background.png")) {
 		throw("[Score State] >> ..ERROR.. Could't load backgroundTexture");
 	}
 	this->background.setTexture(&this->backgroundTexture);
