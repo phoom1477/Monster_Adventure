@@ -26,7 +26,6 @@ void SoundComponent::addSound(std::string key, std::string path)
 
 void SoundComponent::play(std::string key)
 {
-	
 	if (this->sounds[key].getStatus() != sf::Sound::Playing) {
 		this->sounds[key].play();
 	}

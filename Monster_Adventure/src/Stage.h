@@ -22,23 +22,28 @@ class Stage
 private:
 	//Window
 	sf::RenderWindow *window;
-	
+	sf::Font& font;
+
 	//Variable
 	bool clear;
 
 	//Resource
 	Player *player;
 	std::vector<Enemy*> enemy;
-	
+
 	sf::Texture background_texture;
 	std::vector<sf::RectangleShape> background;
 
+	//UI Resource
+	sf::Text stageNumberText;
+
 	//Initialization
 	void initVariable();
+	void initUI(std::string stage_num);
 
 public:
 	//Contructor , Destructor
-	Stage(sf::RenderWindow* window, Player *player);
+	Stage(sf::RenderWindow* window,sf::Font& font, Player *player, std::string stage_num);
 	virtual ~Stage();
 
 	//Accessor

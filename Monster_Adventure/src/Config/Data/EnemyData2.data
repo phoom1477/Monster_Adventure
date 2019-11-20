@@ -1,21 +1,26 @@
 NAME 			Minotaur
-ATK 			15
+ATK 			10
 DEF 			15
-MSPD 			5
-maxHP 			1500
+MSPD 			3
+maxHP 			2000
 point			200
 
 face_right_origin	0 0
-face_left_origin        100 0
+face_left_origin        90 0
+
+attack_right_offset     145 70
+attack_right_size	90 115
+attack_left_offset      40 70
+attack_left_size        90 115
 
 sprite_size		96 96
 idle			10 	0 0	4 0
 walk			8 	0 1	7 1
-attack			8 	0 3	8 3
+attack			12 	0 3	8 3
 dead			13 	0 9	5 9
 hurt			13 	0 8	2 8
 
-offset			80 65
-minus_size		120 165
+offset			90 65
+minus_size		200 165
 
 attackSoundPath		src/Resource/SoundFX/Enemy/attack_slash.ogg

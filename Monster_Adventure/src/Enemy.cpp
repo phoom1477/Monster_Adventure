@@ -26,11 +26,27 @@ void Enemy::initData(std::string id)
 	this->faceLeftOrigin = sf::Vector2f(0, 0);
 }
 
+void Enemy::initUI()
+{
+	this->enemyShowHPBar.setOutlineThickness(3.0f);
+	this->enemyShowHPBar.setOutlineColor(sf::Color::Black);
+	this->enemyShowHPBar.setFillColor(sf::Color::Green);
+	this->enemyShowHPBar.setSize(sf::Vector2f(
+		this->getGlobalBounds().width * (this->getCurrHP() / this->getMaxHP()),
+		2.0f
+	));
+	this->enemyShowHPBar.setPosition(
+		this->getGlobalBounds().left,
+		this->getGlobalBounds().top - 10.0f
+	);
+}
+
 //Constructor , Destructor
 Enemy::Enemy(float x, float y, sf::Texture& texture_sheet, std::string id)
 {
 	this->initVariable();
 	this->initData(id);
+	this->initUI();
 	this->setPosition(x, y);
 
 	//Getdata Variable -------------------
@@ -105,6 +121,20 @@ Enemy::Enemy(float x, float y, sf::Texture& texture_sheet, std::string id)
 		}
 		if (buff == "face_left_origin") {
 			getdata >> this->faceLeftOrigin.x >> this->faceLeftOrigin.y;
+		}
+
+		//getdata to class varible for attack
+		if (buff == "attack_right_offset") {
+			getdata >> this->attackRightOffset.x >> this->attackRightOffset.y;
+		}
+		if (buff == "attack_right_size") {
+			getdata >> this->attackRightSize.x >> this->attackRightSize.y;
+		}
+		if (buff == "attack_left_offset") {
+			getdata >> this->attackLeftOffset.x >> this->attackLeftOffset.y;
+		}
+		if (buff == "attack_left_size") {
+			getdata >> this->attackLeftSize.x >> this->attackLeftSize.y;
 		}
 
 		//getdata animation component
@@ -208,6 +238,11 @@ const float& Enemy::getCurrHP()
 	return this->currHP;
 }
 
+const float & Enemy::getMaxHP()
+{
+	return this->maxHP;
+}
+
 const int & Enemy::getPoint()
 {
 	return this->point;
@@ -265,12 +300,13 @@ void Enemy::createAttackHitbox()
 	if (this->attacking) {
 		if (this->sprite.getScale().x > 0.0f) {
 			if (this->attackStyle == ATTACK_ONCE) {
-				this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Red);
+				this->attackHitbox = new HitboxComponent(this->sprite, this->attackRightOffset.x, this->attackRightOffset.y, this->attackRightSize.x, this->attackRightSize.y , sf::Color::Red);
+				std::cout << this->attackRightOffset.x;
 			}
 		}
 		else {
 			if (this->attackStyle == ATTACK_ONCE) {
-				this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Red);
+				this->attackHitbox = new HitboxComponent(this->sprite, this->attackLeftOffset.x, this->attackLeftOffset.y, this->attackLeftSize.x, this->attackLeftSize.y, sf::Color::Red);
 			}
 		}
 	}
@@ -309,8 +345,11 @@ void Enemy::updateEntity(const float & dt, sf::RenderWindow& window)
 		this->hitboxComponent->updateComponent();
 	}
 
+	//update UI
+	this->updateUI();
+
 	//update collision
-	this->updateCollisionFrame(window, 2);
+	this->updateCollisionFrame(window, 1);
 }
 
 void Enemy::updateAnimation(const float & dt)
@@ -361,6 +400,37 @@ void Enemy::updateAnimation(const float & dt)
 	}
 }
 
+void Enemy::updateUI()
+{
+	//update playerShowHPBar
+	if ((this->getCurrHP() / this->getMaxHP()) * 100.0f > 50.0f) {
+		this->enemyShowHPBar.setFillColor(sf::Color::Green);
+	}
+	if ((this->getCurrHP() / this->getMaxHP()) * 100.0f <= 50.0f) {
+		this->enemyShowHPBar.setFillColor(sf::Color::Yellow);
+	}
+	if ((this->getCurrHP() / this->getMaxHP()) * 100.0f <= 20.0f) {
+		this->enemyShowHPBar.setFillColor(sf::Color::Red);
+	}
+
+	if (this->getCurrHP() <= 0.0f) {
+		this->enemyShowHPBar.setSize(sf::Vector2f(
+			0.0f,
+			0.0f
+		));
+	}
+	else {
+		this->enemyShowHPBar.setSize(sf::Vector2f(
+			this->getGlobalBounds().width * (this->getCurrHP() / this->getMaxHP()),
+			2.0f
+		));
+	}
+	this->enemyShowHPBar.setPosition(
+		this->getGlobalBounds().left,
+		this->getGlobalBounds().top - 10.0f
+	);
+}
+
 void Enemy::renderEntity(sf::RenderTarget & target)
 {
 	target.draw(this->sprite);
@@ -373,4 +443,11 @@ void Enemy::renderEntity(sf::RenderTarget & target)
 		this->attackHitbox->renderComponent(target);
 	}
 	//-----------------------
+
+	this->renderUI(target);
+}
+
+void Enemy::renderUI(sf::RenderTarget& target)
+{
+	target.draw(this->enemyShowHPBar);
 }

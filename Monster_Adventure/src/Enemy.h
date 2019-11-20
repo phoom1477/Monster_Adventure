@@ -23,6 +23,11 @@ private:
 	//Getdata variable for animation
 	sf::Vector2f faceRightOrigin;
 	sf::Vector2f faceLeftOrigin;
+	//Getdata variable for attack
+	sf::Vector2f attackRightOffset;
+	sf::Vector2f attackRightSize;
+	sf::Vector2f attackLeftOffset;
+	sf::Vector2f attackLeftSize;
 
 	//Action
 	bool hurting;
@@ -33,9 +38,13 @@ private:
 	//Add on Component
 	HitboxComponent *attackHitbox;
 
+	//UI Resource
+	sf::RectangleShape enemyShowHPBar;
+
 	//Initialization
 	void initVariable();
 	void initData(std::string id);
+	void initUI();
 
 public:
 	//Public enum
@@ -53,6 +62,7 @@ public:
 	const bool& getHurting();
 
 	const float& getCurrHP();
+	const float& getMaxHP();
 	const int& getPoint();
 
 	//Function
@@ -66,8 +76,10 @@ public:
 	//update
 	void updateEntity(const float &dt, sf::RenderWindow& window);
 	void updateAnimation(const float &dt);
+	void updateUI();
 
 	//render
 	virtual void renderEntity(sf::RenderTarget& target);
+	void renderUI(sf::RenderTarget& target);
 };
 

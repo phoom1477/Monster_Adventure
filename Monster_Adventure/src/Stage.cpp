@@ -6,10 +6,22 @@ void Stage::initVariable()
 	this->clear = false;
 }
 
-Stage::Stage(sf::RenderWindow* window, Player *player)
-	: window(window), player(player)
+void Stage::initUI(std::string stage_num)
+{
+	this->stageNumberText.setFont(this->font);
+	this->stageNumberText.setCharacterSize(40);
+	this->stageNumberText.setString("STAGE : " + stage_num);
+	this->stageNumberText.setPosition(
+		this->window->getSize().x / 2.0f - this->stageNumberText.getGlobalBounds().width / 2.0f,
+		this->window->getSize().y / 16.0f * 2.0f
+	);
+}
+
+Stage::Stage(sf::RenderWindow* window, sf::Font& font, Player *player, std::string stage_num)
+	: window(window), font(font), player(player)
 {
 	this->initVariable();
+	this->initUI(stage_num);
 }
 
 Stage::~Stage()
@@ -70,7 +82,7 @@ void Stage::addBackground(short unsigned background_id)
 		
 	//create background
 	int start_count = (int)this->background.size();
-	int end_count = start_count + 2;
+	int end_count = start_count + 1;
 	for (int i = start_count; i < end_count; i++) {
 		sf::RectangleShape buff;
 		buff.setTexture(&this->background_texture);
@@ -135,7 +147,7 @@ void Stage::updateEnemyControl(const float & dt)
 		srand(int(time(NULL)));
 		for (int i = 0; i < this->enemy.size(); i++) {
 			//control bot walk to player
-			if (std::abs(this->player->getCenter().x - this->enemy[i]->getCenter().x) <= 300.0f && std::abs(this->player->getCenter().x - this->enemy[i]->getCenter().x) >= 50) {
+			if (std::abs(this->player->getCenter().x - this->enemy[i]->getCenter().x) <= 300.0f  && std::abs(this->player->getCenter().x - this->enemy[i]->getCenter().x) >= 30) {
 				if (this->player->getCenter().x < this->enemy[i]->getCenter().x) {
 					this->enemy[i]->moveEntity(-1.0f, 0.0f, dt);
 				}
@@ -144,8 +156,8 @@ void Stage::updateEnemyControl(const float & dt)
 				}
 			}
 
-			//control bot attack player [enemy chance to attack is 80%]
-			if (rand() % 100 <= 80) {
+			//control bot attack player [enemy chance to attack is 95%]
+			if (rand() % 100 <= 95) {
 				if (std::abs(this->player->getCenter().x - this->enemy[i]->getCenter().x) <= 100.0f && !this->enemy[i]->getAttacking()) {
 					this->enemy[i]->attack(dt, Enemy::ATTACK_ONCE, this->player);
 				}
@@ -164,6 +176,9 @@ void Stage::renderStage(sf::RenderTarget * target)
 	for (int i = 0; i < this->background.size(); i++) {
 		target->draw(this->background[i]);
 	}
+
+	//render UI
+	target->draw(this->stageNumberText);
 
 	//render enemy
 	if (!this->enemy.empty()) {

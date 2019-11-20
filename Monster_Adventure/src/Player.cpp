@@ -238,7 +238,7 @@ void Player::updateEntity(const float & dt, sf::RenderWindow& window)
 	}
 
 	//update collision
-	this->updateCollisionFrame(window, 2);
+	this->updateCollisionFrame(window, 1);
 }
 
 void Player::updateAnimation(const float & dt)
@@ -254,7 +254,7 @@ void Player::updateAnimation(const float & dt)
 	}
 	else {
 		if (this->hurting) {
-			if (this->animationComponent->play("HURT", dt, true)) {
+			if (this->animationComponent->play("HURT", dt)) {
 				this->hurting = false;
 			}
 		}

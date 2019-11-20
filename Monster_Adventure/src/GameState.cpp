@@ -151,30 +151,31 @@ void GameState::initPopUpMenu()
 //load
 void GameState::loadStage()
 {
+	srand((int)time(NULL));
 	//create new stage
 	if (this->currStage == 1) {
-		this->stages = new Stage(this->window, this->player);
+		this->stages = new Stage(this->window, this->font, this->player, "1");
 		
 		//set up background
 		this->stages->addBackground(1);
 
 		//set up enemy
 		for (int i = 0; i < 5; i++) {
-			this->stages->addEnemy(i * 100.0f, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+			this->stages->addEnemy(rand() % 1000 + 100.0f, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
 		}
 
 		//return enemy address to enemy in gamestate
 		this->enemy = &this->stages->getEnemy();
 	}
 	if(this->currStage == 2){
-		this->stages = new Stage(this->window, this->player);
+		this->stages = new Stage(this->window, this->font, this->player, "2");
 
 		//set up background
 		this->stages->addBackground(2);
 
 		//set up enemy
 		for (int i = 0; i < 5; i++) {
-			this->stages->addEnemy(i * 100.0f, 50.0f, this->textures["ENEMY_SHEET_MINOTAUR"], "2");
+			this->stages->addEnemy(rand() % 1000 + 100.0f, 50.0f, this->textures["ENEMY_SHEET_MINOTAUR"], "2");
 		}
 
 		//return enemy address to enemy in gamestate

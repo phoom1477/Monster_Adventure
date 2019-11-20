@@ -1,17 +1,22 @@
 NAME 			Skeleton
 ATK 			10
 DEF 			10
-MSPD 			3
+MSPD 			5
 maxHP 			1000
 point			100
 
 face_right_origin	0 0
 face_left_origin        17 0
 
+attack_right_offset     25 24
+attack_right_size	90 85
+attack_left_offset      -70 24
+attack_left_size        90 85
+
 sprite_size		43 37
 idle			10 	0 0	10 0
 walk			8 	0 1	12 1
-attack			8 	0 2	17 2
+attack			6 	0 2	17 2
 dead			13 	0 3	14 3
 hurt			13 	0 4	7 4
 
