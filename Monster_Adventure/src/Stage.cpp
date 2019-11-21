@@ -146,7 +146,7 @@ void Stage::updateEnemyControl(const float & dt)
 	if (!this->enemy.empty()) {
 		srand(int(time(NULL)));
 		for (int i = 0; i < this->enemy.size(); i++) {
-			//control bot walk to player
+			//control bot walk to player [player is near]
 			if (std::abs(this->player->getCenter().x - this->enemy[i]->getCenter().x) <= 300.0f  && std::abs(this->player->getCenter().x - this->enemy[i]->getCenter().x) >= 30) {
 				if (this->player->getCenter().x < this->enemy[i]->getCenter().x) {
 					this->enemy[i]->moveEntity(-1.0f, 0.0f, dt);
@@ -155,13 +155,25 @@ void Stage::updateEnemyControl(const float & dt)
 					this->enemy[i]->moveEntity(1.0f, 0.0f, dt);
 				}
 			}
+			//control bot random walk [player is far]
+			else {
+				//random direction bot [5% to go left , 5% to go right]
+				if (rand() % 100 <= 5) {
+					this->enemy[i]->moveEntity(-1.0f, 0.0f, dt);
+				}
+				else if (rand() % 100 >= 95) {
+					this->enemy[i]->moveEntity(1.0f, 0.0f, dt);
+				}
+			}
 
-			//control bot attack player [enemy chance to attack is 95%]
-			if (rand() % 100 <= 95) {
-				if (std::abs(this->player->getCenter().x - this->enemy[i]->getCenter().x) <= 100.0f && !this->enemy[i]->getAttacking()) {
+			//control bot attack player 
+			if (std::abs(this->player->getCenter().x - this->enemy[i]->getCenter().x) <= 100.0f && !this->enemy[i]->getAttacking() && !this->enemy[i]->getHurting()) {
+				//[enemy chance to attack is 95 % ]
+				if (rand() % 100 <= 95) {
 					this->enemy[i]->attack(dt, Enemy::ATTACK_ONCE, this->player);
 				}
 			}
+			
 		}
 	}
 }

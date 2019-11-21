@@ -3,7 +3,7 @@
 //Initialization
 void GameState::initVariable()
 {
-	this->maxStage = 2;
+	this->maxStage = 6;
 	this->currStage = 1;
 }
 
@@ -160,7 +160,7 @@ void GameState::loadStage()
 		this->stages->addBackground(1);
 
 		//set up enemy
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 1; i++) {
 			this->stages->addEnemy(rand() % 1000 + 100.0f, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
 		}
 
@@ -169,6 +169,63 @@ void GameState::loadStage()
 	}
 	if(this->currStage == 2){
 		this->stages = new Stage(this->window, this->font, this->player, "2");
+
+		//set up background
+		this->stages->addBackground(1);
+
+		//set up enemy
+		for (int i = 0; i < 3; i++) {
+			this->stages->addEnemy(rand() % 1000 + 100.0f, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+		}
+
+		//return enemy address to enemy in gamestate
+		this->enemy = &this->stages->getEnemy();
+	}
+	if (this->currStage == 3) {
+		this->stages = new Stage(this->window, this->font, this->player, "3");
+
+		//set up background
+		this->stages->addBackground(1);
+
+		//set up enemy
+		for (int i = 0; i < 5; i++) {
+			this->stages->addEnemy(rand() % 1000 + 100.0f, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+		}
+
+		//return enemy address to enemy in gamestate
+		this->enemy = &this->stages->getEnemy();
+	}
+
+	if (this->currStage == 4) {
+		this->stages = new Stage(this->window, this->font, this->player, "4");
+
+		//set up background
+		this->stages->addBackground(2);
+
+		//set up enemy
+		for (int i = 0; i < 1; i++) {
+			this->stages->addEnemy(rand() % 1000 + 100.0f, 50.0f, this->textures["ENEMY_SHEET_MINOTAUR"], "2");
+		}
+
+		//return enemy address to enemy in gamestate
+		this->enemy = &this->stages->getEnemy();
+	}
+	if (this->currStage == 5) {
+		this->stages = new Stage(this->window, this->font, this->player, "5");
+
+		//set up background
+		this->stages->addBackground(2);
+
+		//set up enemy
+		for (int i = 0; i < 3; i++) {
+			this->stages->addEnemy(rand() % 1000 + 100.0f, 50.0f, this->textures["ENEMY_SHEET_MINOTAUR"], "2");
+		}
+
+		//return enemy address to enemy in gamestate
+		this->enemy = &this->stages->getEnemy();
+	}
+	if (this->currStage == 6) {
+		this->stages = new Stage(this->window, this->font, this->player, "6");
 
 		//set up background
 		this->stages->addBackground(2);

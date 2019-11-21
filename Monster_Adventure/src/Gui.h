@@ -27,7 +27,7 @@ namespace gui {
 		sf::RectangleShape shape;
 		sf::Font& font;
 		sf::Text text;
-		float charectorSize;
+		int charectorSize;
 
 		sf::SoundBuffer pressedSoundBuffer;
 		sf::Sound pressedSound;

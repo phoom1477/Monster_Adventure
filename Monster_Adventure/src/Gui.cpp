@@ -169,7 +169,7 @@ gui::DropDownBox::DropDownBox(float x, float y, float width, float height,
 		default_index
 	);
 
-	for (size_t i = 0; i < num_Elements; i++) {
+	for (unsigned i = 0; i < num_Elements; i++) {
 		this->list.push_back(
 			new gui::Button(
 				x, y + ((i + 1) * height), width, height,
