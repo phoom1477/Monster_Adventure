@@ -31,8 +31,17 @@ private:
 
 	//UI Resource
 	sf::Text nameText;
+
+	sf::Text ATKText;
+	sf::Text playerShowATKText;
+
+	sf::Text DEFText;
+	sf::Text playerShowDEFText;
+
+
 	sf::Text HPText;
 	sf::RectangleShape playerShowHPBar;
+
 	sf::Text scoreText;
 	sf::Text playerShowScoreText;
 	

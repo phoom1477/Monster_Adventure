@@ -75,6 +75,9 @@ void GameState::initView()
 
 void GameState::initUI()
 {
+	//convertor
+	std::stringstream int_to_string;
+
 	//create nameText
 	this->nameText.setFont(this->font);
 	this->nameText.setCharacterSize(30);
@@ -82,6 +85,24 @@ void GameState::initUI()
 	this->nameText.setPosition(
 		this->view.getCenter().x + 300.0f,
 		10.0f
+	);
+	//create ATKText
+	this->ATKText.setFont(this->font);
+	this->ATKText.setCharacterSize(20);
+	this->ATKText.setString("ATK :");
+	this->ATKText.setLetterSpacing(1.5f);
+	this->ATKText.setPosition(
+		this->view.getCenter().x - this->view.getSize().x / 2.0f + 15.0f,
+		50.0f
+	);
+	//create DEFText
+	this->DEFText.setFont(this->font);
+	this->DEFText.setCharacterSize(20);
+	this->DEFText.setString("DEF : ");
+	this->DEFText.setLetterSpacing(2.0f);
+	this->DEFText.setPosition(
+		this->view.getCenter().x - this->view.getSize().x / 2.0f + 15.0f,
+		80.0f
 	);
 	//create HPText
 	this->HPText.setFont(this->font);
@@ -101,6 +122,28 @@ void GameState::initUI()
 	);
 
 
+	//create playerShowATKText
+	int_to_string << this->player->getATK();
+	this->playerShowATKText.setFont(this->font);
+	this->playerShowATKText.setCharacterSize(20);
+	this->playerShowATKText.setString(int_to_string.str());
+	this->DEFText.setLetterSpacing(2.0f);
+	this->playerShowATKText.setPosition(
+		this->view.getCenter().x - this->view.getSize().x / 2.0f + 90.0f,
+		50.0f
+	);
+	int_to_string.str("");
+	//create playerShowDEFText
+	int_to_string << this->player->getDEF();
+	this->playerShowDEFText.setFont(this->font);
+	this->playerShowDEFText.setCharacterSize(20);
+	this->playerShowDEFText.setString(int_to_string.str());
+	this->DEFText.setLetterSpacing(2.0f);
+	this->playerShowDEFText.setPosition(
+		this->view.getCenter().x - this->view.getSize().x / 2.0f + 90.0f,
+		80.0f
+	);
+	int_to_string.str("");
 	//create playerShowHPBar
 	this->playerShowHPBar.setOutlineThickness(5.0f);
 	this->playerShowHPBar.setOutlineColor(sf::Color::Black);
@@ -114,7 +157,6 @@ void GameState::initUI()
 		20.0f
 	);
 	//create playerShowScoreText
-	std::stringstream int_to_string;
 	int_to_string << this->player->getScore();
 	this->playerShowScoreText.setFont(this->font);
 	this->playerShowScoreText.setCharacterSize(30);
@@ -123,6 +165,7 @@ void GameState::initUI()
 		this->view.getCenter().x + 420.0f,
 		50.0f
 	);
+	int_to_string.str("");
 }
 
 void GameState::initPopUpMenu()
@@ -326,10 +369,6 @@ void GameState::updateInput(const float &dt)
 void GameState::updatePlayer(const float & dt)
 {
 	//Control player
-	/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::K)&&this->getKeyTime()) {  // for test healing
-		this->player->increaseHP(10);
-	}*/
-
 	if (!this->player->getAttacking()) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_LEFT")))) {
 			this->player->moveEntity(-1.0f, 0.0f, dt);
@@ -431,11 +470,23 @@ void GameState::updateView()
 
 void GameState::updateUI()
 {
-	
+	//convertor
+	std::stringstream int_to_string;
+
 	//update nameText
 	this->nameText.setPosition(
 		this->view.getCenter().x + 300.0f,
 		10.0f
+	);
+	//update ATKText
+	this->ATKText.setPosition(
+		this->view.getCenter().x - this->view.getSize().x / 2.0f + 15.0f,
+		50.0f
+	);
+	//update DEFText
+	this->DEFText.setPosition(
+		this->view.getCenter().x - this->view.getSize().x / 2.0f + 15.0f,
+		80.0f
 	);
 	//update HPText
 	this->HPText.setPosition(
@@ -448,6 +499,25 @@ void GameState::updateUI()
 		50.0f
 	);
 
+
+
+	//update playerShowATKText
+	int_to_string << this->player->getATK();
+	this->playerShowATKText.setString(int_to_string.str());
+	this->playerShowATKText.setPosition(
+		this->view.getCenter().x - this->view.getSize().x / 2.0f + 90.0f,
+		50.0f
+	);
+	int_to_string.str("");
+
+	//update playerShowDEFText
+	int_to_string << this->player->getDEF();
+	this->playerShowDEFText.setString(int_to_string.str());
+	this->playerShowDEFText.setPosition(
+		this->view.getCenter().x - this->view.getSize().x / 2.0f + 90.0f,
+		80.0f
+	);
+	int_to_string.str("");
 
 	//update playerShowHPBar
 	if ((this->player->getCurrHP() / this->player->getMaxHP()) * 100.0f > 50.0f) {
@@ -478,13 +548,13 @@ void GameState::updateUI()
 	);
 
 	//update playerShowScoreText
-	std::stringstream int_to_string;
 	int_to_string << this->player->getScore();
 	this->playerShowScoreText.setString(int_to_string.str());
 	this->playerShowScoreText.setPosition(
 		this->view.getCenter().x + 420.0f,
 		50.0f
 	);
+	int_to_string.str("");
 }
 
 void GameState::updatePauseMenuButton()
@@ -580,9 +650,13 @@ void GameState::renderUI(sf::RenderTarget * target)
 	target->draw(this->nameText);
 
 	target->draw(this->HPText);
+	target->draw(this->ATKText);
+	target->draw(this->DEFText);
 	target->draw(this->scoreText);
 
 	target->draw(this->playerShowHPBar);
+	target->draw(this->playerShowATKText);
+	target->draw(this->playerShowDEFText);
 	target->draw(this->playerShowScoreText);
 }
 

@@ -3,6 +3,9 @@
 #include "Entity.h"
 #include "Enemy.h"
 
+//forward declarations
+class Enemy;
+
 class Player : public Entity
 {
 private:
@@ -48,6 +51,9 @@ public:
 	const bool& getHurting();
 
 	const std::string& getName();
+	const float& getATK();
+	const float& getDEF();
+
 	const float& getCurrHP();
 	const float& getMaxHP();
 	const int& getScore();
@@ -60,9 +66,9 @@ public:
 	void decreaseHP(const float& dt, const float ATK, sf::Vector2f attacker_center);
 	void increaseScore(const int point);
 
-	void attack(const float& dt, short unsigned attack_style, Entity* enemy);
+	void attack(const float& dt, short unsigned attack_style, Enemy* enemy);
 	void createAttackHitbox();
-	const bool checkHitCollision(Entity* enemy);
+	const bool checkHitCollision(Enemy* enemy);
 	void clearAttackHitbox();
 
 	void jump();

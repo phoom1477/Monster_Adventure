@@ -57,10 +57,10 @@ void Item::initSound(std::string id)
 		this->soundComponent->addSound("GET", "src/Resource/SoundFX/Item/getPosion.ogg");
 	}
 	if (id == "2") {
-		this->soundComponent->addSound("GET", "src/Resource/SoundFX/Item/getBuffATK.ogg");
+		this->soundComponent->addSound("GET", "src/Resource/SoundFX/Item/getBuff.ogg");
 	}
 	if (id == "3") {
-		this->soundComponent->addSound("GET", "src/Resource/SoundFX/Item/getPosion.ogg");
+		this->soundComponent->addSound("GET", "src/Resource/SoundFX/Item/getBuff.ogg");
 	}
 }
 
@@ -159,12 +159,4 @@ void Item::renderEntity(sf::RenderTarget & target)
 	if (this->hitboxComponent) {
 		this->hitboxComponent->renderComponent(target);
 	}
-}
-
-
-
-
-//not use just define for inheritance
-void Item::decreaseHP(const float & dt, const float ATK, sf::Vector2f attacker_center)
-{
 }

@@ -61,8 +61,6 @@ public:
 	virtual void stopEntityX();
 	virtual void stopEntityY();
 	
-	virtual void decreaseHP(const float& dt, const float ATK, sf::Vector2f attacker_center) = 0;
-
 	//update
 	virtual void updateEntity(const float &dt, sf::RenderWindow& window) = 0;
 	virtual void updateCollisionFrame(sf::RenderWindow& window, int num_window);

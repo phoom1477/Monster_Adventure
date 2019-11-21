@@ -5,6 +5,9 @@
 
 #include <time.h>
 
+//forward declarations
+class Player;
+
 class Enemy : public Entity
 {
 private:
@@ -68,9 +71,9 @@ public:
 	//Function
 	void decreaseHP(const float& dt, const float ATK, sf::Vector2f attacker_center);
 
-	void attack(const float& dt, short unsigned attack_style, Entity* player);
+	void attack(const float& dt, short unsigned attack_style, Player* player);
 	void createAttackHitbox();
-	const bool checkHitCollision(Entity* player);
+	const bool checkHitCollision(Player* player);
 	void clearAttackHitbox();
 	
 	//update

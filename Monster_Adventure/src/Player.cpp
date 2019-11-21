@@ -102,6 +102,16 @@ const std::string & Player::getName()
 	return this->name;
 }
 
+const float & Player::getATK()
+{
+	return this->ATK;
+}
+
+const float & Player::getDEF()
+{
+	return this->DEF;
+}
+
 const float & Player::getCurrHP()
 {
 	return this->currHP;
@@ -161,7 +171,7 @@ void Player::increaseScore(const int point)
 	this->score += point;
 }
 
-void Player::attack(const float& dt, short unsigned attack_style, Entity* enemy)
+void Player::attack(const float& dt, short unsigned attack_style, Enemy* enemy)
 {
 	//play sound effect
 	this->soundComponent->play("ATTACK");
@@ -205,7 +215,7 @@ void Player::createAttackHitbox()
 	}
 }
 
-const bool Player::checkHitCollision(Entity* enemy)
+const bool Player::checkHitCollision(Enemy* enemy)
 {
 	if (this->attacking) {
 		if (this->attackHitbox->checkIntersect(enemy->getGlobalBounds())) {

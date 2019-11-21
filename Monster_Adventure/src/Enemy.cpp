@@ -276,7 +276,7 @@ void Enemy::decreaseHP(const float& dt, const float ATK, sf::Vector2f attacker_c
 	}
 }
 
-void Enemy::attack(const float& dt, short unsigned attack_style, Entity* player)
+void Enemy::attack(const float& dt, short unsigned attack_style, Player* player)
 {
 	//play sound effect
 	this->soundComponent->play("ATTACK");
@@ -310,7 +310,7 @@ void Enemy::createAttackHitbox()
 	}
 }
 
-const bool Enemy::checkHitCollision(Entity* player)
+const bool Enemy::checkHitCollision(Player* player)
 {
 	if (this->attacking) {
 		if (this->attackHitbox->checkIntersect(player->getGlobalBounds())) {

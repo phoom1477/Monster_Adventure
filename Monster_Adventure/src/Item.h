@@ -3,6 +3,9 @@
 #include "Entity.h"
 #include "Player.h"
 
+//forward declarations
+class Player;
+
 class Item : public Entity
 {
 private:
@@ -41,9 +44,5 @@ public:
 
 	//render
 	virtual void renderEntity(sf::RenderTarget& target);
-
-
-	//not use just define for inheritance
-	virtual void decreaseHP(const float& dt, const float ATK, sf::Vector2f attacker_center);
 };
 
