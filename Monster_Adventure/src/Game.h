@@ -27,10 +27,15 @@ private:
 
 	std::map<std::string, int> supportedKeys;
 
+	//Resource
+	std::map<std::string, sf::SoundBuffer> musicBuffer;
+	std::map<std::string, sf::Sound> music;
+
 	//Initialization
 	void initVariable();
 	void initWindow();
 	void initKeys();
+
 	void initStates();
 
 public:

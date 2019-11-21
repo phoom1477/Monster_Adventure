@@ -38,7 +38,7 @@ Stage::~Stage()
 }
 
 //Accessor
-const sf::Vector2f Stage::getStageSize()
+const sf::Vector2i Stage::getStageSize()
 {
 	if (!this->background.empty()) {
 		float size_x = 0;
@@ -47,10 +47,10 @@ const sf::Vector2f Stage::getStageSize()
 			size_x += this->background[i].getSize().x;
 			size_y += this->background[i].getSize().y;
 		}
-		return sf::Vector2f(size_x, size_y);
+		return sf::Vector2i(size_x, size_y);
 	}
 	else {
-		return sf::Vector2f(0.0f, 0.0f);
+		return sf::Vector2i(0.0f, 0.0f);
 	}
 }
 
@@ -126,7 +126,7 @@ void Stage::updateEnemy(const float & dt)
 		for (int i = 0; i < this->enemy.size(); i++) {
 			if (this->enemy[i]->getDied()) {
 				//drop item [chance to drop 75%]
-				if (rand() % 101 <= 75) {
+				if (rand() % 101 <= 60) {
 				
 					std::stringstream itemID;
 					itemID << rand() % 3 + 1;

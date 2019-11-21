@@ -51,6 +51,52 @@ void GameState::initTexture()
 	}
 }
 
+void GameState::initMusicList()
+{
+	//laod all music
+	if (!this->musicBuffer["MUSIC_1"].loadFromFile("src/Resource/Music/GameState/music_1.ogg")) {
+		throw("[Game State] >> ERROR can't load music buffer");
+	}
+	this->music["MUSIC_1"].setBuffer(musicBuffer["MUSIC_1"]);
+	this->music["MUSIC_1"].setLoop(true);
+	this->music["MUSIC_1"].setVolume(50);
+
+	if (!this->musicBuffer["MUSIC_2"].loadFromFile("src/Resource/Music/GameState/music_2.ogg")) {
+		throw("[Game State] >> ERROR can't load music buffer");
+	}
+	this->music["MUSIC_2"].setBuffer(musicBuffer["MUSIC_2"]);
+	this->music["MUSIC_2"].setLoop(true);
+	this->music["MUSIC_2"].setVolume(50);
+
+	if (!this->musicBuffer["MUSIC_3"].loadFromFile("src/Resource/Music/GameState/music_3.ogg")) {
+		throw("[Game State] >> ERROR can't load music buffer");
+	}
+	this->music["MUSIC_3"].setBuffer(musicBuffer["MUSIC_3"]);
+	this->music["MUSIC_3"].setLoop(true);
+	this->music["MUSIC_3"].setVolume(50);
+
+	if (!this->musicBuffer["MUSIC_4"].loadFromFile("src/Resource/Music/GameState/music_4.ogg")) {
+		throw("[Game State] >> ERROR can't load music buffer");
+	}
+	this->music["MUSIC_4"].setBuffer(musicBuffer["MUSIC_4"]);
+	this->music["MUSIC_4"].setLoop(true);
+	this->music["MUSIC_4"].setVolume(50);
+
+	if (!this->musicBuffer["MUSIC_5"].loadFromFile("src/Resource/Music/GameState/music_5.ogg")) {
+		throw("[Game State] >> ERROR can't load music buffer");
+	}
+	this->music["MUSIC_5"].setBuffer(musicBuffer["MUSIC_5"]);
+	this->music["MUSIC_5"].setLoop(true);
+	this->music["MUSIC_5"].setVolume(50);
+
+	if (!this->musicBuffer["MUSIC_6"].loadFromFile("src/Resource/Music/GameState/music_6.ogg")) {
+		throw("[Game State] >> ERROR can't load music buffer");
+	}
+	this->music["MUSIC_6"].setBuffer(musicBuffer["MUSIC_6"]);
+	this->music["MUSIC_6"].setLoop(true);
+	this->music["MUSIC_6"].setVolume(50);
+}
+
 void GameState::initPlayer()
 {
 	if (this->playerIndex == 0) {
@@ -215,7 +261,7 @@ void GameState::loadStage()
 
 		//set up enemy
 		for (int i = 0; i < 1; i++) {
-			this->stages->addEnemy(rand() % (int)this->stages->getStageSize().x, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
 		}
 		
 
@@ -230,7 +276,7 @@ void GameState::loadStage()
 
 		//set up enemy
 		for (int i = 0; i < 1; i++) {
-			this->stages->addEnemy(rand() % (int)this->stages->getStageSize().x, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
 		}
 
 		//return enemy address to enemy in gamestate
@@ -244,7 +290,7 @@ void GameState::loadStage()
 
 		//set up enemy
 		for (int i = 0; i < 1; i++) {
-			this->stages->addEnemy(rand() % (int)this->stages->getStageSize().x, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
 		}
 
 		//return enemy address to enemy in gamestate
@@ -258,7 +304,7 @@ void GameState::loadStage()
 
 		//set up enemy
 		for (int i = 0; i < 1; i++) {
-			this->stages->addEnemy(rand() % (int)this->stages->getStageSize().x, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
 		}
 
 		//return enemy address to enemy in gamestate
@@ -272,7 +318,7 @@ void GameState::loadStage()
 
 		//set up enemy
 		for (int i = 0; i < 1; i++) {
-			this->stages->addEnemy(rand() % (int)this->stages->getStageSize().x, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
 		}
 
 		//return enemy address to enemy in gamestate
@@ -286,7 +332,7 @@ void GameState::loadStage()
 
 		//set up enemy
 		for (int i = 0; i < 1; i++) {
-			this->stages->addEnemy(rand() % (int)this->stages->getStageSize().x, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
 		}
 
 		//return enemy address to enemy in gamestate
@@ -300,7 +346,7 @@ void GameState::loadStage()
 
 		//set up enemy
 		for (int i = 0; i < 1; i++) {
-			this->stages->addEnemy(rand() % (int)this->stages->getStageSize().x, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
 		}
 
 		//return enemy address to enemy in gamestate
@@ -314,7 +360,7 @@ void GameState::loadStage()
 
 		//set up enemy
 		for (int i = 0; i < 1; i++) {
-			this->stages->addEnemy(rand() % (int)this->stages->getStageSize().x, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
 		}
 
 		//return enemy address to enemy in gamestate
@@ -328,7 +374,7 @@ void GameState::loadStage()
 
 		//set up enemy
 		for (int i = 0; i < 1; i++) {
-			this->stages->addEnemy(rand() % (int)this->stages->getStageSize().x, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
 		}
 
 		//return enemy address to enemy in gamestate
@@ -342,7 +388,7 @@ void GameState::loadStage()
 
 		//set up enemy
 		for (int i = 0; i < 1; i++) {
-			this->stages->addEnemy(rand() % (int)this->stages->getStageSize().x, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
 		}
 
 		//return enemy address to enemy in gamestate
@@ -355,42 +401,36 @@ void GameState::loadStage()
 
 void GameState::loadMusic()
 {
-	std::string music_id;
+	//stop song
+	if (this->currStage % 2 == 0 || this->currStage == 1) {
+		if (this->musicPlaying.getStatus() == sf::Sound::Playing) {
+			this->musicPlaying.stop();
+		}
+	}
+
+	//select song to play
 	if (this->currStage == 1) {
-		music_id = "1";
+		this->musicPlaying = this->music["MUSIC_1"];
 	}
 	if (this->currStage == 2) {
-		music_id = "2";
+		this->musicPlaying = this->music["MUSIC_2"];
 	}
 	if (this->currStage == 4) {
-		music_id = "3";
+		this->musicPlaying = this->music["MUSIC_3"];
 	}
 	if (this->currStage == 6) {
-		music_id = "4";
+		this->musicPlaying = this->music["MUSIC_4"];
 	}
 	if (this->currStage == 8) {
-		music_id = "5";
+		this->musicPlaying = this->music["MUSIC_5"];
 	}
 	if (this->currStage == 10) {
-		music_id = "6";
+		this->musicPlaying = this->music["MUSIC_6"];
 	}
 
-	if (this->currStage % 2 == 0 || this->currStage == 1) {
-		if (this->music.getStatus() == sf::Sound::Playing) {
-			this->music.stop();
-		}
-
-		std::string path = "src/Resource/Music/GameState/music_" + music_id + ".ogg";
-		if (!this->musicBuffer.loadFromFile(path)) {
-			throw("[Game State] >> ERROR can't load music buffer");
-		}
-		this->music.setBuffer(this->musicBuffer);
-		this->music.setLoop(true);
-		this->music.setVolume(50);
-
-		if (this->music.getStatus() != sf::Sound::Playing) {
-			this->music.play();
-		}
+	//play that song
+	if (this->musicPlaying.getStatus() != sf::Sound::Playing) {
+		this->musicPlaying.play();
 	}
 }
 
@@ -405,7 +445,7 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 	this->initFonts();
 
 	this->initTexture();
-	//this->initMusicList();
+	this->initMusicList();
 
 	this->initPlayer();
 

@@ -84,6 +84,7 @@ Game::Game()
 	this->initVariable();
 	this->initWindow();
 	this->initKeys();
+
 	this->initStates();
 }
 

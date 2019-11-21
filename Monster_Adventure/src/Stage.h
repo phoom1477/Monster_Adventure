@@ -45,7 +45,7 @@ public:
 	virtual ~Stage();
 
 	//Accessor
-	const sf::Vector2f getStageSize();
+	const sf::Vector2i getStageSize();
 
 	const bool& getClear();
 	std::vector<Enemy*>& getEnemy();

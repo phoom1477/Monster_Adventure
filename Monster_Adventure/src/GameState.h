@@ -29,8 +29,7 @@ private:
 	std::vector<Enemy*>* enemy;
 	Stage* stages;
 
-	sf::SoundBuffer musicBuffer;
-	sf::Sound music;
+	sf::Sound musicPlaying;
 
 	//UI Resource
 	sf::Text nameText;
@@ -52,7 +51,9 @@ private:
 	
 	//State Resource
 	std::map<std::string, sf::Texture> textures;
-	
+	std::map<std::string, sf::SoundBuffer> musicBuffer;
+	std::map<std::string, sf::Sound> music;
+
 	sf::Font font;
 	PopUpMenu* pauseMenu;
 	PopUpMenu* gameOverMenu;
@@ -64,6 +65,7 @@ private:
 	void initFonts();
 
 	void initTexture();
+	void initMusicList();
 
 	void initPlayer();
 	
