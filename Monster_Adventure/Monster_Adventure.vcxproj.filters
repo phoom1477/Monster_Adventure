@@ -14,9 +14,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Tile">
-      <UniqueIdentifier>{b5ae832a-163c-4107-92da-32044e150fda}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GUI">
       <UniqueIdentifier>{eb94bc39-cf29-4754-a1f1-50b07e0d0edd}</UniqueIdentifier>
     </Filter>
@@ -55,9 +52,6 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="src\Tile.cpp">
-      <Filter>Tile</Filter>
-    </ClCompile>
     <ClCompile Include="src\Gui.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
@@ -78,6 +72,9 @@
     </ClCompile>
     <ClCompile Include="src\SoundComponent.cpp">
       <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Item.cpp">
+      <Filter>Entity</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -108,9 +105,6 @@
     <ClInclude Include="src\HitboxComponent.h">
       <Filter>Component</Filter>
     </ClInclude>
-    <ClInclude Include="src\Tile.h">
-      <Filter>Tile</Filter>
-    </ClInclude>
     <ClInclude Include="src\Gui.h">
       <Filter>GUI</Filter>
     </ClInclude>
@@ -131,6 +125,9 @@
     </ClInclude>
     <ClInclude Include="src\SoundComponent.h">
       <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Item.h">
+      <Filter>Entity</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

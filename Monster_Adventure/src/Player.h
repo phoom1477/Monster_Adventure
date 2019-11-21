@@ -53,6 +53,8 @@ public:
 	const int& getScore();
 
 	//Function
+	void increaseATK(const float atk_point);
+	void increaseDEF(const float def_point);
 	void increaseHP(const float heal_point);
 
 	void decreaseHP(const float& dt, const float ATK, sf::Vector2f attacker_center);

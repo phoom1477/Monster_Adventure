@@ -16,6 +16,7 @@
 
 #include "Player.h"
 #include "Enemy.h"
+#include "Item.h"
 
 class Stage
 {
@@ -30,6 +31,7 @@ private:
 	//Resource
 	Player *player;
 	std::vector<Enemy*> enemy;
+	std::vector<Item*> item;
 
 	sf::Texture background_texture;
 	std::vector<sf::RectangleShape> background;
@@ -60,6 +62,8 @@ public:
 	void updateStage(const float& dt);
 	void updateEnemy(const float &dt);
 	void updateEnemyControl(const float& dt);
+	void updateItem(const float& dt);
+	void updateItemControl(const float& dt);
 
 	//render
 	void renderStage(sf::RenderTarget* target = NULL);

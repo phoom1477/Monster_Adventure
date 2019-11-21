@@ -36,6 +36,17 @@ Stage::~Stage()
 		// fit size vector
 		this->enemy.shrink_to_fit();
 	}
+
+	if (!this->item.empty()) {
+		for (int i = 0; i < this->item.size(); i++) {
+			delete this->item[i];
+
+			this->item.erase(this->item.begin() + i);
+		}
+
+		// fit size vector
+		this->item.shrink_to_fit();
+	}
 }
 
 //Accessor
@@ -107,6 +118,9 @@ void Stage::updateStage(const float & dt)
 	//update enemy
 	this->updateEnemy(dt);
 
+	//update item
+	this->updateItem(dt);
+
 	//cleared stage if all enemy down
 	if (this->enemy.empty()) {
 		this->clear = true;
@@ -118,7 +132,7 @@ void Stage::updateEnemy(const float & dt)
 	//Control enemy
 	this->updateEnemyControl(dt);
 
-	//Update all Entity component
+	//Update all enemy component
 	if (!this->enemy.empty()) {
 		for (int i = 0; i < this->enemy.size(); i++) {
 			this->enemy[i]->updateEntity(dt, *this->window);
@@ -129,9 +143,21 @@ void Stage::updateEnemy(const float & dt)
 	if (!this->enemy.empty()) {
 		for (int i = 0; i < this->enemy.size(); i++) {
 			if (this->enemy[i]->getDied()) {
-				this->player->increaseScore(this->enemy[i]->getPoint());
+				//drop item [chance to drop 75%]
+				if (rand() % 101 <= 75) {
+				
+					std::stringstream itemID;
+					itemID << rand() % 3 + 1;
+					this->item.push_back(new Item(this->enemy[i]->getCenter().x, this->enemy[i]->getPosition().y, itemID.str()));
 
-				delete enemy[i];
+					// fit size vector
+					this->item.shrink_to_fit();
+				}
+
+				//increase player score
+				this->player->increaseScore(this->enemy[i]->getPoint());
+				
+				delete this->enemy[i];
 				this->enemy.erase(this->enemy.begin() + i);
 
 				// fit size vector
@@ -143,8 +169,9 @@ void Stage::updateEnemy(const float & dt)
 
 void Stage::updateEnemyControl(const float & dt)
 {
+	srand(int(time(NULL)));
+
 	if (!this->enemy.empty()) {
-		srand(int(time(NULL)));
 		for (int i = 0; i < this->enemy.size(); i++) {
 			//control bot walk to player [player is near]
 			if (std::abs(this->player->getCenter().x - this->enemy[i]->getCenter().x) <= 300.0f  && std::abs(this->player->getCenter().x - this->enemy[i]->getCenter().x) >= 30) {
@@ -158,10 +185,10 @@ void Stage::updateEnemyControl(const float & dt)
 			//control bot random walk [player is far]
 			else {
 				//random direction bot [5% to go left , 5% to go right]
-				if (rand() % 100 <= 5) {
+				if (rand() % 101 <= 5) {
 					this->enemy[i]->moveEntity(-1.0f, 0.0f, dt);
 				}
-				else if (rand() % 100 >= 95) {
+				else if (rand() % 101 >= 95) {
 					this->enemy[i]->moveEntity(1.0f, 0.0f, dt);
 				}
 			}
@@ -169,11 +196,65 @@ void Stage::updateEnemyControl(const float & dt)
 			//control bot attack player 
 			if (std::abs(this->player->getCenter().x - this->enemy[i]->getCenter().x) <= 100.0f && !this->enemy[i]->getAttacking() && !this->enemy[i]->getHurting()) {
 				//[enemy chance to attack is 95 % ]
-				if (rand() % 100 <= 95) {
+				if (rand() % 101 <= 95) {
 					this->enemy[i]->attack(dt, Enemy::ATTACK_ONCE, this->player);
 				}
 			}
 			
+		}
+	}
+}
+
+void Stage::updateItem(const float & dt)
+{
+	//Control item
+	this->updateItemControl(dt);
+
+	//Update all item component
+	if (!this->item.empty()) {
+		for (int i = 0; i < this->item.size(); i++) {
+			this->item[i]->updateEntity(dt, *this->window);
+		}
+	}
+
+	//check player get item
+	if (!this->item.empty()) {
+		for (int i = 0; i < this->item.size(); i++) {
+			if (this->item[i]->checkPlayerCollision(this->player)) {
+				item[i]->buffPlayer(this->player);
+
+				delete this->item[i];
+				this->item.erase(this->item.begin() + i);
+
+				// fit size vector
+				this->item.shrink_to_fit();
+			}
+		}
+	}
+}
+
+void Stage::updateItemControl(const float & dt)
+{
+	if (!this->item.empty()) {
+		for (int i = 0; i < this->item.size(); i++) {
+			//control item fly to player [player is near]
+			if (std::abs(this->player->getCenter().x - this->item[i]->getCenter().x) <= 50) {
+				if (this->player->getCenter().x < this->item[i]->getCenter().x) {
+					this->item[i]->moveEntity(-1.0f, 0.0f, dt);
+				}
+				if (this->player->getCenter().x > this->item[i]->getCenter().x) {
+					this->item[i]->moveEntity(1.0f, 0.0f, dt);
+				}
+
+				if (std::abs(this->player->getCenter().y - this->item[i]->getCenter().y) <= 50) {
+					if (this->player->getCenter().y < this->item[i]->getCenter().y) {
+						this->item[i]->moveEntity(0.0f, -3.0f, dt);
+					}
+					if (this->player->getCenter().y > this->item[i]->getCenter().y) {
+						this->item[i]->moveEntity(0.0f, 3.0f, dt);
+					}
+				}
+			}
 		}
 	}
 }
@@ -196,6 +277,13 @@ void Stage::renderStage(sf::RenderTarget * target)
 	if (!this->enemy.empty()) {
 		for (int i = 0; i < this->enemy.size(); i++) {
 			this->enemy[i]->renderEntity(*target);
+		}
+	}
+
+	//render item
+	if (!this->item.empty()) {
+		for (int i = 0; i < this->item.size(); i++) {
+			this->item[i]->renderEntity(*target);
 		}
 	}
 }

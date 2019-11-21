@@ -160,7 +160,7 @@ void GameState::loadStage()
 		this->stages->addBackground(1);
 
 		//set up enemy
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < 2; i++) {
 			this->stages->addEnemy(rand() % 1000 + 100.0f, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
 		}
 
@@ -382,7 +382,6 @@ void GameState::updateStage(const float & dt)
 		if (this->currStage < this->maxStage) {
 			//clear old stage for create new
 			if (this->stages) {
-				std::cout << "xxxx";
 				delete this->stages;
 				this->stages = NULL;
 			}

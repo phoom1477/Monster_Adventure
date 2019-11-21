@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Item.cpp" />
     <ClCompile Include="src\SoundComponent.cpp" />
     <ClCompile Include="src\ScoreState.cpp" />
     <ClCompile Include="src\GetInfoState.cpp" />
@@ -35,10 +36,10 @@
     <ClCompile Include="src\MainMenuState.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\State.cpp" />
-    <ClCompile Include="src\Tile.cpp" />
     <ClCompile Include="src\Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Item.h" />
     <ClInclude Include="src\SoundComponent.h" />
     <ClInclude Include="src\ScoreState.h" />
     <ClInclude Include="src\GetInfoState.h" />
@@ -54,7 +55,6 @@
     <ClInclude Include="src\GameState.h" />
     <ClInclude Include="src\MainMenuState.h" />
     <ClInclude Include="src\State.h" />
-    <ClInclude Include="src\Tile.h" />
     <ClInclude Include="src\Stage.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

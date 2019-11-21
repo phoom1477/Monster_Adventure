@@ -255,8 +255,8 @@ void Enemy::decreaseHP(const float& dt, const float ATK, sf::Vector2f attacker_c
 
 	float damage = (ATK * 1.25f) - (this->DEF / 100.0f);
 
-	if (rand() % 100 <= 5) {
-		//miss attack
+	if (rand() % 101 <= 5) {
+		//miss attack [ 5% chance to miss ]
 		this->currHP = this->currHP - 0.0f;
 	}
 	else {
@@ -274,8 +274,6 @@ void Enemy::decreaseHP(const float& dt, const float ATK, sf::Vector2f attacker_c
 			}
 		}
 	}
-
-	std::cout << this->currHP << "/" << this->maxHP << '\n';
 }
 
 void Enemy::attack(const float& dt, short unsigned attack_style, Entity* player)

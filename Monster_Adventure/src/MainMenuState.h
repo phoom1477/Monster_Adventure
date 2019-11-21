@@ -7,7 +7,6 @@
 
 #include "GameState.h"
 #include "GetInfoState.h"
-#include "SettingState.h"
 #include "ScoreState.h"
 #include "gui.h"
 
