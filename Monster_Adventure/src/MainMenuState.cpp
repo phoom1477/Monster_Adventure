@@ -52,7 +52,7 @@ void MainMenuState::initMusic()
 
 	this->music.setBuffer(this->musicBuffer);
 	this->music.setLoop(true);
-	this->music.setVolume(30);
+	this->music.setVolume(50);
 	this->music.play();
 }
 
@@ -77,14 +77,6 @@ void MainMenuState::initButton()
 		this->font, "SCORE", 40,
 		sf::Color(255, 255, 255, 255), sf::Color(150, 150, 150, 255), sf::Color(0, 0, 0, 255)
 	);
-
-	/*this->buttons["Options"] = new gui::Button(
-		(this->window->getSize().x / 2) - (button_width / 2),
-		(this->window->getSize().y / 8) * 5.5f, 
-		button_width, button_height,
-		this->font, "OPTIONS", 40,
-		sf::Color(255, 255, 255, 255), sf::Color(150, 150, 150, 255), sf::Color(0, 0, 0, 255)
-	);*/
 	
 	this->buttons["Quit"] = new gui::Button(
 		(this->window->getSize().x / 2) - (button_width / 2),
@@ -149,10 +141,7 @@ void MainMenuState::updateButton()
 	if (this->buttons["Score"]->isPressed() && this->getKeyTime()) {
 		this->states->push(new ScoreState(this->window, this->supportedKeys, this->states));
 	}
-	//Go Setting State
-	/*if (this->buttons["Options"]->isPressed() && this->getKeyTime()) {
-		this->states->push(new SettingState(this->window, this->supportedKeys, this->states));
-	}*/
+	
 	//Exit this state
 	if (this->buttons["Quit"]->isPressed() && this->getKeyTime()) {
 		this->endState();

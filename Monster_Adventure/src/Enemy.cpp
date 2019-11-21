@@ -299,7 +299,6 @@ void Enemy::createAttackHitbox()
 		if (this->sprite.getScale().x > 0.0f) {
 			if (this->attackStyle == ATTACK_ONCE) {
 				this->attackHitbox = new HitboxComponent(this->sprite, this->attackRightOffset.x, this->attackRightOffset.y, this->attackRightSize.x, this->attackRightSize.y , sf::Color::Red);
-				std::cout << this->attackRightOffset.x;
 			}
 		}
 		else {
@@ -347,7 +346,7 @@ void Enemy::updateEntity(const float & dt, sf::RenderWindow& window)
 	this->updateUI();
 
 	//update collision
-	this->updateCollisionFrame(window, 1);
+	this->updateCollisionFrame(window, 2);
 }
 
 void Enemy::updateAnimation(const float & dt)

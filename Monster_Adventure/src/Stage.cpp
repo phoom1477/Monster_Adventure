@@ -6,22 +6,10 @@ void Stage::initVariable()
 	this->clear = false;
 }
 
-void Stage::initUI(std::string stage_num)
-{
-	this->stageNumberText.setFont(this->font);
-	this->stageNumberText.setCharacterSize(40);
-	this->stageNumberText.setString("STAGE : " + stage_num);
-	this->stageNumberText.setPosition(
-		this->window->getSize().x / 2.0f - this->stageNumberText.getGlobalBounds().width / 2.0f,
-		this->window->getSize().y / 16.0f * 2.0f
-	);
-}
-
-Stage::Stage(sf::RenderWindow* window, sf::Font& font, Player *player, std::string stage_num)
+Stage::Stage(sf::RenderWindow* window, sf::Font& font, Player *player)
 	: window(window), font(font), player(player)
 {
 	this->initVariable();
-	this->initUI(stage_num);
 }
 
 Stage::~Stage()
@@ -77,23 +65,17 @@ std::vector<Enemy*>& Stage::getEnemy()
 }
 
 //Function
-void Stage::addBackground(short unsigned background_id)
+void Stage::addBackground(std::string background_id)
 {
 	//select background
-	if (background_id == 1) {
-		if (!this->background_texture.loadFromFile("src/Resource/Background/GameState/background_1.png")) {
-			throw("[Stage] >> ..ERROR.. Could't load backgroundTexture");
-		}
-	}
-	if (background_id == 2) {
-		if (!this->background_texture.loadFromFile("src/Resource/Background/GameState/background_2.png")) {
-			throw("[Stage] >> ..ERROR.. Could't load backgroundTexture");
-		}
+	std::string path = "src/Resource/Background/GameState/background_" + background_id + ".png";
+	if (!this->background_texture.loadFromFile(path)) {
+		throw("[Stage] >> ..ERROR.. Could't load backgroundTexture");
 	}
 		
 	//create background
 	int start_count = (int)this->background.size();
-	int end_count = start_count + 1;
+	int end_count = start_count + 2;
 	for (int i = start_count; i < end_count; i++) {
 		sf::RectangleShape buff;
 		buff.setTexture(&this->background_texture);
@@ -272,9 +254,6 @@ void Stage::renderStage(sf::RenderTarget * target)
 	for (int i = 0; i < this->background.size(); i++) {
 		target->draw(this->background[i]);
 	}
-
-	//render UI
-	target->draw(this->stageNumberText);
 
 	//render enemy
 	if (!this->enemy.empty()) {

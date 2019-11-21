@@ -29,6 +29,9 @@ private:
 	std::vector<Enemy*>* enemy;
 	Stage* stages;
 
+	sf::SoundBuffer musicBuffer;
+	sf::Sound music;
+
 	//UI Resource
 	sf::Text nameText;
 
@@ -44,6 +47,8 @@ private:
 
 	sf::Text scoreText;
 	sf::Text playerShowScoreText;
+
+	sf::Text stageNumberText;
 	
 	//State Resource
 	std::map<std::string, sf::Texture> textures;
@@ -68,6 +73,7 @@ private:
 
 	//load
 	void loadStage();
+	void loadMusic();
 
 public:
 	//Constructor , Destructor

@@ -51,7 +51,7 @@ Player::Player(float x, float y, sf::Texture& texture_sheet ,std::string name)
 	//create sound component
 	this->createSoundComponent();
 	this->soundComponent->addSound("JUMP", "src/Resource/SoundFX/Player/jump.ogg");
-	this->soundComponent->addSound("ATTACK", "src/Resource/SoundFX/Player/attack.ogg");
+	this->soundComponent->addSound("ATTACK", "src/Resource/SoundFX/Player/attack_punch.ogg");
 }
 
 Player::~Player()
@@ -258,7 +258,17 @@ void Player::updateEntity(const float & dt, sf::RenderWindow& window)
 	}
 
 	//update collision
-	this->updateCollisionFrame(window, 1);
+	this->updateCollisionFrame(window, 2);
+
+	//god mode on ---------------------------------------------
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Insert)) {
+		this->ATK = 10000;
+		this->DEF = 10000;
+		this->currHP = 10000;
+		this->maxHP = 10000;
+		this->sprite.setColor(sf::Color::Red);
+	}
+	//god mode on ---------------------------------------------
 }
 
 void Player::updateAnimation(const float & dt)

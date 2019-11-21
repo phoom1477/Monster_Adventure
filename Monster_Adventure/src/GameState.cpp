@@ -3,7 +3,7 @@
 //Initialization
 void GameState::initVariable()
 {
-	this->maxStage = 6;
+	this->maxStage = 10;
 	this->currStage = 1;
 }
 
@@ -166,6 +166,16 @@ void GameState::initUI()
 		50.0f
 	);
 	int_to_string.str("");
+
+	//create stageNumberText
+	int_to_string << this->currStage;
+	this->stageNumberText.setFont(this->font);
+	this->stageNumberText.setCharacterSize(40);
+	this->stageNumberText.setString("STAGE : " + int_to_string.str());
+	this->stageNumberText.setPosition(
+		this->view.getCenter().x - this->stageNumberText.getGlobalBounds().width / 2.0f,
+		this->view.getSize().y / 16.0f * 2.0f
+	);
 }
 
 void GameState::initPopUpMenu()
@@ -195,87 +205,144 @@ void GameState::initPopUpMenu()
 void GameState::loadStage()
 {
 	srand((int)time(NULL));
+	
 	//create new stage
 	if (this->currStage == 1) {
-		this->stages = new Stage(this->window, this->font, this->player, "1");
-		
+		this->stages = new Stage(this->window, this->font, this->player);
+
 		//set up background
-		this->stages->addBackground(1);
+		this->stages->addBackground("1");
 
 		//set up enemy
-		for (int i = 0; i < 2; i++) {
-			this->stages->addEnemy(rand() % 1000 + 100.0f, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+		for (int i = 0; i < 1; i++) {
+			this->stages->addEnemy(rand() % (int)this->stages->getStageSize().x, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
 		}
+		
 
 		//return enemy address to enemy in gamestate
 		this->enemy = &this->stages->getEnemy();
 	}
-	if(this->currStage == 2){
-		this->stages = new Stage(this->window, this->font, this->player, "2");
+	if (this->currStage == 2){
+		this->stages = new Stage(this->window, this->font, this->player);
 
 		//set up background
-		this->stages->addBackground(1);
+		this->stages->addBackground("2");
 
 		//set up enemy
-		for (int i = 0; i < 3; i++) {
-			this->stages->addEnemy(rand() % 1000 + 100.0f, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+		for (int i = 0; i < 1; i++) {
+			this->stages->addEnemy(rand() % (int)this->stages->getStageSize().x, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
 		}
 
 		//return enemy address to enemy in gamestate
 		this->enemy = &this->stages->getEnemy();
 	}
 	if (this->currStage == 3) {
-		this->stages = new Stage(this->window, this->font, this->player, "3");
+		this->stages = new Stage(this->window, this->font, this->player);
 
 		//set up background
-		this->stages->addBackground(1);
+		this->stages->addBackground("2");
 
 		//set up enemy
-		for (int i = 0; i < 5; i++) {
-			this->stages->addEnemy(rand() % 1000 + 100.0f, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+		for (int i = 0; i < 1; i++) {
+			this->stages->addEnemy(rand() % (int)this->stages->getStageSize().x, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
 		}
 
 		//return enemy address to enemy in gamestate
 		this->enemy = &this->stages->getEnemy();
 	}
-
 	if (this->currStage == 4) {
-		this->stages = new Stage(this->window, this->font, this->player, "4");
+		this->stages = new Stage(this->window, this->font, this->player);
 
 		//set up background
-		this->stages->addBackground(2);
+		this->stages->addBackground("3");
 
 		//set up enemy
 		for (int i = 0; i < 1; i++) {
-			this->stages->addEnemy(rand() % 1000 + 100.0f, 50.0f, this->textures["ENEMY_SHEET_MINOTAUR"], "2");
+			this->stages->addEnemy(rand() % (int)this->stages->getStageSize().x, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
 		}
 
 		//return enemy address to enemy in gamestate
 		this->enemy = &this->stages->getEnemy();
 	}
 	if (this->currStage == 5) {
-		this->stages = new Stage(this->window, this->font, this->player, "5");
+		this->stages = new Stage(this->window, this->font, this->player);
 
 		//set up background
-		this->stages->addBackground(2);
+		this->stages->addBackground("3");
 
 		//set up enemy
-		for (int i = 0; i < 3; i++) {
-			this->stages->addEnemy(rand() % 1000 + 100.0f, 50.0f, this->textures["ENEMY_SHEET_MINOTAUR"], "2");
+		for (int i = 0; i < 1; i++) {
+			this->stages->addEnemy(rand() % (int)this->stages->getStageSize().x, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
 		}
 
 		//return enemy address to enemy in gamestate
 		this->enemy = &this->stages->getEnemy();
 	}
 	if (this->currStage == 6) {
-		this->stages = new Stage(this->window, this->font, this->player, "6");
+		this->stages = new Stage(this->window, this->font, this->player);
 
 		//set up background
-		this->stages->addBackground(2);
+		this->stages->addBackground("4");
 
 		//set up enemy
-		for (int i = 0; i < 5; i++) {
-			this->stages->addEnemy(rand() % 1000 + 100.0f, 50.0f, this->textures["ENEMY_SHEET_MINOTAUR"], "2");
+		for (int i = 0; i < 1; i++) {
+			this->stages->addEnemy(rand() % (int)this->stages->getStageSize().x, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+		}
+
+		//return enemy address to enemy in gamestate
+		this->enemy = &this->stages->getEnemy();
+	}
+	if (this->currStage == 7) {
+		this->stages = new Stage(this->window, this->font, this->player);
+
+		//set up background
+		this->stages->addBackground("4");
+
+		//set up enemy
+		for (int i = 0; i < 1; i++) {
+			this->stages->addEnemy(rand() % (int)this->stages->getStageSize().x, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+		}
+
+		//return enemy address to enemy in gamestate
+		this->enemy = &this->stages->getEnemy();
+	}
+	if (this->currStage == 8) {
+		this->stages = new Stage(this->window, this->font, this->player);
+
+		//set up background
+		this->stages->addBackground("5");
+
+		//set up enemy
+		for (int i = 0; i < 1; i++) {
+			this->stages->addEnemy(rand() % (int)this->stages->getStageSize().x, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+		}
+
+		//return enemy address to enemy in gamestate
+		this->enemy = &this->stages->getEnemy();
+	}
+	if (this->currStage == 9) {
+		this->stages = new Stage(this->window, this->font, this->player);
+
+		//set up background
+		this->stages->addBackground("5");
+
+		//set up enemy
+		for (int i = 0; i < 1; i++) {
+			this->stages->addEnemy(rand() % (int)this->stages->getStageSize().x, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+		}
+
+		//return enemy address to enemy in gamestate
+		this->enemy = &this->stages->getEnemy();
+	}
+	if (this->currStage == 10) {
+		this->stages = new Stage(this->window, this->font, this->player);
+
+		//set up background
+		this->stages->addBackground("6");
+
+		//set up enemy
+		for (int i = 0; i < 1; i++) {
+			this->stages->addEnemy(rand() % (int)this->stages->getStageSize().x, 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
 		}
 
 		//return enemy address to enemy in gamestate
@@ -284,6 +351,47 @@ void GameState::loadStage()
 
 	//fit size vector
 	this->enemy->shrink_to_fit();
+}
+
+void GameState::loadMusic()
+{
+	std::string music_id;
+	if (this->currStage == 1) {
+		music_id = "1";
+	}
+	if (this->currStage == 2) {
+		music_id = "2";
+	}
+	if (this->currStage == 4) {
+		music_id = "3";
+	}
+	if (this->currStage == 6) {
+		music_id = "4";
+	}
+	if (this->currStage == 8) {
+		music_id = "5";
+	}
+	if (this->currStage == 10) {
+		music_id = "6";
+	}
+
+	if (this->currStage % 2 == 0 || this->currStage == 1) {
+		if (this->music.getStatus() == sf::Sound::Playing) {
+			this->music.stop();
+		}
+
+		std::string path = "src/Resource/Music/GameState/music_" + music_id + ".ogg";
+		if (!this->musicBuffer.loadFromFile(path)) {
+			throw("[Game State] >> ERROR can't load music buffer");
+		}
+		this->music.setBuffer(this->musicBuffer);
+		this->music.setLoop(true);
+		this->music.setVolume(50);
+
+		if (this->music.getStatus() != sf::Sound::Playing) {
+			this->music.play();
+		}
+	}
 }
 
 //Constructor , Destructor
@@ -297,7 +405,7 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 	this->initFonts();
 
 	this->initTexture();
-	//this->initBackground();
+	//this->initMusicList();
 
 	this->initPlayer();
 
@@ -307,6 +415,7 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 
 	//load first stage
 	this->loadStage();
+	this->loadMusic();
 }
 
 GameState::~GameState()
@@ -369,7 +478,7 @@ void GameState::updateInput(const float &dt)
 void GameState::updatePlayer(const float & dt)
 {
 	//Control player
-	if (!this->player->getAttacking()) {
+	if (!this->player->getAttacking() && !this->player->getHurting()) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_LEFT")))) {
 			this->player->moveEntity(-1.0f, 0.0f, dt);
 		}
@@ -428,6 +537,7 @@ void GameState::updateStage(const float & dt)
 			//create new stage
 			currStage++;
 			this->loadStage();
+			this->loadMusic();
 		}
 		else {
 			this->gameWinState();
@@ -555,6 +665,14 @@ void GameState::updateUI()
 		50.0f
 	);
 	int_to_string.str("");
+
+	int_to_string << this->currStage;
+	this->stageNumberText.setString("STAGE : " + int_to_string.str());
+	this->stageNumberText.setPosition(
+		this->view.getCenter().x - this->stageNumberText.getGlobalBounds().width / 2.0f,
+		this->view.getSize().y / 16.0f * 2.0f
+	);
+	int_to_string.str("");
 }
 
 void GameState::updatePauseMenuButton()
@@ -658,5 +776,7 @@ void GameState::renderUI(sf::RenderTarget * target)
 	target->draw(this->playerShowATKText);
 	target->draw(this->playerShowDEFText);
 	target->draw(this->playerShowScoreText);
+
+	target->draw(this->stageNumberText);
 }
 

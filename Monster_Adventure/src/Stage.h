@@ -36,16 +36,12 @@ private:
 	sf::Texture background_texture;
 	std::vector<sf::RectangleShape> background;
 
-	//UI Resource
-	sf::Text stageNumberText;
-
 	//Initialization
 	void initVariable();
-	void initUI(std::string stage_num);
 
 public:
 	//Contructor , Destructor
-	Stage(sf::RenderWindow* window,sf::Font& font, Player *player, std::string stage_num);
+	Stage(sf::RenderWindow* window,sf::Font& font, Player *player);
 	virtual ~Stage();
 
 	//Accessor
@@ -55,7 +51,7 @@ public:
 	std::vector<Enemy*>& getEnemy();
 
 	//Function
-	void addBackground(short unsigned background_id);
+	void addBackground(std::string background_id);
 	void addEnemy(const float x, const float y, sf::Texture& texture_sheet, std::string id);
 
 	//update
