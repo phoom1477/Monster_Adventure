@@ -49,6 +49,13 @@ void GameState::initTexture()
 	if (!this->textures["ENEMY_SHEET_MINOTAUR"].loadFromFile("src/Resource/Charector/Enemy/Minotaur/Minotaur_Animation_List.png")) {
 		throw("[Game State] >> ERROR can't load Enemy texture");
 	}
+	if (!this->textures["ENEMY_SHEET_KNIGHT"].loadFromFile("src/Resource/Charector/Enemy/Knight/Knight_Animation_List.png")) {
+		throw("[Game State] >> ERROR can't load Enemy texture");
+	}
+	if (!this->textures["ENEMY_SHEET_KING"].loadFromFile("src/Resource/Charector/Enemy/King/King_Animation_List.png")) {
+		throw("[Game State] >> ERROR can't load Enemy texture");
+	}
+
 }
 
 void GameState::initPlayer()
@@ -257,7 +264,7 @@ void GameState::loadStage()
 
 		//set up enemy
 		for (int i = 0; i < 5; i++) {
-			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_MINOTAUR"], "2");
 		}
 
 		//return enemy address to enemy in gamestate
@@ -271,7 +278,7 @@ void GameState::loadStage()
 
 		//set up enemy
 		for (int i = 0; i < 7; i++) {
-			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_MINOTAUR"], "2");
 		}
 
 		//return enemy address to enemy in gamestate
@@ -285,7 +292,7 @@ void GameState::loadStage()
 
 		//set up enemy
 		for (int i = 0; i < 5; i++) {
-			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_KNIGHT"], "3");
 		}
 
 		//return enemy address to enemy in gamestate
@@ -299,7 +306,7 @@ void GameState::loadStage()
 
 		//set up enemy
 		for (int i = 0; i < 7; i++) {
-			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_KNIGHT"], "3");
 		}
 
 		//return enemy address to enemy in gamestate
@@ -341,7 +348,7 @@ void GameState::loadStage()
 
 		//set up enemy
 		for (int i = 0; i < 1; i++) {
-			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+			this->stages->addEnemy(this->window->getSize().x / 2.0f, 50.0f, this->textures["ENEMY_SHEET_KING"], "4");
 		}
 
 		//return enemy address to enemy in gamestate

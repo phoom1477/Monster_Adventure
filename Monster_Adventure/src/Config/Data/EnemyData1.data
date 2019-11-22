@@ -1,8 +1,8 @@
 NAME 			Skeleton
-ATK 			10
+ATK 			15
 DEF 			10
 MSPD 			5
-maxHP 			1000
+maxHP 			500
 point			100
 
 face_right_origin	0 0

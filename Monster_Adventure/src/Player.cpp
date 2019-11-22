@@ -283,7 +283,7 @@ void Player::updateAnimation(const float & dt)
 		}
 	}
 	else {
-		if (this->hurting) {
+		if (this->hurting && !this->jumpping && !this->attacking) {
 			if (this->animationComponent->play("HURT", dt)) {
 				this->hurting = false;
 			}

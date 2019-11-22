@@ -1,6 +1,6 @@
 NAME 			Minotaur
-ATK 			10
-DEF 			15
+ATK 			20
+DEF 			20
 MSPD 			3
 maxHP 			2000
 point			200
