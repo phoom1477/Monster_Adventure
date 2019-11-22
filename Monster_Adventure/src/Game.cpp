@@ -71,10 +71,56 @@ void Game::initKeys()
 	ifs.close();
 }
 
+void Game::initMusicList()
+{
+	//laod all music
+	if (!this->musicBuffer["MUSIC_1"].loadFromFile("src/Resource/Music/music_1.ogg")) {
+		throw("[Game State] >> ERROR can't load music buffer");
+	}
+	this->music["MUSIC_1"].setBuffer(musicBuffer["MUSIC_1"]);
+	this->music["MUSIC_1"].setLoop(true);
+	this->music["MUSIC_1"].setVolume(50);
+
+	if (!this->musicBuffer["MUSIC_2"].loadFromFile("src/Resource/Music/music_2.ogg")) {
+		throw("[Game State] >> ERROR can't load music buffer");
+	}
+	this->music["MUSIC_2"].setBuffer(musicBuffer["MUSIC_2"]);
+	this->music["MUSIC_2"].setLoop(true);
+	this->music["MUSIC_2"].setVolume(50);
+
+	if (!this->musicBuffer["MUSIC_3"].loadFromFile("src/Resource/Music/music_3.ogg")) {
+		throw("[Game State] >> ERROR can't load music buffer");
+	}
+	this->music["MUSIC_3"].setBuffer(musicBuffer["MUSIC_3"]);
+	this->music["MUSIC_3"].setLoop(true);
+	this->music["MUSIC_3"].setVolume(50);
+
+	if (!this->musicBuffer["MUSIC_4"].loadFromFile("src/Resource/Music/music_4.ogg")) {
+		throw("[Game State] >> ERROR can't load music buffer");
+	}
+	this->music["MUSIC_4"].setBuffer(musicBuffer["MUSIC_4"]);
+	this->music["MUSIC_4"].setLoop(true);
+	this->music["MUSIC_4"].setVolume(50);
+
+	if (!this->musicBuffer["MUSIC_5"].loadFromFile("src/Resource/Music/music_5.ogg")) {
+		throw("[Game State] >> ERROR can't load music buffer");
+	}
+	this->music["MUSIC_5"].setBuffer(musicBuffer["MUSIC_5"]);
+	this->music["MUSIC_5"].setLoop(true);
+	this->music["MUSIC_5"].setVolume(50);
+
+	if (!this->musicBuffer["MUSIC_6"].loadFromFile("src/Resource/Music/music_6.ogg")) {
+		throw("[Game State] >> ERROR can't load music buffer");
+	}
+	this->music["MUSIC_6"].setBuffer(musicBuffer["MUSIC_6"]);
+	this->music["MUSIC_6"].setLoop(true);
+	this->music["MUSIC_6"].setVolume(50);
+}
+
 void Game::initStates()
 {
 	//Push Main Menu state to states stack
-	this->states.push(new MainMenuState(this->window, &this->supportedKeys, &this->states));
+	this->states.push(new MainMenuState(this->window, &this->supportedKeys, &this->states, &this->music));
 }
 
 //Constructor , Destructor
@@ -85,6 +131,7 @@ Game::Game()
 	this->initWindow();
 	this->initKeys();
 
+	this->initMusicList();
 	this->initStates();
 }
 

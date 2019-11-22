@@ -179,10 +179,9 @@ void ScoreState::swap(std::pair<std::string ,int>* pair_x, std::pair<std::string
 	*pair_y = temp;
 }
 
-
 //Constructor , Destructor
-ScoreState::ScoreState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
-	:State(window, supportedKeys, states)
+ScoreState::ScoreState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, std::map<std::string, sf::Sound>* musicList)
+	:State(window, supportedKeys, states, musicList)
 {
 	std::cout << "[Score State] >> On" << std::endl;
 	this->initKeybinds();

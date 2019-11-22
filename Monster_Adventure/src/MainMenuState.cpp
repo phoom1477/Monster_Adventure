@@ -23,6 +23,11 @@ void MainMenuState::initFonts()
 	}
 }
 
+void MainMenuState::initMusic()
+{
+	this->music = this->musicList->at("MUSIC_5");
+}
+
 void MainMenuState::initBackground()
 {
 	this->background.setSize(sf::Vector2f(static_cast<float>(this->window->getSize().x), static_cast<float>(this->window->getSize().y)));
@@ -42,18 +47,6 @@ void MainMenuState::initLogo()
 	this->logo.setSize(sf::Vector2f(static_cast<float>(this->logoTexture.getSize().x / 2), static_cast<float>(this->logoTexture.getSize().y / 2)));
 	this->logo.setPosition(sf::Vector2f(static_cast<float>((this->window->getSize().x / 2) - (this->logo.getSize().x / 2)), static_cast<float>(this->window->getSize().y / 8)));
 	this->logo.setTexture(&this->logoTexture);
-}
-
-void MainMenuState::initMusic()
-{
-	if (!musicBuffer.loadFromFile("src/Resource/Music/MainMenuState/twinkle_twinkle_little_star.ogg")) {
-		throw("[Main Menu State] >> ..ERROR.. Could't load musicBuffer");
-	}
-
-	this->music.setBuffer(this->musicBuffer);
-	this->music.setLoop(true);
-	this->music.setVolume(50);
-	this->music.play();
 }
 
 void MainMenuState::initButton()
@@ -88,16 +81,16 @@ void MainMenuState::initButton()
 }
 
 //Constructor , Destructor
-MainMenuState::MainMenuState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states) 
-	:State(window, supportedKeys, states)
+MainMenuState::MainMenuState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, std::map<std::string, sf::Sound>* musicList)
+	:State(window, supportedKeys, states, musicList)
 {
 	std::cout << "[Main Menu State] >> On" << std::endl;
 	this->initKeybinds();
 	this->initFonts();
-	
+	this->initMusic();
+
 	this->initBackground();
 	this->initLogo();
-	this->initMusic();
 	
 	this->initButton();
 }
@@ -134,12 +127,12 @@ void MainMenuState::updateButton()
 
 	//Go Game State
 	if (this->buttons["New Game"]->isPressed() && this->getKeyTime()) {
-		this->states->push(new GetInfoState(this->window, this->supportedKeys, this->states));
+		this->states->push(new GetInfoState(this->window, this->supportedKeys, this->states, this->musicList));
 		this->music.stop();
 	}
 	//Go Score 
 	if (this->buttons["Score"]->isPressed() && this->getKeyTime()) {
-		this->states->push(new ScoreState(this->window, this->supportedKeys, this->states));
+		this->states->push(new ScoreState(this->window, this->supportedKeys, this->states, this->musicList));
 	}
 	
 	//Exit this state

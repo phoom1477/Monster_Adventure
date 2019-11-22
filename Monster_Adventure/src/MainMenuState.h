@@ -19,7 +19,7 @@ private:
 	sf::Texture logoTexture;
 	sf::RectangleShape logo;
 
-	sf::SoundBuffer musicBuffer;
+	//music play
 	sf::Sound music;
 
 	sf::Font font;
@@ -28,16 +28,16 @@ private:
 	//Initialization
 	void initKeybinds();
 	void initFonts();
+	void initMusic();
 
 	void initBackground();
 	void initLogo();
-	void initMusic();
-
+	
 	void initButton();
 
 public:
 	//Constructor , Destructor
-	MainMenuState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
+	MainMenuState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, std::map<std::string, sf::Sound>* musicList);
 	virtual ~MainMenuState();
 
 	//update

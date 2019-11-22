@@ -12,8 +12,8 @@ void State::initVariable()
 }
 
 //Constructor , Destructor
-State::State(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
-	:window(window), supportedKeys(supportedKeys), states(states)
+State::State(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, std::map<std::string, sf::Sound>* musicList)
+	:window(window), supportedKeys(supportedKeys), states(states), musicList(musicList)
 {
 	this->initVariable();
 }

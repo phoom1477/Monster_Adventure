@@ -133,8 +133,8 @@ void GetInfoState::initButton()
 }
 
 //Constructor , Destructor
-GetInfoState::GetInfoState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
-	:State(window, supportedKeys, states)
+GetInfoState::GetInfoState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, std::map<std::string, sf::Sound>* musicList)
+	:State(window, supportedKeys, states, musicList)
 {
 	std::cout << "[Get Info State] >> on" << std::endl;
 	this->initVariable();
@@ -196,7 +196,7 @@ void GetInfoState::updateButton()
 	}
 	if (this->buttons["Start"]->isPressed() && this->getKeyTime()) {	
 		this->endState();
-		this->states->push(new GameState(this->window, this->supportedKeys, this->states, this->playerIndex, this->playerName));
+		this->states->push(new GameState(this->window, this->supportedKeys, this->states, this->musicList, this->playerIndex, this->playerName));
 	}
 	if (this->buttons["Back"]->isPressed() && this->getKeyTime()) {	
 		this->endState();

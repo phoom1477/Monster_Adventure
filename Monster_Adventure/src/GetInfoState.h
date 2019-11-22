@@ -50,7 +50,7 @@ private:
 		
 public:
 	//Constructor , Destructor
-	GetInfoState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
+	GetInfoState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, std::map<std::string, sf::Sound>* musicList);
 	virtual ~GetInfoState();
 
 	//update

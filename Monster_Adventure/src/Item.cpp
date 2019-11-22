@@ -144,7 +144,7 @@ void Item::updateEntity(const float & dt, sf::RenderWindow & window)
 	}
 
 	//update collision
-	this->updateCollisionFrame(window, 1);
+	this->updateCollisionFrame(window, 2);
 }
 
 void Item::updateAnimation(const float & dt)

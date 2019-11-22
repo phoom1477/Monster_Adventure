@@ -29,7 +29,8 @@ private:
 	std::vector<Enemy*>* enemy;
 	Stage* stages;
 
-	sf::Sound musicPlaying;
+	//music play
+	sf::Sound music;
 
 	//UI Resource
 	sf::Text nameText;
@@ -51,8 +52,6 @@ private:
 	
 	//State Resource
 	std::map<std::string, sf::Texture> textures;
-	std::map<std::string, sf::SoundBuffer> musicBuffer;
-	std::map<std::string, sf::Sound> music;
 
 	sf::Font font;
 	PopUpMenu* pauseMenu;
@@ -65,7 +64,6 @@ private:
 	void initFonts();
 
 	void initTexture();
-	void initMusicList();
 
 	void initPlayer();
 	
@@ -79,7 +77,7 @@ private:
 
 public:
 	//Constructor , Destructor
-	GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, 
+	GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, std::map<std::string, sf::Sound>* musicList,
 		short unsigned player_index, std::string player_name);
 	virtual ~GameState();
 

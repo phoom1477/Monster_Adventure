@@ -36,6 +36,7 @@ private:
 	void initWindow();
 	void initKeys();
 
+	void initMusicList();
 	void initStates();
 
 public:

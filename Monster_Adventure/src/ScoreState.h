@@ -46,7 +46,7 @@ private:
 
 public:
 	//Constructor , Destructor
-	ScoreState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
+	ScoreState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, std::map<std::string, sf::Sound>* musicList);
 	virtual ~ScoreState();
 
 	//update
