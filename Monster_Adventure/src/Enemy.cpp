@@ -185,7 +185,7 @@ Enemy::Enemy(float x, float y, sf::Texture& texture_sheet, std::string id)
 	this->animationComponent->addAnimation("HURT", hurt_time, hurt_start.x, hurt_start.y, hurt_end.x, hurt_end.y, sprite_size.x, sprite_size.y);
 
 	//create hitbox component
-	this->createHitboxComponent(offset.x, offset.y, this->sprite.getGlobalBounds().width - minus_size.x, this->sprite.getGlobalBounds().height - minus_size.y, sf::Color::Yellow);
+	this->createHitboxComponent(offset.x, offset.y, this->sprite.getGlobalBounds().width - minus_size.x, this->sprite.getGlobalBounds().height - minus_size.y, sf::Color::Transparent);
 
 	//create movement component
 	this->createMovementComponent(40.0f * this->MSPD, 30.0f, 10.0f, 0.0f, 35.0f);
@@ -255,8 +255,8 @@ void Enemy::decreaseHP(const float& dt, const float ATK, sf::Vector2f attacker_c
 
 	float damage = (ATK * 1.25f) - (this->DEF / 100.0f);
 
-	if (rand() % 101 <= 5) {
-		//miss attack [ 5% chance to miss ]
+	if (rand() % 101 <= 10) {
+		//miss attack [ 10% chance to miss ]
 		this->currHP = this->currHP - 0.0f;
 	}
 	else {
@@ -289,7 +289,7 @@ void Enemy::attack(const float& dt, short unsigned attack_style, Player* player)
 			player->decreaseHP(dt, this->ATK, this->getCenter());
 		}
 	}
-	//this->clearAttackHitbox();
+	this->clearAttackHitbox();
 }
 
 void Enemy::createAttackHitbox()
@@ -298,12 +298,12 @@ void Enemy::createAttackHitbox()
 	if (this->attacking) {
 		if (this->sprite.getScale().x > 0.0f) {
 			if (this->attackStyle == ATTACK_ONCE) {
-				this->attackHitbox = new HitboxComponent(this->sprite, this->attackRightOffset.x, this->attackRightOffset.y, this->attackRightSize.x, this->attackRightSize.y , sf::Color::Red);
+				this->attackHitbox = new HitboxComponent(this->sprite, this->attackRightOffset.x, this->attackRightOffset.y, this->attackRightSize.x, this->attackRightSize.y , sf::Color::Transparent);
 			}
 		}
 		else {
 			if (this->attackStyle == ATTACK_ONCE) {
-				this->attackHitbox = new HitboxComponent(this->sprite, this->attackLeftOffset.x, this->attackLeftOffset.y, this->attackLeftSize.x, this->attackLeftSize.y, sf::Color::Red);
+				this->attackHitbox = new HitboxComponent(this->sprite, this->attackLeftOffset.x, this->attackLeftOffset.y, this->attackLeftSize.x, this->attackLeftSize.y, sf::Color::Transparent);
 			}
 		}
 	}
@@ -436,9 +436,9 @@ void Enemy::renderEntity(sf::RenderTarget & target)
 		this->hitboxComponent->renderComponent(target);
 	}
 	//---------------------- for debug
-	if (this->attackHitbox) {
+	/*if (this->attackHitbox) {
 		this->attackHitbox->renderComponent(target);
-	}
+	}*/
 	//-----------------------
 
 	this->renderUI(target);

@@ -1,0 +1,26 @@
+NAME 			Knight
+ATK 			15
+DEF 			15
+MSPD 			5
+maxHP 			2000
+point			200
+
+face_right_origin	0 0
+face_left_origin        145 0
+
+attack_right_offset     230 40
+attack_right_size	70 80
+attack_left_offset      135 40
+attack_left_size        70 80
+
+sprite_size		144 64
+idle			10 	0 0	14 0
+walk			8 	0 1	7 1
+attack			9.1 	0 2	10 2
+dead			13 	0 3	14 3
+hurt			13 	0 4	6 4
+
+offset			180 40
+minus_size		355 100
+
+attackSoundPath		src/Resource/SoundFX/Enemy/attack_slash.ogg

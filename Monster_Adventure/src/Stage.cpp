@@ -47,10 +47,10 @@ const sf::Vector2i Stage::getStageSize()
 			size_x += this->background[i].getSize().x;
 			size_y += this->background[i].getSize().y;
 		}
-		return sf::Vector2i(size_x, size_y);
+		return sf::Vector2i((int)size_x, (int)size_y);
 	}
 	else {
-		return sf::Vector2i(0.0f, 0.0f);
+		return sf::Vector2i(0, 0);
 	}
 }
 

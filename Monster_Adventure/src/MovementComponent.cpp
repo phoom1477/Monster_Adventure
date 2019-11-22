@@ -16,7 +16,7 @@ const sf::Vector2f& MovementComponent::getVelocity()
 	return this->velocity;
 }
 
-const float & MovementComponent::getJumpVelocity()
+const float MovementComponent::getJumpVelocity()
 {
 	return this->acceleration * this->jumpForce;
 }

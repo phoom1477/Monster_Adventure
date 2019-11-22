@@ -2,7 +2,11 @@
 //	Object list that used by dynamic allocated  //
 //		-player									//
 //		-Stage									//
-//		-pauseMenu								//
+//		-wButton								//
+//		-aButton								//
+//		-sButton								//
+//		-dButton								//
+//		-jButton								//
 //////////////////////////////////////////////////
 
 #pragma once
@@ -11,6 +15,7 @@
 #include "Player.h"
 #include "Stage.h"
 #include "PopUpMenu.h"
+#include "UIAnimation.h"
 
 class GameState : public State
 {
@@ -50,6 +55,15 @@ private:
 
 	sf::Text stageNumberText;
 	
+	//UI Resource2 [animation UI]
+	UIAnimation* wButton;
+	UIAnimation* aButton;
+	UIAnimation* sButton;
+	UIAnimation* dButton;
+	UIAnimation* jButton;
+	sf::Text moveText;
+	sf::Text attackText;
+
 	//State Resource
 	std::map<std::string, sf::Texture> textures;
 
@@ -69,6 +83,7 @@ private:
 	
 	void initView();
 	void initUI();
+	void initUIAnimation();
 	void initPopUpMenu();
 
 	//load
@@ -90,6 +105,7 @@ public:
 	
 	void updateView();
 	void updateUI();
+	void updateUIAnimation(const float &dt);
 	void updatePauseMenuButton();
 	void updateGameOverMenuButton();
 	void updateGameWinButton();
@@ -101,5 +117,6 @@ public:
 	void renderStage(sf::RenderTarget* target = NULL);
 	
 	void renderUI(sf::RenderTarget* target = NULL);
+	void renderUIAnimation(sf::RenderTarget* target = NULL);
 };
 

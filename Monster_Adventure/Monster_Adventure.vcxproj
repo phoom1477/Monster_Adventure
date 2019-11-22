@@ -37,6 +37,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\State.cpp" />
     <ClCompile Include="src\Stage.cpp" />
+    <ClCompile Include="src\UIAnimation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Item.h" />
@@ -56,6 +57,7 @@
     <ClInclude Include="src\MainMenuState.h" />
     <ClInclude Include="src\State.h" />
     <ClInclude Include="src\Stage.h" />
+    <ClInclude Include="src\UIAnimation.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -166,6 +168,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>C:\Users\Admin\Desktop\Monster_Adventure\SFML-VC++15\SFML-2.5.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-system.lib;sfml-window.lib;sfml-audio.lib;sfml-graphics.lib;sfml-network.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>NotSet</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -76,6 +76,9 @@
     <ClCompile Include="src\Item.cpp">
       <Filter>Entity</Filter>
     </ClCompile>
+    <ClCompile Include="src\UIAnimation.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Game.h">
@@ -128,6 +131,9 @@
     </ClInclude>
     <ClInclude Include="src\Item.h">
       <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UIAnimation.h">
+      <Filter>GUI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

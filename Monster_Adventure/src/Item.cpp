@@ -78,7 +78,7 @@ Item::Item(float x, float y, std::string id)
 	this->animationComponent->addAnimation("IDLE", 10.0f, 0, 0, 0, 0, 16, 16);
 
 	//create hitbox component
-	this->createHitboxComponent(10.0f, 10.0f, this->sprite.getGlobalBounds().width - 20, this->sprite.getGlobalBounds().height - 20, sf::Color::Cyan);
+	this->createHitboxComponent(10.0f, 10.0f, this->sprite.getGlobalBounds().width - 20, this->sprite.getGlobalBounds().height - 20, sf::Color::Transparent);
 	
 	//create movement component
 	this->createMovementComponent(200.0f, 30.0f, 10.0f, 50.0f, 35.0f);

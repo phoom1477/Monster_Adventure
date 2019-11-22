@@ -43,7 +43,7 @@ Player::Player(float x, float y, sf::Texture& texture_sheet ,std::string name)
 	this->animationComponent->addAnimation("HURT", 13.0f, 6, 3, 9, 3, 32, 32);
 
 	//create hitbox component
-	this->createHitboxComponent(16.0f, 16.0f, this->sprite.getGlobalBounds().width-40, this->sprite.getGlobalBounds().height-20, sf::Color::Green);
+	this->createHitboxComponent(16.0f, 16.0f, this->sprite.getGlobalBounds().width-40, this->sprite.getGlobalBounds().height-20, sf::Color::Transparent);
 	
 	//create movement component
 	this->createMovementComponent(40.0f * this->MSPD, 30.0f, 10.0f, 50.0f, 35.0f);
@@ -155,8 +155,8 @@ void Player::decreaseHP(const float& dt, const float ATK, sf::Vector2f attacker_
 
 	float damage = (ATK * 1.25f) - (this->DEF / 100.0f);
 
-	if (rand() % 101 <= 5) {
-		//miss attack [ 5% chance to miss ]
+	if (rand() % 101 <= 10) {
+		//miss attack [ 1% chance to miss ]
 		this->currHP = this->currHP - 0.0f;
 	}
 	else {
@@ -189,7 +189,7 @@ void Player::attack(const float& dt, short unsigned attack_style, Enemy* enemy)
 			enemy->decreaseHP(dt, this->ATK, this->getCenter());
 		}
 	}
-	//this->clearAttackHitbox();
+	this->clearAttackHitbox();
 }
 
 void Player::createAttackHitbox()
@@ -198,18 +198,18 @@ void Player::createAttackHitbox()
 	if (this->attacking) {
 		if (this->sprite.getScale().x > 0.0f) {
 			if (this->attackStyle == ATTACK_ONCE) {
-				this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Red);
+				this->attackHitbox = new HitboxComponent(this->sprite, 45, 50, 50, 30, sf::Color::Transparent);
 			}
 			if (this->attackStyle == ATTACK_DOUBLE) {
-				this->attackHitbox = new HitboxComponent(this->sprite, 65, 50, 30, 20, sf::Color::Blue);
+				this->attackHitbox = new HitboxComponent(this->sprite, 45, 50, 50, 30, sf::Color::Transparent);
 			}
 		}
 		else {
 			if (this->attackStyle == ATTACK_ONCE) {
-				this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Red);
+				this->attackHitbox = new HitboxComponent(this->sprite, -10, 50, 50, 30, sf::Color::Transparent);
 			}
 			if (this->attackStyle == ATTACK_DOUBLE) {
-				this->attackHitbox = new HitboxComponent(this->sprite, -6, 50, 30, 20, sf::Color::Blue);
+				this->attackHitbox = new HitboxComponent(this->sprite, -10, 50, 50, 30, sf::Color::Transparent);
 			}
 		}
 	}
@@ -337,9 +337,9 @@ void Player::renderEntity(sf::RenderTarget& target)
 		this->hitboxComponent->renderComponent(target);
 	}
 	//---------------------- for debug
-	if (this->attackHitbox) {
+	/*if (this->attackHitbox) {
 		this->attackHitbox->renderComponent(target);
-	}
+	}*/
 	//--------------------
 }
 

@@ -37,7 +37,7 @@ public:
 
 	//Accessor
 	const sf::Vector2f& getVelocity();
-	const float& getJumpVelocity();
+	const float getJumpVelocity();
 	const float& getMaxVelocity();
 	const bool getState(const short unsigned state);
 

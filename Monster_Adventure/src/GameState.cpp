@@ -52,10 +52,29 @@ void GameState::initTexture()
 	if (!this->textures["ENEMY_SHEET_KNIGHT"].loadFromFile("src/Resource/Charector/Enemy/Knight/Knight_Animation_List.png")) {
 		throw("[Game State] >> ERROR can't load Enemy texture");
 	}
+	if (!this->textures["ENEMY_SHEET_VIKING"].loadFromFile("src/Resource/Charector/Enemy/Viking/Viking_Animation_List.png")) {
+		throw("[Game State] >> ERROR can't load Enemy texture");
+	}
 	if (!this->textures["ENEMY_SHEET_KING"].loadFromFile("src/Resource/Charector/Enemy/King/King_Animation_List.png")) {
 		throw("[Game State] >> ERROR can't load Enemy texture");
 	}
 
+	//load all UIAnimation texture
+	if (!this->textures["UI_SHEET_WBUTTON"].loadFromFile("src/Resource/UI/Keyboard/Wbutton.png")) {
+		throw("[Game State] >> ERROR can't load UIAnimation texture");
+	}
+	if (!this->textures["UI_SHEET_ABUTTON"].loadFromFile("src/Resource/UI/Keyboard/Abutton.png")) {
+		throw("[Game State] >> ERROR can't load UIAnimation texture");
+	}
+	if (!this->textures["UI_SHEET_SBUTTON"].loadFromFile("src/Resource/UI/Keyboard/Sbutton.png")) {
+		throw("[Game State] >> ERROR can't load UIAnimation texture");
+	}
+	if (!this->textures["UI_SHEET_DBUTTON"].loadFromFile("src/Resource/UI/Keyboard/Dbutton.png")) {
+		throw("[Game State] >> ERROR can't load UIAnimation texture");
+	}
+	if (!this->textures["UI_SHEET_JBUTTON"].loadFromFile("src/Resource/UI/Keyboard/Jbutton.png")) {
+		throw("[Game State] >> ERROR can't load UIAnimation texture");
+	}
 }
 
 void GameState::initPlayer()
@@ -88,6 +107,8 @@ void GameState::initUI()
 	//create nameText
 	this->nameText.setFont(this->font);
 	this->nameText.setCharacterSize(30);
+	this->nameText.setOutlineThickness(2.0f);
+	this->nameText.setOutlineColor(sf::Color::Black);
 	this->nameText.setString(this->player->getName());
 	this->nameText.setPosition(
 		this->view.getCenter().x + 300.0f,
@@ -96,6 +117,8 @@ void GameState::initUI()
 	//create ATKText
 	this->ATKText.setFont(this->font);
 	this->ATKText.setCharacterSize(20);
+	this->ATKText.setOutlineThickness(2.0f);
+	this->ATKText.setOutlineColor(sf::Color::Black);
 	this->ATKText.setString("ATK :");
 	this->ATKText.setLetterSpacing(1.5f);
 	this->ATKText.setPosition(
@@ -105,6 +128,8 @@ void GameState::initUI()
 	//create DEFText
 	this->DEFText.setFont(this->font);
 	this->DEFText.setCharacterSize(20);
+	this->DEFText.setOutlineThickness(2.0f);
+	this->DEFText.setOutlineColor(sf::Color::Black);
 	this->DEFText.setString("DEF : ");
 	this->DEFText.setLetterSpacing(2.0f);
 	this->DEFText.setPosition(
@@ -114,6 +139,8 @@ void GameState::initUI()
 	//create HPText
 	this->HPText.setFont(this->font);
 	this->HPText.setCharacterSize(30);
+	this->HPText.setOutlineThickness(2.0f);
+	this->HPText.setOutlineColor(sf::Color::Black);
 	this->HPText.setString("HP");
 	this->HPText.setPosition(
 		this->view.getCenter().x - this->view.getSize().x / 2.0f + 20.0f,
@@ -122,6 +149,8 @@ void GameState::initUI()
 	//create scoreText
 	this->scoreText.setFont(this->font);
 	this->scoreText.setCharacterSize(30);
+	this->scoreText.setOutlineThickness(2.0f);
+	this->scoreText.setOutlineColor(sf::Color::Black);
 	this->scoreText.setString("SCORE :");
 	this->scoreText.setPosition(
 		this->view.getCenter().x + 300.0f,
@@ -133,6 +162,8 @@ void GameState::initUI()
 	int_to_string << this->player->getATK();
 	this->playerShowATKText.setFont(this->font);
 	this->playerShowATKText.setCharacterSize(20);
+	this->playerShowATKText.setOutlineThickness(2.0f);
+	this->playerShowATKText.setOutlineColor(sf::Color::Black);
 	this->playerShowATKText.setString(int_to_string.str());
 	this->DEFText.setLetterSpacing(2.0f);
 	this->playerShowATKText.setPosition(
@@ -144,6 +175,8 @@ void GameState::initUI()
 	int_to_string << this->player->getDEF();
 	this->playerShowDEFText.setFont(this->font);
 	this->playerShowDEFText.setCharacterSize(20);
+	this->playerShowDEFText.setOutlineThickness(2.0f);
+	this->playerShowDEFText.setOutlineColor(sf::Color::Black);
 	this->playerShowDEFText.setString(int_to_string.str());
 	this->DEFText.setLetterSpacing(2.0f);
 	this->playerShowDEFText.setPosition(
@@ -167,6 +200,8 @@ void GameState::initUI()
 	int_to_string << this->player->getScore();
 	this->playerShowScoreText.setFont(this->font);
 	this->playerShowScoreText.setCharacterSize(30);
+	this->playerShowScoreText.setOutlineThickness(2.0f);
+	this->playerShowScoreText.setOutlineColor(sf::Color::Black);
 	this->playerShowScoreText.setString(int_to_string.str());
 	this->playerShowScoreText.setPosition(
 		this->view.getCenter().x + 420.0f,
@@ -178,10 +213,72 @@ void GameState::initUI()
 	int_to_string << this->currStage;
 	this->stageNumberText.setFont(this->font);
 	this->stageNumberText.setCharacterSize(40);
+	this->stageNumberText.setOutlineThickness(2.0f);
+	this->stageNumberText.setOutlineColor(sf::Color::Black);
 	this->stageNumberText.setString("STAGE : " + int_to_string.str());
 	this->stageNumberText.setPosition(
 		this->view.getCenter().x - this->stageNumberText.getGlobalBounds().width / 2.0f,
 		this->view.getSize().y / 16.0f * 2.0f
+	);
+}
+
+void GameState::initUIAnimation()
+{
+	//create UIAnimation
+	this->wButton = new UIAnimation(
+		this->view.getCenter().x + 325.0f,
+		100.0f,
+		this->textures["UI_SHEET_WBUTTON"]
+	);
+	this->wButton->setScale(2.0f, 2.0f);
+
+	this->aButton = new UIAnimation(
+		this->view.getCenter().x + 300.0f,
+		130.0f,
+		this->textures["UI_SHEET_ABUTTON"]
+	);
+	this->aButton->setScale(2.0f, 2.0f);
+
+	this->sButton = new UIAnimation(
+		this->view.getCenter().x + 325.0f,
+		130.0f,
+		this->textures["UI_SHEET_SBUTTON"]
+	);
+	this->sButton->setScale(2.0f, 2.0f);
+
+	this->dButton = new UIAnimation(
+		this->view.getCenter().x + 350.0f,
+		130.0f,
+		this->textures["UI_SHEET_DBUTTON"]
+	);
+	this->dButton->setScale(2.0f, 2.0f);
+
+	this->jButton = new UIAnimation(
+		this->view.getCenter().x + 325.0f,
+		170.0f,
+		this->textures["UI_SHEET_JBUTTON"]
+	);
+	this->jButton->setScale(2.0f, 2.0f);
+
+	//create description text
+	this->moveText.setFont(this->font);
+	this->moveText.setCharacterSize(20);
+	this->moveText.setOutlineThickness(2.0f);
+	this->moveText.setOutlineColor(sf::Color::Black);
+	this->moveText.setString("MOVE");
+	this->moveText.setPosition(
+		this->view.getCenter().x + 425.0f,
+		120.0f
+	);
+
+	this->attackText.setFont(this->font);
+	this->attackText.setCharacterSize(20);
+	this->attackText.setOutlineThickness(2.0f);
+	this->attackText.setOutlineColor(sf::Color::Black);
+	this->attackText.setString("ATTACK");
+	this->attackText.setPosition(
+		this->view.getCenter().x + 425.0f,
+		177.0f
 	);
 }
 
@@ -221,7 +318,7 @@ void GameState::loadStage()
 		this->stages->addBackground("1");
 
 		//set up enemy
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 2; i++) {
 			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
 		}
 		
@@ -235,7 +332,7 @@ void GameState::loadStage()
 		this->stages->addBackground("2");
 
 		//set up enemy
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 3; i++) {
 			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
 		}
 
@@ -249,7 +346,7 @@ void GameState::loadStage()
 		this->stages->addBackground("2");
 
 		//set up enemy
-		for (int i = 0; i < 7; i++) {
+		for (int i = 0; i < 5; i++) {
 			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
 		}
 
@@ -263,7 +360,7 @@ void GameState::loadStage()
 		this->stages->addBackground("3");
 
 		//set up enemy
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 3; i++) {
 			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_MINOTAUR"], "2");
 		}
 
@@ -277,7 +374,7 @@ void GameState::loadStage()
 		this->stages->addBackground("3");
 
 		//set up enemy
-		for (int i = 0; i < 7; i++) {
+		for (int i = 0; i < 5; i++) {
 			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_MINOTAUR"], "2");
 		}
 
@@ -291,7 +388,7 @@ void GameState::loadStage()
 		this->stages->addBackground("4");
 
 		//set up enemy
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 3; i++) {
 			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_KNIGHT"], "3");
 		}
 
@@ -305,7 +402,7 @@ void GameState::loadStage()
 		this->stages->addBackground("4");
 
 		//set up enemy
-		for (int i = 0; i < 7; i++) {
+		for (int i = 0; i < 5; i++) {
 			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_KNIGHT"], "3");
 		}
 
@@ -319,8 +416,8 @@ void GameState::loadStage()
 		this->stages->addBackground("5");
 
 		//set up enemy
-		for (int i = 0; i < 5; i++) {
-			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+		for (int i = 0; i < 3; i++) {
+			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_VIKING"], "4");
 		}
 
 		//return enemy address to enemy in gamestate
@@ -333,8 +430,8 @@ void GameState::loadStage()
 		this->stages->addBackground("5");
 
 		//set up enemy
-		for (int i = 0; i < 7; i++) {
-			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_SKELETON"], "1");
+		for (int i = 0; i < 5; i++) {
+			this->stages->addEnemy((float)(rand() % this->stages->getStageSize().x), 50.0f, this->textures["ENEMY_SHEET_VIKING"], "4");
 		}
 
 		//return enemy address to enemy in gamestate
@@ -348,7 +445,7 @@ void GameState::loadStage()
 
 		//set up enemy
 		for (int i = 0; i < 1; i++) {
-			this->stages->addEnemy(this->window->getSize().x / 2.0f, 50.0f, this->textures["ENEMY_SHEET_KING"], "4");
+			this->stages->addEnemy(this->window->getSize().x / 2.0f, 50.0f, this->textures["ENEMY_SHEET_KING"], "5");
 		}
 
 		//return enemy address to enemy in gamestate
@@ -410,6 +507,7 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 
 	this->initView();
 	this->initUI();
+	this->initUIAnimation();
 	this->initPopUpMenu();
 
 	//load first stage
@@ -419,6 +517,12 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 
 GameState::~GameState()
 {
+	delete this->wButton;
+	delete this->aButton;
+	delete this->sButton;
+	delete this->dButton;
+	delete this->jButton;
+
 	delete this->pauseMenu;
 	delete this->gameOverMenu;
 	delete this->gameWinMenu;
@@ -451,6 +555,7 @@ void GameState::updateState(const float &dt)
 			this->updateStage(dt);
 
 			this->updateUI();
+			this->updateUIAnimation(dt);
 		}
 		//Paused update
 		else if (this->paused) {
@@ -477,7 +582,7 @@ void GameState::updateInput(const float &dt)
 void GameState::updatePlayer(const float & dt)
 {
 	//Control player
-	if (!this->player->getAttacking() && !this->player->getHurting()) {
+	if (!this->player->getAttacking()) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_LEFT")))) {
 			this->player->moveEntity(-1.0f, 0.0f, dt);
 		}
@@ -524,9 +629,12 @@ void GameState::updateStage(const float & dt)
 {
 	this->stages->updateStage(dt);
 
-	//add new stage
+	//add new stage 
 	if (this->stages->getClear()) {
 		if (this->currStage < this->maxStage) {
+			//bonus for player cleared stage [heal 10% HP]
+			this->player->increaseHP(10);
+
 			//clear old stage for create new
 			if (this->stages) {
 				delete this->stages;
@@ -677,6 +785,50 @@ void GameState::updateUI()
 	int_to_string.str("");
 }
 
+void GameState::updateUIAnimation(const float &dt)
+{
+	//update UIAnimation
+	this->wButton->updateEntity(dt);
+	this->wButton->setPosition(
+		this->view.getCenter().x + 325.0f,
+		100.0f
+	);
+
+	this->aButton->updateEntity(dt);
+	this->aButton->setPosition(
+		this->view.getCenter().x + 300.0f,
+		130.0f
+	);
+
+	this->sButton->updateEntity(dt);
+	this->sButton->setPosition(
+		this->view.getCenter().x + 325.0f,
+		130.0f
+	);
+
+	this->dButton->updateEntity(dt);
+	this->dButton->setPosition(
+		this->view.getCenter().x + 350.0f,
+		130.0f
+	);
+
+	this->jButton->updateEntity(dt);
+	this->jButton->setPosition(
+		this->view.getCenter().x + 325.0f,
+		170.0f
+	);
+
+	//update description text
+	this->moveText.setPosition(
+		this->view.getCenter().x + 425.0f,
+		120.0f
+	);
+	this->attackText.setPosition(
+		this->view.getCenter().x + 425.0f,
+		177.0f
+	);
+}
+
 void GameState::updatePauseMenuButton()
 {
 	//Update all the buttons in Paused Menu
@@ -739,6 +891,9 @@ void GameState::renderState(sf::RenderTarget* target)
 	//render UI
 	this->renderUI(target);
 
+	//render UIAnimation
+	this->renderUIAnimation(target);
+
 	//paused menu render
 	if (this->paused) {		
 		this->pauseMenu->renderPauseMenu(*target);
@@ -780,5 +935,17 @@ void GameState::renderUI(sf::RenderTarget * target)
 	target->draw(this->playerShowScoreText);
 
 	target->draw(this->stageNumberText);
+}
+
+void GameState::renderUIAnimation(sf::RenderTarget * target)
+{
+	this->wButton->renderUIAnimation(*target);
+	this->aButton->renderUIAnimation(*target);
+	this->sButton->renderUIAnimation(*target);
+	this->dButton->renderUIAnimation(*target);
+	this->jButton->renderUIAnimation(*target);
+
+	target->draw(this->moveText);
+	target->draw(this->attackText);
 }
 
