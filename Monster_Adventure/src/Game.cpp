@@ -130,6 +130,12 @@ void Game::initMusicList()
 
 void Game::initStates()
 {
+	//show intro before go to first state
+	sf::Clock timer;
+	while (timer.getElapsedTime().asMilliseconds() <= 3000) {
+		// waiting
+	}
+
 	//Push Main Menu state to states stack
 	this->states.push(new MainMenuState(this->window, &this->supportedKeys, &this->states, &this->music));
 }
