@@ -592,6 +592,9 @@ void GameState::updatePlayer(const float & dt)
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_UP"))) && !this->player->getJumpping()) {
 			this->player->jump();
 		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_DOWN")))) {
+			this->player->moveEntity(0.0f,1.0f,dt);
+		}
 	}
 	if (!this->player->getJumpping() && !this->player->getHurting()) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("ATTACK"))) && !this->player->getAttacking()) {

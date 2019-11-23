@@ -16,6 +16,10 @@
 class Game
 {
 private:
+	//Intro Resource
+	sf::Texture introTexture;
+	sf::RectangleShape intro;
+
 	//Variable
 	sf::RenderWindow* window;
 	sf::Event event;
@@ -35,6 +39,7 @@ private:
 	void initVariable();
 	void initWindow();
 	void initKeys();
+	void initIntro();
 
 	void initMusicList();
 	void initStates();

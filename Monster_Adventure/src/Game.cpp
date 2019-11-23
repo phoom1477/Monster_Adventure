@@ -71,46 +71,59 @@ void Game::initKeys()
 	ifs.close();
 }
 
+void Game::initIntro()
+{
+	if (!this->introTexture.loadFromFile("src/Resource/Background/intro.png")) {
+		throw "ERROR can't load Intro";
+	}
+	this->intro.setTexture(&this->introTexture);
+	this->intro.setSize(sf::Vector2f(static_cast<float>(this->window->getSize().x), static_cast<float>(this->window->getSize().y)));
+
+	//render intro
+	this->window->draw(this->intro);
+	this->window->display();
+}
+
 void Game::initMusicList()
 {
 	//laod all music
 	if (!this->musicBuffer["MUSIC_1"].loadFromFile("src/Resource/Music/music_1.ogg")) {
-		throw("[Game State] >> ERROR can't load music buffer");
+		throw("ERROR can't load music buffer");
 	}
 	this->music["MUSIC_1"].setBuffer(musicBuffer["MUSIC_1"]);
 	this->music["MUSIC_1"].setLoop(true);
 	this->music["MUSIC_1"].setVolume(50);
 
 	if (!this->musicBuffer["MUSIC_2"].loadFromFile("src/Resource/Music/music_2.ogg")) {
-		throw("[Game State] >> ERROR can't load music buffer");
+		throw("ERROR can't load music buffer");
 	}
 	this->music["MUSIC_2"].setBuffer(musicBuffer["MUSIC_2"]);
 	this->music["MUSIC_2"].setLoop(true);
 	this->music["MUSIC_2"].setVolume(50);
 
 	if (!this->musicBuffer["MUSIC_3"].loadFromFile("src/Resource/Music/music_3.ogg")) {
-		throw("[Game State] >> ERROR can't load music buffer");
+		throw("ERROR can't load music buffer");
 	}
 	this->music["MUSIC_3"].setBuffer(musicBuffer["MUSIC_3"]);
 	this->music["MUSIC_3"].setLoop(true);
 	this->music["MUSIC_3"].setVolume(50);
 
 	if (!this->musicBuffer["MUSIC_4"].loadFromFile("src/Resource/Music/music_4.ogg")) {
-		throw("[Game State] >> ERROR can't load music buffer");
+		throw("ERROR can't load music buffer");
 	}
 	this->music["MUSIC_4"].setBuffer(musicBuffer["MUSIC_4"]);
 	this->music["MUSIC_4"].setLoop(true);
 	this->music["MUSIC_4"].setVolume(50);
 
 	if (!this->musicBuffer["MUSIC_5"].loadFromFile("src/Resource/Music/music_5.ogg")) {
-		throw("[Game State] >> ERROR can't load music buffer");
+		throw("ERROR can't load music buffer");
 	}
 	this->music["MUSIC_5"].setBuffer(musicBuffer["MUSIC_5"]);
 	this->music["MUSIC_5"].setLoop(true);
 	this->music["MUSIC_5"].setVolume(50);
 
 	if (!this->musicBuffer["MUSIC_6"].loadFromFile("src/Resource/Music/music_6.ogg")) {
-		throw("[Game State] >> ERROR can't load music buffer");
+		throw("ERROR can't load music buffer");
 	}
 	this->music["MUSIC_6"].setBuffer(musicBuffer["MUSIC_6"]);
 	this->music["MUSIC_6"].setLoop(true);
@@ -119,6 +132,20 @@ void Game::initMusicList()
 
 void Game::initStates()
 {
+	//animated intro before go to first state
+	float intro_position_y = this->intro.getPosition().y;
+
+	while (this->intro.getPosition().y <= this->window->getSize().y) {
+		intro_position_y += 1.0f;
+
+		//update intro
+		this->intro.setPosition(0.0f, intro_position_y);
+
+		//render intro
+		this->window->draw(this->intro);
+		this->window->display();
+	}
+
 	//Push Main Menu state to states stack
 	this->states.push(new MainMenuState(this->window, &this->supportedKeys, &this->states, &this->music));
 }
@@ -130,6 +157,7 @@ Game::Game()
 	this->initVariable();
 	this->initWindow();
 	this->initKeys();
+	this->initIntro();
 
 	this->initMusicList();
 	this->initStates();

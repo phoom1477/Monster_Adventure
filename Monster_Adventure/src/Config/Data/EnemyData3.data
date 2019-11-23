@@ -18,7 +18,7 @@ idle			10 	0 0	14 0
 walk			8 	0 1	7 1
 attack			9.1 	0 2	10 2
 dead			13 	0 3	14 3
-hurt			13 	0 4	6 4
+hurt			8 	0 4	6 4
 
 offset			180 40
 minus_size		355 100
