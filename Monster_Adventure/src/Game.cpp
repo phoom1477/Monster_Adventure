@@ -24,8 +24,6 @@ void Game::initWindow()
 		ifs >> buff;
 		if (buff == "title") {
 			getline(ifs, title);
-			//trim [title]
-			title.erase(std::remove_if(title.begin(), title.end(), isspace), title.end());
 		}
 		if (buff == "width") {
 			ifs >> window_bounds.width;
@@ -86,7 +84,7 @@ void Game::initIntro()
 
 void Game::initMusicList()
 {
-	//laod all music
+	//load all music
 	if (!this->musicBuffer["MUSIC_1"].loadFromFile("src/Resource/Music/music_1.ogg")) {
 		throw("ERROR can't load music buffer");
 	}
@@ -132,20 +130,6 @@ void Game::initMusicList()
 
 void Game::initStates()
 {
-	//animated intro before go to first state
-	float intro_position_y = this->intro.getPosition().y;
-
-	while (this->intro.getPosition().y <= this->window->getSize().y) {
-		intro_position_y += 1.0f;
-
-		//update intro
-		this->intro.setPosition(0.0f, intro_position_y);
-
-		//render intro
-		this->window->draw(this->intro);
-		this->window->display();
-	}
-
 	//Push Main Menu state to states stack
 	this->states.push(new MainMenuState(this->window, &this->supportedKeys, &this->states, &this->music));
 }
