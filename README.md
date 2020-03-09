@@ -1,3 +1,6 @@
-# SFML_GAME
+# Monster Adventure
 Game Development with SFML _library in C++
-![Game Logo](./Monster_Adventure/src/Resource/Gamelogo/Gamelogo.png)
+
+>![Monster Adventure Logo](./Monster_Adventure/src/Resource/Gamelogo/logo_Black.png)
+
+Created for education by EsitoneX 
