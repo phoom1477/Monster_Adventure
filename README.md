@@ -2,9 +2,8 @@
 ![License:MIT](https://img.shields.io/github/license/phoom1477/Monster_Adventure)
 
 # **Monster Adventure**
-Game Development with SFML library in C++
 
-![Monster Adventure Logo](./Monster_Adventure/src/Resource/Gamelogo/logo_Black.png)
+<img src="./Monster_Adventure/src/Resource/Gamelogo/logo_Black.png" alt="drawing" width="500">
 
 ## Creator
  - EsitoneX
