@@ -6,7 +6,7 @@
 <img src="./Monster_Adventure/src/Resource/Gamelogo/logo_Black.png" alt="drawing" width="500">
 
 ## Creator
- - EsitoneX
+ - Phukphoom Taphrae
 
 ## Tools
  - C++
