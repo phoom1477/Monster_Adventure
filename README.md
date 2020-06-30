@@ -3,23 +3,21 @@
 
 # **Monster Adventure**
 
-<img src="./Monster_Adventure/src/Resource/Gamelogo/logo_Black.png" alt="drawing" width="500">
+<img src="https://github.com/phoom1477/Monster_Adventure/blob/master/Monster_Adventure/src/Resource/Gamelogo/logo_Black.png" alt="drawing" width="500">
 
-## Creator
+## Developer
  - Phukphoom Taphrae
 
+## Library
+ - SFML
+
 ## Tools
- - C++
- - SFML library
  - Visual Studio 2017
 
-## Setup
- - It's already setup for Visual Studio 2017
-
 ## Features
- - Single player
- - Kill all enemies for clear stage
- - Kill the boss in the last stage for clear this game
+ - เกมผู้เล่นคนเดียว (Single Player)
+ - ผ่าน Stage โดยการกำจัดศัตรูทุกตัวใน Stage 
+ - จบเกมโดยการสังหารบอสใน Stage สุดท้าย (Stage ที่ 10)
 
 ## License
 ```
