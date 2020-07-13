@@ -45,3 +45,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+## Game Trailer
+[![Watch the video](https://github.com/phoom1477/Monster_Adventure/blob/master/Monster_Adventure/src/Resource/Trailer/Trailer.png)](https://youtu.be/po4H-PCdl1E)
